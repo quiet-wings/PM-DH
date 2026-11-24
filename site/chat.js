@@ -164,7 +164,7 @@ function mount(root) {
         .map((s, i) => `<a href="${escapeHtml(s.url)}">[${i + 1}] ${escapeHtml(s.title)} · ${escapeHtml(s.heading)}</a>`).join('')}</div>`;
     }
     if (res.feature) {
-      html += `<a class="feature-link" href="${escapeHtml(res.feature.url)}" target="_blank" rel="noopener" data-feature="${res.feature.key}">${res.feature.emoji} 마음버블에서 ${escapeHtml(res.feature.label)}</a>`;
+      html += `<a class="feature-link" href="${escapeHtml(res.feature.url)}" target="_blank" rel="noopener" data-feature="${res.feature.key}">${res.feature.emoji} ${escapeHtml(res.feature.label)}</a>`;
     }
     if (res.type === 'demo' || res.type === 'fallback') {
       html += `<span class="mode">데모 모드: AI 대신 블로그 문단을 그대로 보여 드렸어요</span>`;

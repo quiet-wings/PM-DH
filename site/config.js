@@ -9,11 +9,11 @@ export const SITE = {
 
 // 글의 front-matter `feature` 값 → 챗봇과 글 하단에서 추천할 마음버블 기능
 export const FEATURES = {
-  home: { label: '걱정 버블 띄우기', emoji: '🫧', path: '/' },
-  breathing: { label: '호흡 쉼터에서 4-4 호흡하기', emoji: '🌬️', path: '/' },
-  game: { label: '미니게임으로 팡팡 터뜨리기', emoji: '🎮', path: '/game' },
-  typing: { label: '긍정 글귀 따라 쓰기', emoji: '⌨️', path: '/typing' },
-  books: { label: '마음버블서점에서 책 고르기', emoji: '📚', path: '/books' },
+  home: { label: '마음버블에서 걱정 버블 띄우기', emoji: '🫧', path: '/' },
+  breathing: { label: '마음버블 호흡 쉼터 열기', emoji: '🌬️', path: '/' },
+  game: { label: '마음버블 미니게임 하러 가기', emoji: '🎮', path: '/game' },
+  typing: { label: '마음버블에서 긍정 글귀 따라 쓰기', emoji: '⌨️', path: '/typing' },
+  books: { label: '마음버블서점 둘러보기', emoji: '📚', path: '/books' },
 };
 
 export function featureLink(key) {
