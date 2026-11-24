@@ -13,7 +13,7 @@ export const firebaseConfig = {
   appId: 'YOUR_APP_ID',
 };
 
-// AI 중계 주소 (Cloudflare Pages Functions → Claude API, 키는 Cloudflare 비밀값에만 있음, D-016)
+// AI 중계 주소 (Cloudflare Pages Functions → Claude API, 키는 Cloudflare 비밀값에만 있음, D-017)
 // 값이 있으면 이 주소로 답변을 만들고, 비우면 Firebase AI Logic(Gemini)을 써요.
 export const AI_PROXY_URL = 'https://maeumbubble-test.pages.dev/api/ask';
 
