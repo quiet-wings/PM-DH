@@ -1,4 +1,4 @@
-// 「클로버에게 물어보기」 챗봇 위젯 (브라우저 전용)
+// 「포앤에게 물어봐」 챗봇 위젯 (브라우저 전용)
 // 핵심 로직은 lib/clover.js 에 있고, 여기서는 화면과 Firebase 연결만 담당해요.
 import { askClover } from './lib/clover.js';
 import { prepareIndex } from './lib/search.js';
@@ -82,11 +82,11 @@ function el(html) {
 }
 
 function mount(root) {
-  const fab = el(`<button type="button" class="chat-fab" aria-haspopup="dialog" aria-controls="clover-panel">🍀 클로버에게 물어보기</button>`);
-  const panel = el(`<section class="chat-panel" id="clover-panel" role="dialog" aria-label="클로버에게 물어보기" hidden>
+  const fab = el(`<button type="button" class="chat-fab" aria-haspopup="dialog" aria-controls="clover-panel"><img class="cta-icon" src="/assets/img/poen-face.webp" alt="" width="30" height="30"> 포앤에게 물어봐</button>`);
+  const panel = el(`<section class="chat-panel" id="clover-panel" role="dialog" aria-label="포앤에게 물어봐" hidden>
     <div class="chat-head">
-      <span class="avatar" aria-hidden="true">🍀</span>
-      <div><strong>클로버에게 물어보기</strong><small>마음버블 블로그 글을 찾아 답해 드려요</small></div>
+      <img class="avatar" src="/assets/img/poen-face.webp" alt="" aria-hidden="true" width="38" height="38">
+      <div><strong>포앤에게 물어봐</strong><small>마음버블 블로그 글을 찾아 답해 드려요</small></div>
       <button type="button" class="close" aria-label="닫기">×</button>
     </div>
     <div class="chat-log" aria-live="polite"></div>
@@ -112,7 +112,7 @@ function mount(root) {
   };
 
   const greet = () => {
-    addMsg('bot', '안녕하세요, 클로버예요 🍀 마음버블 블로그에 있는 글을 찾아서 답해 드릴게요. 무엇이 궁금하세요?');
+    addMsg('bot', '안녕하세요, 포앤이에요 🫧 마음버블 블로그에 있는 글을 찾아서 답해 드릴게요. 무엇이 궁금하세요?');
     const chips = el(`<div class="chips"></div>`);
     for (const s of SUGGESTIONS) {
       const b = el(`<button type="button"></button>`);
@@ -149,7 +149,7 @@ function mount(root) {
       return;
     }
     sendBtn.disabled = true;
-    const typing = addMsg('bot typing', '클로버가 블로그 글을 찾고 있어요…');
+    const typing = addMsg('bot typing', '포앤이 블로그 글을 찾고 있어요…');
     try {
       const [index, firebase] = await Promise.all([loadIndex(), loadFirebase()]);
       const res = await askClover({

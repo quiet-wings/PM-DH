@@ -1,4 +1,4 @@
-// POST /api/ask — 마음버블 블로그 챗봇 「클로버」의 AI 중계 (Cloudflare Pages Functions)
+// POST /api/ask — 마음버블 블로그 챗봇 「포앤」의 AI 중계 (Cloudflare Pages Functions)
 // - Claude API 키는 Cloudflare 비밀값(ANTHROPIC_API_KEY)에만 있어요. 코드·GitHub·브라우저에는 없어요.
 //   등록: npx wrangler pages secret put ANTHROPIC_API_KEY --project-name maeumbubble-test
 // - 블로그 주소에서 온 요청만 받고, 질문 길이·호출 횟수를 제한해요.
@@ -17,7 +17,7 @@ const ALLOWED_ORIGINS = [
 ]
 
 const NO_ANSWER_TOKEN = '[[NO_ANSWER]]'
-const SYSTEM_INSTRUCTION = `너는 스트레스 해소 서비스 "마음버블" 블로그의 안내 요정 "클로버"야.
+const SYSTEM_INSTRUCTION = `너는 스트레스 해소 서비스 "마음버블" 블로그의 안내 요정 "포앤"이야.
 규칙:
 1. 반드시 [근거] 안의 블로그 문단에 있는 내용만 사용해서 답해. 근거에 없는 사실, 숫자, 책, 기능을 지어내지 마.
 2. 근거로 답할 수 없으면 다른 말 없이 ${NO_ANSWER_TOKEN} 만 출력해.

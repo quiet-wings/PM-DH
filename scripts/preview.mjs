@@ -11,6 +11,7 @@ import { SITE, featureLink, appLink } from '../site/config.js';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const out = process.argv[2] || join(root, 'preview', 'maeum-bubble-blog-preview.html');
 // 앱 아이콘(클로버 요정)을 한 파일 안에 넣어요
+const POEN = `data:image/webp;base64,${readFileSync(join(root, 'site', 'img', 'poen-face.webp')).toString('base64')}`;
 const ICON = `data:image/png;base64,${readFileSync(join(root, 'site', 'icons', 'icon-180.png')).toString('base64')}`;
 build();
 
@@ -31,8 +32,8 @@ const date = (d) => { const [y, m, day] = d.split('-'); return `${y}년 ${+m}월
 const tags = (t) => `<ul class="tags">${t.map((x) => `<li>#${escapeHtml(x)}</li>`).join('')}</ul>`;
 
 const home = `<section class="page" id="home">
-<section class="hero"><div class="bubble-hero" aria-hidden="true">🍀</div><h1>마음이 무거운 날, 쉬어 가는 글</h1><p>${escapeHtml(SITE.tagline)}</p>
-<button type="button" class="ask-cta" data-open-chat>🍀 클로버에게 물어보기</button><p class="hint">오프라인 미리보기예요. 챗봇은 AI 없이 블로그 문단으로 답하는 데모 모드로 동작해요.</p></section>
+<section class="hero"><div class="bubble-hero" aria-hidden="true">🍀</div><h1>마음을 들어요, 마음에 들게요</h1><p>${escapeHtml(SITE.tagline)}</p>
+<button type="button" class="ask-cta" data-open-chat><img class="cta-icon" src="${POEN}" alt="" width="30" height="30"> 포앤에게 물어봐</button><p class="hint">오프라인 미리보기예요. 챗봇은 AI 없이 블로그 문단으로 답하는 데모 모드로 동작해요.</p></section>
 <section class="list">${posts.map((p) => `<article class="card"><a href="#post-${p.slug}"><time>${date(p.date)}</time><h2>${escapeHtml(p.title)}</h2><p>${escapeHtml(p.summary)}</p>${tags(p.tags)}</a></article>`).join('')}</section></section>`;
 const pages = posts.map((p) => {
   const f = featureLink(p.feature, 'post');
