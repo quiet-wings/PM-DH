@@ -2,11 +2,9 @@
 
 | 항목 | 내용 |
 |---|---|
-| 문서 버전 | v1.2 (Claude 중계 실서비스 검증) |
-| 테스트 일자 | 2026-11-24 |
-| 대상 | `main` 브랜치 (PRD v1.3 기준) · 배포: Firebase Hosting 비공개 미리보기 채널 |
-| 환경 | Node 22 `node:test` · Chromium(Playwright) 390×844 모바일 / 1280×800 데스크톱 · 로컬 서버 `npm run dev` |
-| 결과 | **단위테스트 68/68 통과 (100%)** · 유저플로우 11개 화면 + 배포 주소 화면 정상 · CSP 위반 0건 · **배포 주소에서 실제 AI(Claude) 답변 확인** → P0·P1 통과, **출시 가능** |
+| 문서 버전 · 일자 | v1.3 (v1.2 Claude 중계 실서비스 검증을 A4 2쪽으로 압축) · 2026-11-24 |
+| 대상 · 환경 | `main` (PRD v1.3 기준) · Firebase Hosting 미리보기 채널 · Node 22 `node:test` · Playwright 390×844 / 1280×800 · `npm run dev` |
+| 결과 | **단위테스트 68/68 통과** · 유저플로우 11개 화면·배포 주소 정상 · CSP 위반 0건 · **배포 주소에서 실제 AI(Claude) 답변 확인** → P0·P1 통과, **출시 가능** |
 
 ## 1. 기능별 단위테스트 (`npm test`)
 
@@ -27,15 +25,15 @@ PRD 3장 지표와의 연결: 위기 대응 100%(안전 13/13), 범위 밖 정�
 
 | ① 홈 | ② 글 하단 기능 버튼 | ③ 챗봇 열기 | ④ 답변 + 출처(데모) |
 |---|---|---|---|
-| <img src="screenshots/01-home-mobile.png" width="96"> | <img src="screenshots/03-post-cta.png" width="96"> | <img src="screenshots/04-chat-open.png" width="96"> | <img src="screenshots/05-answer-demo.png" width="96"> |
+| <img src="screenshots/01-home-mobile.png" width="80"> | <img src="screenshots/03-post-cta.png" width="80"> | <img src="screenshots/04-chat-open.png" width="80"> | <img src="screenshots/05-answer-demo.png" width="80"> |
 | 글 목록 + 질문 버튼 | 글 → 마음버블 유입 | 추천 질문 칩 4개 | 근거 글 2개 + 기능 링크 |
 
 | ⑤ 범위 밖 질문 | ⑥ 진단·약 질문 | ⑦ 위기 표현 | ⑧ AI 답변(모의) |
 |---|---|---|---|
-| <img src="screenshots/06-out-of-scope.png" width="96"> | <img src="screenshots/07-medical.png" width="96"> | <img src="screenshots/08-crisis.png" width="96"> | <img src="screenshots/09-answer-ai-mock.png" width="96"> |
+| <img src="screenshots/06-out-of-scope.png" width="80"> | <img src="screenshots/07-medical.png" width="80"> | <img src="screenshots/08-crisis.png" width="80"> | <img src="screenshots/09-answer-ai-mock.png" width="80"> |
 | 지어내지 않음 + 갭 기록 | 의료진 상담 권유 | 109·1577-0199·119 + 전화 버튼 | 근거 번호 [1][2] 표시 |
 
-⑧은 Firebase SDK를 모의 응답으로 바꿔 화면 표시만 검증했다. 글 상세·404·데스크톱 화면도 정상.
+⑧은 AI 응답을 모의로 바꿔 화면 표시만 검증. 글 상세·404·데스크톱 화면도 정상.
 
 ## 3. 발견한 결함과 조치 (자세히: `logs/SUCCESS_FAILURE_LOG.md`)
 
@@ -45,9 +43,9 @@ PRD 3장 지표와의 연결: 위기 대응 100%(안전 13/13), 범위 밖 정�
 
 | 항목 | 결과 |
 |---|---|
-| 홈·글·처리방침·404, 모바일 가로 넘침·콘솔 오류 | ✅ 4개 화면 × 2개 폭 정상 |
-| 보안 헤더(CSP) 적용 후 기능 충돌 / 마음버블 링크(UTM) | ✅ 챗봇 질문 5종(출처·범위 밖·의료·위기) 동작, CSP 위반 0건 / UTM 포함 |
-| 마음버블 앱 배포 주소(maeumbubble-test.pages.dev) | ✅ 홈 화면 로드, 미니게임·타이핑·서점·처리방침 링크 확인 (익명 고민 전송·운영자 페이지는 별도 확인 필요) |
-| 실제 AI 답변 (Cloudflare 중계 → Claude, D-017) | ✅ 근거 번호·출처 표시, 응답 4.6~5.1초. 타 도메인·직접 호출 403 차단. Gemini 경로는 403(API·초기 설정·App Check)로 전환 |
+| 홈·글·처리방침·404 (가로 넘침·콘솔 오류) | ✅ 4개 화면 × 2개 폭 정상 |
+| CSP 적용 후 기능 / 마음버블 링크 | ✅ 챗봇 질문 5종 동작, CSP 위반 0건 / UTM 포함 |
+| 마음버블 앱(maeumbubble-test.pages.dev) | ✅ 홈·미니게임·타이핑·서점·처리방침 링크 (익명 고민·운영자 페이지는 별도 확인) |
+| 실제 AI 답변 (Cloudflare 중계 → Claude, D-017) | ✅ 근거 번호·출처, 4.6~5.1초. 타 도메인·직접 호출 403 차단 (Gemini 403으로 전환) |
 
-배포 주소 화면: [출처 답변](screenshots/deploy-02-answer.png) · [범위 밖](screenshots/deploy-04-out-of-scope.png) · [위기](screenshots/deploy-06-crisis.png) · [개인정보 처리방침](screenshots/deploy-07-privacy.png) (`docs/screenshots/deploy-*.png`)
+배포 주소 화면: [출처 답변](screenshots/deploy-02-answer.png) · [범위 밖](screenshots/deploy-04-out-of-scope.png) · [위기](screenshots/deploy-06-crisis.png) · [처리방침](screenshots/deploy-07-privacy.png)
