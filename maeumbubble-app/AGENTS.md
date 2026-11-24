@@ -20,7 +20,7 @@
 ├── src/
 │   ├── components/
 │   │   ├── AffirmationModal.tsx     # Saved affirmation drawer & sharing
-│   │   ├── BreathingGuide.tsx       # 4-4 mindfulness breathing circle
+│   │   ├── BreathingGuide.tsx       # 4-4-4 mindfulness breathing circle
 │   │   ├── CloverMascot.tsx         # Mascot with reactive speech bubble
 │   │   ├── FloatingBubbleItem.tsx   # Glassmorphism thought bubble with pop physics
 │   │   └── SoundBar.tsx             # Ambient drone & FX sound toggles

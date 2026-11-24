@@ -70,7 +70,7 @@ export const translations = {
     linkCopiedToast: '링크가 복사되었어요! 지친 친구에게 보내보세요 💌',
 
     // Breathing modal
-    breathingBadge: '마음 안정 4-4 호흡',
+    breathingBadge: '마음 안정 4-4-4 호흡',
     breathingTitle: '깊고 편안한 호흡으로 마음 비우기',
     breathingInhale: '코로 천천히 숨을 들이마셔요',
     breathingHold: '숨을 가만히 머금고 느껴보세요',
@@ -183,7 +183,7 @@ export const translations = {
     linkCopiedToast: 'Link copied! Send it to a tired friend 💌',
 
     // Breathing modal
-    breathingBadge: 'Calming 4-4 Breathing',
+    breathingBadge: 'Calming 4-4-4 Breathing',
     breathingTitle: 'Clear your mind with deep, soothing breaths',
     breathingInhale: 'Breathe in slowly through your nose',
     breathingHold: 'Hold your breath gently and feel still',
