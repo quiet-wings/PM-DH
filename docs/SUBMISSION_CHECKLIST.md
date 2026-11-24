@@ -17,7 +17,7 @@
 | 필수 | 로그 ① 에이전트용 지침 | AI 에이전트용 지침 파일 | [`AGENTS.md`](../AGENTS.md) · [`CLAUDE.md`](../CLAUDE.md) | ✅ |
 | 필수 | 로그 ② 성공·실패 로그 | 시행착오 기록 (형식: 상황 → 결과 → 원인 → 조치 → 배운 점) | [`docs/logs/SUCCESS_FAILURE_LOG.md`](logs/SUCCESS_FAILURE_LOG.md) | ✅ |
 | 필수 | 로그 ③ 의사결정 로그 | 무엇을·누가·왜 결정했는지 한 줄씩 | [`docs/logs/DECISION_LOG.md`](logs/DECISION_LOG.md) | ⏳ (D-001·002·004·005·006 결정자 확인 필요) |
-| 필수 | 소스코드 | 같은 저장소 | `lib/` `site/` `scripts/` `posts/` `tests/` | ✅ |
+| 필수 | 소스코드 | 같은 저장소 | `lib/` `site/` `scripts/` `posts/` `tests/` · 마음버블 앱 `maeumbubble-app/` | ✅ |
 | 제출 | 결과보고서 | 안내문 "github 링크 / 결과보고서까지 제출" — 별도 양식 언급 없음 | 강사님께 형식 확인 필요 (테스트 보고서로 갈음되는지) | ❌ |
 
 ## 2. 평가 항목 (안내문에 적힌 조건)

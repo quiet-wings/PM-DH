@@ -13,7 +13,8 @@
 | 에이전트용 지침 | [`AGENTS.md`](AGENTS.md) |
 | 의사결정 로그 | [`docs/logs/DECISION_LOG.md`](docs/logs/DECISION_LOG.md) |
 | 성공·실패 로그 | [`docs/logs/SUCCESS_FAILURE_LOG.md`](docs/logs/SUCCESS_FAILURE_LOG.md) |
-| 소스코드 | `lib/`(챗봇·검색·안전 규칙), `site/`(화면), `scripts/`(빌드), `posts/`(글), `tests/` |
+| 소스코드 | 블로그: `lib/`(챗봇·검색·안전 규칙), `site/`(화면), `scripts/`(빌드), `posts/`(글), `tests/` · 마음버블 앱: [`maeumbubble-app/`](maeumbubble-app) |
+| 마음버블 앱 | https://maeumbubble-test.pages.dev (Cloudflare Pages) — 배경음·단순화·처리방침·보안 헤더 반영 |
 
 ## 어떤 문제를 푸나요
 - **독자**: 지친 순간에 긴 글을 다 읽기 어렵고, 답이 어느 글에 있는지 모른다.

@@ -40,6 +40,7 @@
 | `.github/workflows/deploy.yml` | push 시 테스트 → 빌드 → Firebase 배포 |
 | `tests/` | `node:test` 단위테스트 |
 | `docs/` | PRD, 테스트 보고서, 로그, 스크린샷 |
+| `maeumbubble-app/` | 마음버블 앱(TanStack Start + React, Cloudflare Pages). 자체 `package.json`·테스트(`npx vitest run`)를 쓰며 루트 "외부 의존성 금지" 규칙은 블로그에만 적용. 비밀값(관리자 비밀번호·암호키·`wrangler.toml`)은 커밋 금지 |
 | `versions/` | 블로그 HTML·PRD HTML·README의 버전별 스냅샷 (`*_new_vN`). 기존 버전은 고치지 말고 `vN+1` 파일을 새로 추가 |
 | `AGENTS.md` / `CLAUDE.md` | 에이전트 지침 (내용은 AGENTS.md에만, CLAUDE.md는 import 한 줄) |
 | `README.md` | 사람을 위한 소개·실행·배포 안내 (에이전트 규칙은 넣지 않음) |
