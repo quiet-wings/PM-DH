@@ -4,12 +4,12 @@
 // 값이 비어 있으면 챗봇은 AI 없이 "데모 모드"(블로그 문단 요약)로 동작해요.
 
 export const firebaseConfig = {
-  apiKey: '',
-  authDomain: '',
-  projectId: '',
-  storageBucket: '',
-  messagingSenderId: '',
-  appId: '',
+  apiKey: 'AIzaSyA9lF4TPWXSht1g0WAGEIVassqSB_c1Uy4',
+  authDomain: 'mindbubble-wings.firebaseapp.com',
+  projectId: 'mindbubble-wings',
+  storageBucket: 'mindbubble-wings.firebasestorage.app',
+  messagingSenderId: '57471046972',
+  appId: '1:57471046972:web:9282d07a98ef2b09ab3a39',
 };
 
 // Firebase AI Logic에서 쓸 Gemini 모델 (콘솔에서 지원 모델 확인 후 바꿀 수 있어요)
