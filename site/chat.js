@@ -8,7 +8,7 @@ import { isRealConfig } from './lib/config-check.js';
 import { featureLink } from './config.js';
 import * as fb from './firebase-config.js';
 
-const SUGGESTIONS = ['잠이 안 올 때 뭐 해요?', '내가 적은 걱정은 저장돼요?', '번아웃에 좋은 책 추천해 줘', '4-4 호흡은 어떻게 해요?'];
+const SUGGESTIONS = ['잠이 안 올 때 뭐 해요?', '내가 적은 걱정은 저장돼요?', '번아웃에 좋은 책 추천해 줘', '4-4-4 호흡은 어떻게 해요?'];
 const limiter = createRateLimiter({ limit: 10, windowMs: 60_000 });
 
 let indexPromise = null;
