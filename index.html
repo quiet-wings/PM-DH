@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hello — 마음버블</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800;900&family=Noto+Sans+KR:wght@500;700;800&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="page">
+    <section class="hero" aria-label="인사말 디스플레이">
+      <div id="bubble-layer" class="bubble-layer" aria-hidden="true"></div>
+      <h1 id="hello-display" class="hello-display" aria-live="polite"></h1>
+    </section>
+
+    <aside class="control-card" aria-label="컨트롤 패널">
+      <div class="control-group">
+        <h2 class="section-title">버튼 · 드롭다운</h2>
+        <div class="action-row">
+          <button id="stress-btn" type="button" class="primary-btn">
+            스트레스 날리기
+          </button>
+
+          <div class="select-wrapper">
+            <select id="palette-select" class="palette-select" aria-label="색상 팔레트 선택">
+              <option value="forest" selected>숲 팔레트</option>
+              <option value="ocean">바다 팔레트</option>
+              <option value="sunset">노을 팔레트</option>
+              <option value="pastel">파스텔 팔레트</option>
+            </select>
+            <svg
+              class="select-chevron"
+              width="14"
+              height="14"
+              viewBox="0 0 16 16"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M4 6L8 10L12 6"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <h2 class="section-title">탭</h2>
+        <div class="tab-list" role="tablist" aria-label="언어 선택">
+          <button
+            type="button"
+            class="tab-btn is-active"
+            role="tab"
+            aria-selected="true"
+            data-lang="en"
+          >
+            영어
+          </button>
+          <button
+            type="button"
+            class="tab-btn"
+            role="tab"
+            aria-selected="false"
+            data-lang="ko"
+          >
+            한국어
+          </button>
+          <button
+            type="button"
+            class="tab-btn"
+            role="tab"
+            aria-selected="false"
+            data-lang="es"
+          >
+            스페인어
+          </button>
+        </div>
+
+        <div id="tab-preview" class="tab-preview" role="tabpanel">
+          Hello
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

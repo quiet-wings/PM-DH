@@ -1,0 +1,695 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>마음 버블 | 디자인 및 기능 검토용 미리보기</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Gowun+Dodum&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    />
+    <style>
+      body {
+        font-family: 'Gowun Dodum', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      @keyframes float-slow {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-8px) rotate(1deg); }
+      }
+      @keyframes float-gentle {
+        0%, 100% { transform: translateY(0px) scale(1); }
+        50% { transform: translateY(-6px) scale(1.015); }
+      }
+      .animate-float-slow {
+        animation: float-slow 6s ease-in-out infinite;
+      }
+      .animate-float-gentle {
+        animation: float-gentle 4.5s ease-in-out infinite;
+      }
+      .scrollbar-none {
+        scrollbar-width: none;
+      }
+      .scrollbar-none::-webkit-scrollbar {
+        display: none;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen bg-gradient-to-b from-sky-50/80 via-emerald-50/40 to-rose-50/40 text-stone-800 selection:bg-emerald-200 selection:text-emerald-900 overflow-x-hidden">
+    <!-- 상단 검토용 안내 배너 -->
+    <div class="bg-gradient-to-r from-emerald-700 via-teal-600 to-sky-700 text-white text-xs py-2 px-4 text-center font-semibold shadow-sm">
+      ✨ [검토용 미리보기 파일] 네트리파이 유료 도메인 배포 전, 새로워진 디자인 · <strong>❤️ 사랑</strong> 키워드 · <strong>하얀 거품 일러스트 버블</strong>을 바로 테스트해 볼 수 있어요.
+    </div>
+
+    <!-- 배경 장식 하얀 거품 일러스트 -->
+    <div aria-hidden="true" class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+      <div class="fixed top-20 left-10 w-72 h-72 rounded-full bg-emerald-200/20 blur-3xl"></div>
+      <div class="fixed top-1/3 right-10 w-80 h-80 rounded-full bg-pink-200/25 blur-3xl"></div>
+      <div class="fixed bottom-20 left-1/3 w-96 h-96 rounded-full bg-sky-100/35 blur-3xl"></div>
+
+      <span class="animate-float-slow absolute opacity-55" style="left: 4%; top: 18%; width: 120px;">
+        <img src="public/img/foam-bubble.png" alt="" class="w-full h-auto select-none" />
+      </span>
+      <span class="animate-float-slow absolute opacity-55" style="left: 84%; top: 15%; width: 92px; animation-delay: 1.5s;">
+        <img src="public/img/foam-bubble.png" alt="" class="w-full h-auto select-none" />
+      </span>
+    </div>
+
+    <!-- 헤더 -->
+    <header class="sticky top-0 z-40 w-full backdrop-blur-md bg-white/75 border-b border-emerald-100/80">
+      <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+        <div class="flex items-center gap-2.5">
+          <span class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-[#f6ecc9] to-[#fdf8e4] border border-[#ecdfb0] flex items-center justify-center shadow-sm text-lg select-none">
+            🍀
+          </span>
+          <div>
+            <h1 class="text-base md:text-lg font-bold text-stone-900 leading-tight flex items-center gap-1.5">
+              <span>마음 버블</span>
+              <span class="hidden sm:inline text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-100/80 text-emerald-800">
+                스트레스 해소 쉼터
+              </span>
+            </h1>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button
+            type="button"
+            onclick="switchView('home')"
+            id="nav-home-btn"
+            class="px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-600 text-white shadow-xs cursor-pointer transition-all"
+          >
+            🫧 마음버블 홈
+          </button>
+          <button
+            type="button"
+            onclick="switchView('clover')"
+            id="nav-clover-btn"
+            class="px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 cursor-pointer transition-all"
+          >
+            🍀 네잎클로버 찾기 게임
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- 메인 영역 -->
+    <main class="max-w-5xl mx-auto px-4 py-8 md:py-12 flex flex-col items-center">
+      <div id="view-home" class="w-full flex flex-col items-center">
+      <!-- 마스코트 & 인사말 -->
+      <section class="w-full flex flex-col items-center text-center mb-8">
+        <div class="relative mb-3 max-w-xs md:max-w-sm px-5 py-3 rounded-2xl bg-white/95 border border-emerald-200/80 shadow-md">
+          <p id="mascot-msg" class="text-sm md:text-base font-medium text-emerald-950 text-center leading-relaxed">
+            어떤 생각이 마음을 무겁게 하나요? 여기에 털어놓아 보세요 🍀
+          </p>
+          <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white/95 border-r border-b border-emerald-200/80 transform rotate-45"></div>
+        </div>
+
+        <div
+          id="mascot-btn"
+          class="relative cursor-pointer transition-transform duration-300 hover:scale-105 animate-float-slow"
+          title="클로버 요정을 톡 터치해보세요"
+        >
+          <div class="w-36 h-36 md:w-44 md:h-44 rounded-full overflow-hidden border-4 border-white shadow-xl bg-gradient-to-b from-sky-100/70 to-emerald-100/70 flex items-center justify-center">
+            <img
+              src="public/img/clover-spirit.png"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+              alt="클로버 요정"
+              class="w-full h-full object-cover"
+            />
+            <span style="display:none" class="text-6xl items-center justify-center">🍀</span>
+          </div>
+          <div class="absolute -bottom-1 -right-1 w-9 h-9 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-lg border-2 border-white">
+            <span>🍀</span>
+          </div>
+        </div>
+
+        <div class="mt-5 max-w-xl">
+          <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/90 border border-emerald-200/70 text-emerald-700 text-xs font-bold shadow-sm mb-3">
+            ✨ 몽글몽글 마음 정화 시간 · 함께 비워낸 걱정 <strong id="global-count">1,842</strong>개
+          </span>
+          <h2 class="text-2xl md:text-4xl font-extrabold text-stone-800 tracking-tight break-keep leading-tight">
+            마음의 짐, 이곳에 훌훌 털어놓으세요
+          </h2>
+          <p class="mt-2.5 text-stone-600 text-sm md:text-base leading-relaxed">
+            적어낸 걱정은 몽글몽글한 반투명 거품 버블이 됩니다.
+            <span class="font-bold text-emerald-700 underline decoration-emerald-300 decoration-wavy underline-offset-4">버블을 가볍게 터트려</span>
+            머릿속 생각을 정리하고 날려보내세요.
+          </p>
+        </div>
+      </section>
+
+      <!-- 미니게임 바로가기 배너 -->
+      <section class="w-full max-w-2xl mb-7">
+        <button
+          type="button"
+          onclick="switchView('clover')"
+          class="w-full group flex items-center justify-between gap-3 p-4 rounded-3xl bg-gradient-to-r from-white/95 via-emerald-50/80 to-amber-50/80 border border-emerald-200/80 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer text-left"
+        >
+          <div class="flex items-center gap-3">
+            <span class="w-12 h-12 rounded-2xl bg-white shadow-xs border border-emerald-100 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">🍀</span>
+            <div>
+              <span class="inline-block text-[11px] font-extrabold text-emerald-700 bg-emerald-100/80 px-2 py-0.5 rounded-full">NEW 미니게임</span>
+              <h3 class="text-sm md:text-base font-extrabold text-stone-800 mt-0.5">행운 네잎클로버 & 금빛 세잎클로버(행복) 찾기</h3>
+              <p class="text-xs text-stone-500">쉬움·중간·어려움 난이도별로 거품을 하나씩 터뜨려 행운과 행복 위로카드를 만나보세요!</p>
+            </div>
+          </div>
+          <span class="shrink-0 px-3.5 py-2 rounded-2xl bg-emerald-600 text-white text-xs font-bold group-hover:bg-emerald-700 transition-colors">게임하기 →</span>
+        </button>
+      </section>
+
+      <!-- 입력 박스 -->
+      <section class="w-full max-w-2xl bg-white/90 border-2 border-white rounded-[2rem] p-5 md:p-7 shadow-[0_20px_50px_-15px_rgba(14,116,144,0.12)] backdrop-blur-xl mb-8">
+        <div class="flex items-center justify-between gap-2 mb-2.5">
+          <span class="text-xs font-bold text-stone-600">마음버블 키워드를 골라보세요</span>
+        </div>
+
+        <!-- 카테고리 버튼들 -->
+        <div id="category-pills" class="flex flex-wrap items-center gap-1.5 pb-3.5 mb-3"></div>
+
+        <!-- 입력 폼 -->
+        <form id="bubble-form" class="relative flex flex-col sm:flex-row gap-2.5">
+          <input
+            id="worry-input"
+            type="text"
+            maxlength="120"
+            placeholder="지금 머릿속을 맴도는 걱정이나 사랑 고민을 적어보세요..."
+            class="flex-1 px-4 py-3.5 rounded-2xl bg-stone-50/90 border border-stone-200/90 text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 text-sm md:text-base transition-all shadow-inner"
+          />
+          <button
+            type="submit"
+            class="flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-sky-600 hover:from-emerald-700 hover:via-teal-700 hover:to-sky-700 text-white font-bold text-sm md:text-base shadow-md hover:shadow-lg transition-all cursor-pointer"
+          >
+            <span>🫧 버블 띄우기</span>
+          </button>
+        </form>
+
+        <!-- 빠른 예시 문구 -->
+        <div class="mt-4 pt-3.5 border-t border-stone-100">
+          <p class="text-xs text-stone-500 mb-2 font-semibold">✨ 이런 고민이 있나요? 눌러서 바로 채워보세요:</p>
+          <div id="preset-chips" class="flex flex-wrap gap-1.5"></div>
+        </div>
+      </section>
+
+      <!-- 방금 피어난 위로 배너 -->
+      <section id="affirmation-banner" class="hidden w-full max-w-2xl mb-8">
+        <div class="relative p-5 rounded-3xl bg-gradient-to-r from-emerald-50 via-pink-50/40 to-sky-50 border border-emerald-200/80 shadow-sm flex items-start gap-3">
+          <span class="text-2xl select-none mt-0.5">🌸</span>
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-emerald-700">방금 피어난 위로</span>
+            <p id="affirmation-text" class="text-base md:text-lg font-bold text-emerald-950 mt-0.5 leading-snug"></p>
+            <p id="affirmation-subtext" class="text-xs text-stone-600 mt-1"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 하얀 거품 일러스트 버블 정원 -->
+      <section class="w-full max-w-5xl rounded-[2.25rem] bg-gradient-to-b from-sky-100/60 via-white/55 to-emerald-50/50 border border-white/95 p-5 md:p-8 shadow-[0_16px_40px_-15px_rgba(56,189,248,0.16)] backdrop-blur-md">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+          <div id="filter-tabs" class="flex items-center gap-1 max-w-full overflow-x-auto scrollbar-none bg-white/85 p-1.5 rounded-2xl border border-sky-100/80 shadow-sm"></div>
+          <button
+            id="release-all-btn"
+            type="button"
+            class="flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/95 border border-emerald-200 text-emerald-800 text-xs font-bold hover:bg-emerald-50 transition-colors shadow-sm cursor-pointer"
+          >
+            <span>🍃 바람 불어 모두 날려보내기</span>
+          </button>
+        </div>
+
+        <div id="bubbles-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-5 md:gap-6"></div>
+      </section>
+      </div>
+
+      <!-- 🍀 미니게임: 행운 네잎클로버 찾기 뷰 -->
+      <div id="view-clover" class="hidden w-full max-w-3xl">
+        <section class="text-center mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-emerald-100/80 text-emerald-800 text-xs font-bold mb-2">
+            🎮 미니게임 · 행운 네잎클로버 찾기
+          </span>
+          <h2 class="text-2xl md:text-3xl font-extrabold text-stone-800 tracking-tight">
+            거품을 톡톡 터뜨려 네잎클로버와 금빛 세잎클로버를 찾아보세요
+          </h2>
+          <p class="mt-1.5 text-stone-600 text-sm md:text-base">
+            못 찾는 판은 없어요! 클릭할 때마다 찾을 가능성이 점점 높아집니다.
+          </p>
+        </section>
+
+        <section class="bg-white/90 border border-emerald-100 rounded-3xl p-5 md:p-7 shadow-xl backdrop-blur-md">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-stone-100">
+            <div>
+              <span class="text-xs font-bold text-emerald-700">난이도 선택 (버블 개수)</span>
+              <p id="clover-diff-desc" class="text-xs text-stone-500 mt-0.5"></p>
+            </div>
+            <div id="clover-diff-tabs" class="flex items-center gap-1.5 bg-stone-100/90 p-1 rounded-2xl shrink-0"></div>
+          </div>
+
+          <div class="mt-4 p-4 rounded-2xl bg-gradient-to-r from-emerald-50/90 via-teal-50/60 to-amber-50/70 border border-emerald-200/60">
+            <div class="flex flex-wrap items-center justify-between gap-2 text-xs font-bold">
+              <div class="flex flex-wrap items-center gap-2">
+                <span id="status-four-leaf" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full border"></span>
+                <span id="status-golden-three" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full border"></span>
+              </div>
+              <span id="clover-chance-text" class="text-emerald-800"></span>
+            </div>
+            <div class="mt-2.5 w-full h-2 rounded-full bg-white/80 overflow-hidden border border-emerald-100">
+              <div id="clover-chance-bar" class="h-full bg-gradient-to-r from-emerald-400 via-teal-400 to-amber-400 transition-all duration-300 rounded-full" style="width: 10%"></div>
+            </div>
+            <p class="mt-1.5 text-[11px] text-stone-500">
+              버블을 하나씩 터뜨릴 때마다 확률이 올라가며 결국 100% 찾게 됩니다.
+            </p>
+          </div>
+
+          <div id="clover-grid" class="mt-5 grid grid-cols-4 gap-2.5 sm:gap-3 select-none"></div>
+
+          <div class="mt-5 flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-stone-100">
+            <p id="clover-remaining-info" class="text-xs text-stone-500"></p>
+            <button
+              type="button"
+              onclick="initCloverGame(cloverDiff)"
+              class="flex items-center gap-1.5 px-4 py-2 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold hover:bg-emerald-100 transition-colors cursor-pointer"
+            >
+              🔄 새 클로버 숨기기
+            </button>
+          </div>
+        </section>
+
+        <!-- 금빛 세잎클로버 ('행복') 위로카드 -->
+        <section id="golden-clover-card" class="hidden mt-6">
+          <div class="relative overflow-hidden rounded-3xl p-6 md:p-8 bg-gradient-to-br from-amber-50 via-yellow-50/90 to-orange-50/70 border-2 border-amber-300/80 shadow-lg">
+            <div class="flex items-start gap-3.5">
+              <div class="w-14 h-14 shrink-0 rounded-2xl bg-gradient-to-br from-amber-200 to-yellow-100 border border-amber-300 flex items-center justify-center shadow-sm">
+                <span class="text-3xl select-none" style="filter: sepia(1) saturate(4.5) hue-rotate(5deg) brightness(1.08);">☘️</span>
+              </div>
+              <div>
+                <span class="inline-flex items-center gap-1 px-3 py-0.5 rounded-full bg-amber-200/80 text-amber-900 text-xs font-extrabold">
+                  ✨ 황금빛 세잎클로버 위로카드 · 꽃말: 행복
+                </span>
+                <h3 id="golden-card-title" class="mt-2 text-lg md:text-xl font-extrabold text-stone-900 leading-snug break-keep"></h3>
+                <p id="golden-card-sub" class="mt-2 text-sm text-stone-700 leading-relaxed break-keep"></p>
+              </div>
+            </div>
+            <div class="mt-4 pt-3 border-t border-amber-200/60 text-xs font-semibold text-amber-800">
+              💛 세잎클로버가 상징하는 ‘행복’을 당신의 마음에 담아보세요
+            </div>
+          </div>
+        </section>
+
+        <!-- 행운의 네잎클로버 위로카드 -->
+        <section id="four-leaf-card" class="hidden mt-6">
+          <div class="relative overflow-hidden rounded-3xl p-6 md:p-8 bg-gradient-to-br from-emerald-50 via-teal-50/90 to-sky-50/70 border-2 border-emerald-300/80 shadow-lg">
+            <div class="flex items-start gap-3.5">
+              <div class="w-14 h-14 shrink-0 rounded-2xl bg-gradient-to-br from-emerald-200 to-teal-100 border border-emerald-300 flex items-center justify-center shadow-sm">
+                <span class="text-3xl select-none">🍀</span>
+              </div>
+              <div>
+                <span class="inline-flex items-center gap-1 px-3 py-0.5 rounded-full bg-emerald-200/80 text-emerald-900 text-xs font-extrabold">
+                  🍀 행운의 네잎클로버 위로카드 · 꽃말: 행운
+                </span>
+                <h3 id="four-card-title" class="mt-2 text-lg md:text-xl font-extrabold text-stone-900 leading-snug break-keep"></h3>
+                <p id="four-card-sub" class="mt-2 text-sm text-stone-700 leading-relaxed break-keep"></p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <script>
+      const CATEGORIES = [
+        { id: 'work', label: '💼 일 & 학업', short: '💼 일', badge: 'bg-amber-50/90 text-amber-800 border-amber-200/80', glow: 'rgba(253, 230, 138, 0.35)' },
+        { id: 'people', label: '👥 인간관계', short: '👥 관계', badge: 'bg-rose-50/90 text-rose-800 border-rose-200/80', glow: 'rgba(254, 205, 211, 0.35)' },
+        { id: 'love', label: '❤️ 사랑', short: '❤️ 사랑', badge: 'bg-pink-50/90 text-pink-700 border-pink-200/90', glow: 'rgba(249, 168, 212, 0.38)' },
+        { id: 'future', label: '🌫️ 미래 & 불안', short: '🌫️ 미래', badge: 'bg-indigo-50/90 text-indigo-800 border-indigo-200/80', glow: 'rgba(199, 210, 254, 0.35)' },
+        { id: 'burnout', label: '🔋 피로 & 번아웃', short: '🔋 번아웃', badge: 'bg-emerald-50/90 text-emerald-800 border-emerald-200/80', glow: 'rgba(167, 243, 208, 0.35)' },
+        { id: 'thoughts', label: '💭 사소한 생각', short: '💭 생각', badge: 'bg-sky-50/90 text-sky-800 border-sky-200/80', glow: 'rgba(186, 230, 253, 0.35)' },
+      ];
+
+      const PRESETS = [
+        { text: '내일 해야 할 일들이 머릿속에서 안 떠나요', cat: 'work' },
+        { text: '좋아하는 사람의 마음 때문에 내 마음이 자꾸 흔들려요', cat: 'love' },
+        { text: '남들에게 어떻게 보일지 신경 쓰여요', cat: 'people' },
+        { text: '몸도 마음도 쉬지 못하고 방전된 기분이에요', cat: 'burnout' },
+      ];
+
+      const AFFIRMATIONS = {
+        love: [
+          { text: '누군가를 진심으로 아끼고 사랑할 줄 아는 당신의 마음이 참 예뻐요.', sub: '그 따뜻한 마음을 가장 먼저 나 자신에게도 나눠주세요.' },
+          { text: '사랑이 마음 같지 않아 아픈 날에도, 당신의 가치는 조금도 줄어들지 않아요.', sub: '당신은 있는 그대로 충분히 사랑받을 자격이 있는 사람이에요.' },
+          { text: '서툰 마음도, 흔들리는 설렘도 모두 당신이 살아있다는 따뜻한 증거예요.', sub: '내 감정을 다그치지 말고 가만히 토닥여 주세요.' },
+        ],
+        default: [
+          { text: '훌훌 털어버려요. 당신은 이미 충분히 잘하고 있어요.', sub: '지금 이 순간에도 당신은 한 걸음씩 나아가고 있어요.' },
+          { text: '마음의 무게가 1g 가벼워졌어요.', sub: '한 번에 하나씩, 천천히 비워가면 돼요.' },
+          { text: '완벽하지 않아도 아름다워요.', sub: '있는 그대로의 당신의 모습을 사랑해주세요.' },
+        ]
+      };
+
+      const INITIAL_BUBBLES = [
+        { id: 'b-1', text: '내일 마감인 일 때문에 가슴이 답답해요', category: 'work' },
+        { id: 'b-2', text: '좋아하는 사람의 사소한 말 한마디에 온종일 마음이 흔들려요', category: 'love' },
+        { id: 'b-3', text: '다른 사람들의 기대에 부응해야 한다는 부담감', category: 'people' },
+        { id: 'b-4', text: '아무것도 하지 않고 쉬는 게 왠지 불안해요', category: 'burnout' },
+      ];
+
+      let selectedCategory = 'love';
+      let activeFilter = 'all';
+      let bubbles = [...INITIAL_BUBBLES];
+      let globalCount = 1842;
+
+      function playPopSound() {
+        try {
+          const ctx = new (window.AudioContext || window.webkitAudioContext)();
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(520, ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.14);
+          gain.gain.setValueAtTime(0.18, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.18);
+        } catch {}
+      }
+
+      function renderCategories() {
+        const container = document.getElementById('category-pills');
+        container.innerHTML = CATEGORIES.map(cat => {
+          const isSelected = selectedCategory === cat.id;
+          const isLove = cat.id === 'love';
+          const cls = isSelected
+            ? (isLove ? 'bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-sm scale-[1.03]' : 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-sm scale-[1.03]')
+            : (isLove ? 'bg-pink-50/90 text-rose-700 border border-pink-200/80 hover:bg-pink-100/90' : 'bg-stone-100/90 text-stone-600 border border-stone-200/60 hover:bg-emerald-50/80');
+          return `<button type="button" onclick="selectCat('${cat.id}')" class="px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${cls}">${cat.label}</button>`;
+        }).join('');
+      }
+
+      function renderPresets() {
+        const container = document.getElementById('preset-chips');
+        container.innerHTML = PRESETS.map((p, idx) =>
+          `<button type="button" onclick="applyPreset(${idx})" class="text-xs text-stone-600 bg-stone-50 hover:bg-emerald-50 border border-stone-200/70 px-3 py-1.5 rounded-full transition-colors text-left cursor-pointer">"${p.text}"</button>`
+        ).join('');
+      }
+
+      function renderFilters() {
+        const container = document.getElementById('filter-tabs');
+        const allCls = activeFilter === 'all' ? 'bg-emerald-600 text-white shadow-sm' : 'text-stone-600 hover:text-stone-900';
+        let html = `<button type="button" onclick="setFilter('all')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer shrink-0 whitespace-nowrap ${allCls}">전체 (${bubbles.length})</button>`;
+        html += CATEGORIES.map(cat => {
+          const count = bubbles.filter(b => b.category === cat.id).length;
+          const isActive = activeFilter === cat.id;
+          const isLove = cat.id === 'love';
+          const cls = isActive ? (isLove ? 'bg-rose-500 text-white shadow-sm' : 'bg-emerald-600 text-white shadow-sm') : 'text-stone-600 hover:text-stone-900';
+          return `<button type="button" onclick="setFilter('${cat.id}')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer shrink-0 whitespace-nowrap ${cls}">${cat.short} ${count > 0 ? `(${count})` : ''}</button>`;
+        }).join('');
+        container.innerHTML = html;
+      }
+
+      function renderBubbles() {
+        const grid = document.getElementById('bubbles-grid');
+        const visible = activeFilter === 'all' ? bubbles : bubbles.filter(b => b.category === activeFilter);
+
+        if (visible.length === 0) {
+          grid.className = 'w-full';
+          grid.innerHTML = `
+            <div class="w-full py-16 px-4 rounded-3xl border-2 border-dashed border-sky-200/70 text-center flex flex-col items-center justify-center bg-white/60">
+              <div class="w-16 h-16 rounded-full bg-sky-50 flex items-center justify-center text-3xl mb-3 shadow-inner">🫧</div>
+              <h3 class="text-lg font-bold text-stone-800">마음의 하늘이 맑아졌어요!</h3>
+              <p class="mt-1 text-sm text-stone-500 max-w-sm">남아있는 스트레스 버블이 모두 날아갔습니다. 새로운 버블을 띄워보세요.</p>
+              <button onclick="restoreBubbles()" class="mt-4 px-4 py-2 rounded-xl text-xs font-semibold text-emerald-700 bg-white border border-emerald-200 hover:bg-emerald-50 cursor-pointer">🔄 예시 버블 다시 띄우기</button>
+            </div>`;
+          return;
+        }
+
+        grid.className = 'grid grid-cols-1 sm:grid-cols-2 gap-5 md:gap-6';
+        grid.innerHTML = visible.map((b, idx) => {
+          const cat = CATEGORIES.find(c => c.id === b.category) || CATEGORIES[0];
+          return `
+            <div class="relative animate-float-gentle" style="animation-delay: ${(idx * 0.65) % 3}s">
+              <button
+                type="button"
+                onclick="popBubble('${b.id}', event)"
+                class="group relative w-full min-h-[14rem] md:min-h-[15rem] px-10 pt-11 pb-9 md:px-14 text-center transition-all cursor-pointer select-none hover:scale-[1.035] hover:-translate-y-1 active:scale-95"
+              >
+                <span
+                  aria-hidden="true"
+                  class="pointer-events-none absolute inset-x-8 inset-y-6 rounded-full blur-xl opacity-80 transition-opacity duration-300 group-hover:opacity-100"
+                  style="background: radial-gradient(circle, ${cat.glow} 0%, transparent 72%);"
+                ></span>
+                <img
+                  src="public/img/foam-bubble.png"
+                  alt=""
+                  draggable="false"
+                  class="pointer-events-none select-none absolute inset-0 w-full h-full object-fill opacity-80 group-hover:opacity-90 transition-all duration-300 drop-shadow-[0_12px_24px_rgba(148,184,228,0.28)]"
+                />
+                <span class="relative z-10 flex h-full flex-col items-center justify-center gap-2 px-2">
+                  <span class="inline-flex items-center text-[11px] md:text-xs font-bold px-3 py-0.5 rounded-full border shadow-sm backdrop-blur-sm ${cat.badge}">
+                    ${cat.label}
+                  </span>
+                  <span class="text-base md:text-[17px] font-bold text-stone-800 leading-relaxed break-keep drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)]">
+                    ${b.text}
+                  </span>
+                  <span class="mt-0.5 text-[11px] text-stone-500 flex items-center gap-1 font-semibold group-hover:text-emerald-600 transition-colors">
+                    ✨ <span class="group-hover:hidden">톡 눌러 비우기</span><span class="hidden group-hover:inline">날려보내기 🍃</span>
+                  </span>
+                </span>
+              </button>
+            </div>
+          `;
+        }).join('');
+      }
+
+      function selectCat(id) {
+        selectedCategory = id;
+        renderCategories();
+      }
+
+      function applyPreset(idx) {
+        const p = PRESETS[idx];
+        document.getElementById('worry-input').value = p.text;
+        selectedCategory = p.cat;
+        renderCategories();
+      }
+
+      function setFilter(id) {
+        activeFilter = id;
+        renderFilters();
+        renderBubbles();
+      }
+
+      function restoreBubbles() {
+        bubbles = [...INITIAL_BUBBLES];
+        renderFilters();
+        renderBubbles();
+      }
+
+      function showAffirmation(category) {
+        const pool = AFFIRMATIONS[category] || AFFIRMATIONS.default;
+        const item = pool[Math.floor(Math.random() * pool.length)];
+        document.getElementById('affirmation-banner').classList.remove('hidden');
+        document.getElementById('affirmation-text').textContent = `"${item.text}"`;
+        document.getElementById('affirmation-subtext').textContent = item.sub;
+        document.getElementById('mascot-msg').textContent = `"${item.text}" ✨`;
+      }
+
+      function popBubble(id, e) {
+        playPopSound();
+        if (window.confetti && e) {
+          confetti({
+            particleCount: 28,
+            spread: 65,
+            origin: { x: e.clientX / window.innerWidth, y: e.clientY / window.innerHeight }
+          });
+        }
+        const target = bubbles.find(b => b.id === id);
+        bubbles = bubbles.filter(b => b.id !== id);
+        globalCount += 1;
+        document.getElementById('global-count').textContent = globalCount.toLocaleString();
+        if (target) showAffirmation(target.category);
+        renderFilters();
+        renderBubbles();
+      }
+
+      document.getElementById('bubble-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const input = document.getElementById('worry-input');
+        const val = input.value.trim();
+        if (!val) return;
+        bubbles.unshift({
+          id: 'b-' + Date.now(),
+          text: val,
+          category: selectedCategory
+        });
+        input.value = '';
+        playPopSound();
+        document.getElementById('mascot-msg').textContent = '하얀 거품 방울로 띄워졌어요. 톡 눌러서 날려보내세요! 🫧';
+        renderFilters();
+        renderBubbles();
+      });
+
+      document.getElementById('release-all-btn').addEventListener('click', function() {
+        if (bubbles.length === 0) return;
+        playPopSound();
+        if (window.confetti) {
+          confetti({ particleCount: 60, spread: 100, origin: { y: 0.6 } });
+        }
+        globalCount += bubbles.length;
+        document.getElementById('global-count').textContent = globalCount.toLocaleString();
+        bubbles = [];
+        showAffirmation('default');
+        renderFilters();
+        renderBubbles();
+      });
+
+      renderCategories();
+      renderPresets();
+      renderFilters();
+      renderBubbles();
+
+      // ───────── 행운 네잎클로버 찾기 미니게임 스크립트 ─────────
+      const CLOVER_DIFFS = {
+        easy: { label: '🌱 쉬움 (12개)', count: 12, grid: 'grid-cols-4', desc: '가볍게 12개의 거품 방울 속에서 행운과 행복을 찾아보세요.' },
+        normal: { label: '🌿 중간 (24개)', count: 24, grid: 'grid-cols-4 sm:grid-cols-6', desc: '24개의 거품 방울을 하나씩 터뜨리며 설레는 마음으로 찾아보세요.' },
+        hard: { label: '🌳 어려움 (36개)', count: 36, grid: 'grid-cols-6', desc: '36개의 풍성한 거품 방울! 클릭할 때마다 행운이 점점 가까워져요.' }
+      };
+
+      const GOLDEN_QUOTES = [
+        { title: "세잎클로버의 꽃말은 '행복'이에요.", sub: '우리는 가끔 특별한 행운(네잎클로버)을 찾느라 발밑에 가득 피어난 행복(세잎클로버)을 지나치곤 해요. 오늘 당신의 곁에는 이미 금빛처럼 따뜻한 행복이 머물고 있어요.' },
+        { title: "황금빛 세잎클로버가 건네는 말, '지금 이 순간의 행복'", sub: '거창한 행운이 당장 오지 않아도 괜찮아요. 오늘 무사히 숨 쉬고, 작은 거품을 톡 터뜨리며 미소 지을 수 있는 지금이 가장 반짝이는 행복입니다.' },
+        { title: "세잎클로버는 '행복', 네잎클로버는 '행운'을 상징해요.", sub: '행운을 찾아가는 길목에서 마주친 이 금빛 세잎클로버처럼, 당신의 평범한 일상 곳곳에 다정하고 포근한 행복이 늘 함께하기를 바랍니다.' }
+      ];
+
+      const FOUR_QUOTES = [
+        { title: "행운의 네잎클로버를 찾았어요! 꽃말은 '행운'이에요.", sub: '포기하지 않고 하나씩 거품을 두드린 당신의 손끝에 마침내 네잎클로버가 피어났어요. 조만간 당신의 마음에도 기분 좋은 행운이 다정하게 찾아올 거예요.' },
+        { title: '당신에게 찾아온 초록빛 기적, 네잎클로버!', sub: '클릭할 때마다 조금씩 가까워지던 행운이 드디어 당신의 품에 안겼어요. 오늘 하루, 생각지도 못한 따뜻한 일들이 당신을 기다리고 있을 거예요.' }
+      ];
+
+      let cloverDiff = 'easy';
+      let cloverPopped = [];
+      let fourIdx = 0;
+      let goldIdx = 1;
+      let foundFour = false;
+      let foundGold = false;
+
+      function switchView(view) {
+        const isHome = view === 'home';
+        document.getElementById('view-home').classList.toggle('hidden', !isHome);
+        document.getElementById('view-clover').classList.toggle('hidden', isHome);
+        document.getElementById('nav-home-btn').className = isHome
+          ? 'px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-600 text-white shadow-xs cursor-pointer transition-all'
+          : 'px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 cursor-pointer transition-all';
+        document.getElementById('nav-clover-btn').className = !isHome
+          ? 'px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-600 text-white shadow-xs cursor-pointer transition-all'
+          : 'px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 cursor-pointer transition-all';
+      }
+
+      function initCloverGame(diff) {
+        cloverDiff = diff || 'easy';
+        const cfg = CLOVER_DIFFS[cloverDiff];
+        cloverPopped = Array(cfg.count).fill(false);
+        fourIdx = Math.floor(Math.random() * cfg.count);
+        goldIdx = Math.floor(Math.random() * cfg.count);
+        while (goldIdx === fourIdx) {
+          goldIdx = Math.floor(Math.random() * cfg.count);
+        }
+        foundFour = false;
+        foundGold = false;
+        document.getElementById('golden-clover-card').classList.add('hidden');
+        document.getElementById('four-leaf-card').classList.add('hidden');
+        renderCloverGame();
+      }
+
+      function renderCloverGame() {
+        const cfg = CLOVER_DIFFS[cloverDiff];
+        document.getElementById('clover-diff-desc').textContent = cfg.desc;
+        document.getElementById('clover-diff-tabs').innerHTML = Object.keys(CLOVER_DIFFS).map(k => {
+          const active = k === cloverDiff;
+          return `<button type="button" onclick="initCloverGame('${k}')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${active ? 'bg-emerald-600 text-white shadow-xs' : 'text-stone-600 hover:bg-white/60'}">${CLOVER_DIFFS[k].label}</button>`;
+        }).join('');
+
+        const rem = cloverPopped.filter(p => !p).length;
+        const remSpecial = (foundFour ? 0 : 1) + (foundGold ? 0 : 1);
+        const chance = remSpecial === 0 ? 100 : rem <= 0 ? 100 : Math.min(100, Math.round((remSpecial / rem) * 100));
+        const fourChance = foundFour ? 100 : rem <= 0 ? 100 : Math.min(100, Math.round((1 / rem) * 100));
+
+        const sFour = document.getElementById('status-four-leaf');
+        sFour.className = `inline-flex items-center gap-1 px-2.5 py-1 rounded-full border ${foundFour ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white/90 text-stone-700 border-emerald-200'}`;
+        sFour.textContent = `🍀 행운 네잎클로버: ${foundFour ? '발견 완료!' : '숨어있음 (1개)'}`;
+
+        const sGold = document.getElementById('status-golden-three');
+        sGold.className = `inline-flex items-center gap-1 px-2.5 py-1 rounded-full border ${foundGold ? 'bg-amber-500 text-white border-amber-500' : 'bg-white/90 text-stone-700 border-amber-200'}`;
+        sGold.textContent = `✨ 금빛 세잎클로버(행복): ${foundGold ? '발견 완료!' : '숨어있음 (1개)'}`;
+
+        document.getElementById('clover-chance-text').textContent =
+          (foundFour && foundGold) ? '🎉 두 클로버를 모두 찾았어요!' : `다음 클릭에 찾을 확률: ${chance}% (네잎 ${fourChance}%)`;
+        document.getElementById('clover-chance-bar').style.width = `${chance}%`;
+        document.getElementById('clover-remaining-info').innerHTML =
+          `남은 거품 버블 <strong>${rem}개</strong> · 한 게임에 <strong class="text-emerald-700">🍀 네잎클로버 1개</strong>와 <strong class="text-amber-600">✨ 금빛 세잎클로버 1개</strong>가 숨어 있어요.`;
+
+        const grid = document.getElementById('clover-grid');
+        grid.className = `mt-5 grid ${cfg.grid} gap-2.5 sm:gap-3 select-none`;
+        grid.innerHTML = cloverPopped.map((isPopped, i) => {
+          const isFour = i === fourIdx;
+          const isGold = i === goldIdx;
+          if (!isPopped) {
+            return `
+              <button type="button" onclick="clickCloverCell(${i}, event)" class="group relative aspect-square rounded-2xl flex flex-col items-center justify-center bg-gradient-to-br from-sky-50/90 via-white/95 to-emerald-50/90 border border-sky-200/80 shadow-sm hover:scale-105 hover:shadow-md active:scale-95 transition-all cursor-pointer">
+                <img src="public/img/foam-bubble.png" alt="" draggable="false" class="w-4/5 h-4/5 object-contain opacity-85 group-hover:scale-110 transition-transform pointer-events-none select-none" />
+                <span class="absolute bottom-1.5 text-[10px] font-bold text-stone-400 group-hover:text-emerald-600">톡!</span>
+              </button>`;
+          }
+          if (isFour) {
+            return `
+              <div class="aspect-square rounded-2xl flex flex-col items-center justify-center bg-gradient-to-br from-emerald-100 via-teal-50 to-emerald-200/90 border-2 border-emerald-400 shadow-lg scale-105">
+                <span class="text-2xl sm:text-3xl">🍀</span>
+                <span class="mt-0.5 text-[10px] font-extrabold text-emerald-800">행운!</span>
+              </div>`;
+          }
+          if (isGold) {
+            return `
+              <div class="aspect-square rounded-2xl flex flex-col items-center justify-center bg-gradient-to-br from-amber-100 via-yellow-50 to-amber-200/90 border-2 border-amber-400 shadow-lg scale-105">
+                <span class="text-2xl sm:text-3xl" style="filter: sepia(1) saturate(4.5) hue-rotate(5deg) brightness(1.08);">☘️</span>
+                <span class="mt-0.5 text-[10px] font-extrabold text-amber-800">금빛 행복!</span>
+              </div>`;
+          }
+          return `
+            <div class="aspect-square rounded-2xl flex flex-col items-center justify-center bg-stone-100/70 border border-stone-200/50 opacity-85">
+              <span class="text-lg sm:text-xl opacity-75">☘️</span>
+              <span class="text-[9px] text-stone-400">세잎</span>
+            </div>`;
+        }).join('');
+      }
+
+      function clickCloverCell(idx, e) {
+        if (cloverPopped[idx]) return;
+        cloverPopped[idx] = true;
+        playPopSound();
+        if (idx === fourIdx) {
+          foundFour = true;
+          if (window.confetti && e) {
+            confetti({ particleCount: 55, spread: 80, origin: { x: e.clientX / window.innerWidth, y: e.clientY / window.innerHeight } });
+          }
+          const q = FOUR_QUOTES[Math.floor(Math.random() * FOUR_QUOTES.length)];
+          document.getElementById('four-card-title').textContent = `"${q.title}"`;
+          document.getElementById('four-card-sub').textContent = q.sub;
+          document.getElementById('four-leaf-card').classList.remove('hidden');
+        } else if (idx === goldIdx) {
+          foundGold = true;
+          if (window.confetti && e) {
+            confetti({ particleCount: 40, spread: 70, origin: { x: e.clientX / window.innerWidth, y: e.clientY / window.innerHeight } });
+          }
+          const q = GOLDEN_QUOTES[Math.floor(Math.random() * GOLDEN_QUOTES.length)];
+          document.getElementById('golden-card-title').textContent = `"${q.title}"`;
+          document.getElementById('golden-card-sub').textContent = q.sub;
+          document.getElementById('golden-clover-card').classList.remove('hidden');
+        }
+        renderCloverGame();
+      }
+
+      initCloverGame('easy');
+    </script>
+  </body>
+</html>
