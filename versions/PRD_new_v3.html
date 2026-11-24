@@ -1,4 +1,4 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PRD — 마음버블 블로그 v1.3</title>
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PRD — 마음버블 블로그 v1.4</title>
 <style>
 @page{size:A4;margin:14mm 14mm}
 body{font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR','Noto Sans CJK KR',sans-serif;color:#1f2a26;max-width:860px;margin:24px auto;padding:0 20px;line-height:1.6;font-size:11pt;word-break:keep-all}
@@ -26,7 +26,7 @@ img{max-width:100%}
 </thead>
 <tbody>
 <tr>
-<td>v1.3 (이력은 <code class="notranslate">docs: PRD v0.x~v1.x</code> 커밋, HTML은 <code class="notranslate">versions/PRD_new_v3.html</code>)</td>
+<td>v1.4 (이력은 <code class="notranslate">docs: PRD v0.x~v1.x</code> 커밋, HTML은 <code class="notranslate">versions/PRD_new_v3.html</code>)</td>
 <td>2026-11-24</td>
 <td>quiet-wings (기획·개발 1인)</td>
 <td><a href="./TEST_REPORT.md">테스트 보고서</a> · <a href="./logs/DECISION_LOG.md">의사결정 로그</a> · <a href="./SUBMISSION_CHECKLIST.md">제출 체크리스트</a></td>
@@ -97,7 +97,6 @@ img{max-width:100%}
 </tbody>
 </table></markdown-accessiblity-table>
 <h2>4. 솔루션과 기능 요구사항</h2>
-<p><strong>흐름</strong>: 질문 → 입력 검증 → 위기·의료 질문 검사 → 블로그 문단 검색 → Gemini가 검색된 문단만으로 답변 → 답변 + 출처 글 + 마음버블 기능 링크</p>
 <markdown-accessiblity-table><table role="table">
 <thead>
 <tr>
@@ -152,7 +151,7 @@ img{max-width:100%}
 </tr>
 </tbody>
 </table></markdown-accessiblity-table>
-<p><strong>범위 밖</strong>: 로그인, 대화 기록 저장, 진단·상담 대체, 마음버블 앱 본체 수정.</p>
+<p><strong>범위 밖</strong>: 로그인, 대화 기록 저장, 진단·상담 대체.</p>
 <h2>5. 출시·운영·마케팅과 리스크</h2>
 <ul>
 <li><strong>출시</strong>: push → Actions(테스트·빌드) → Firebase Hosting. Cloud Functions는 유료라 AI Logic(Gemini, 무료)을 브라우저에서 호출 + App Check(D-007).</li>
@@ -182,7 +181,7 @@ img{max-width:100%}
 </tr>
 <tr>
 <td>개인정보</td>
-<td>질문 원문 미저장, 갭 로그는 전화번호·이메일 마스킹</td>
+<td>질문 원문 미저장, 갭 로그 마스킹, 처리방침 공개</td>
 </tr>
 <tr>
 <td>병원 연계 규제</td>
@@ -190,8 +189,35 @@ img{max-width:100%}
 </tr>
 </tbody>
 </table></markdown-accessiblity-table>
-<h2>6. 개선 방향과 v1.2~1.3 보완 (11-24)</h2>
-<ul>
-<li><strong>디자인 단순화(D-013·014, 1차 적용)</strong>: 마음버블 첫 화면을 "적고 → 터뜨리고 → 위로받기" 중심으로. 헤더 버튼 7개 → 4개(호흡·위로 보관함·테마·⚙️설정) — 소리·언어·누적 수는 <strong>설정 하나로</strong>, 자주 쓰는 테마는 따로 유지. 기록·분류는 <strong>접기</strong>, 배경 거품 6→3개·별 절반·큰 색 번짐 제거·폭죽 절반. 배경음은 첫 터치에 자동 시작.</li>
-<li><strong>배포·연결</strong>: 공유한 사람만 보는 비공개 미리보기 채널(30일, D-011), 끊긴 마음버블 링크를 테스트 배포본 + UTM으로 교체(D-012).</li>
-</ul></body></html>
+<h2>6. 추가 개선 기능 (v1.2~1.4, 11-24)</h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>영역</th>
+<th>개선 내용</th>
+<th>결정</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>배포</td>
+<td>공유한 사람만 보는 비공개 미리보기 채널(30일), 저장소는 공개 유지</td>
+<td>D-011</td>
+</tr>
+<tr>
+<td>유입</td>
+<td>끊긴 마음버블 링크 → 테스트 배포본 연결 + UTM 유입 측정</td>
+<td>D-012</td>
+</tr>
+<tr>
+<td>디자인 단순화</td>
+<td>마음버블 헤더 버튼 7→4개(호흡·위로 보관함·테마·⚙️설정), 소리·언어·누적 수는 설정 안으로, 기록·분류 접기, 배경 거품·별·폭죽 절반, 배경음은 첫 터치에 자동 재생</td>
+<td>D-013·014</td>
+</tr>
+<tr>
+<td>개인정보·보안</td>
+<td>블로그·마음버블에 <strong>개인정보 처리방침</strong> 페이지·버튼, <strong>보안 헤더(CSP 등)</strong> — 기능별 필요한 주소만 허용, 360·390px 모바일 점검 위반 0건</td>
+<td>D-015</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table></body></html>
