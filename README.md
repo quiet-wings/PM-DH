@@ -5,8 +5,10 @@
 
 | 제출물 | 위치 |
 |---|---|
-| 배포된 블로그 | `https://<Firebase 프로젝트 ID>.web.app` (배포 후 이 줄에 주소 기입) |
-| PRD 기획서 (v0.1 → v1.0) | [`docs/PRD.md`](docs/PRD.md) |
+| 배포된 블로그 | Firebase Hosting **비공개 미리보기 링크**(30일) — 링크는 제출란으로만 공유 ([D-011](docs/logs/DECISION_LOG.md)) |
+| PRD 기획서 (v0.1 → v1.4) | [`docs/PRD.md`](docs/PRD.md) · 버전별 HTML [`versions/`](versions) |
+| 제출 체크리스트 | [`docs/SUBMISSION_CHECKLIST.md`](docs/SUBMISSION_CHECKLIST.md) |
+| 개인정보 처리방침 | 사이트의 `/privacy` 페이지 (모든 페이지 하단·챗봇 안내문에 링크) |
 | 테스트 보고서 | [`docs/TEST_REPORT.md`](docs/TEST_REPORT.md) · 스크린샷 [`docs/screenshots/`](docs/screenshots) |
 | 에이전트용 지침 | [`AGENTS.md`](AGENTS.md) |
 | 의사결정 로그 | [`docs/logs/DECISION_LOG.md`](docs/logs/DECISION_LOG.md) |
@@ -28,10 +30,15 @@
 
 ## 로컬에서 실행
 ```bash
-npm test        # 단위테스트 59개
+npm test        # 단위테스트 61개
 npm run dev     # 빌드 후 http://localhost:5173 (Firebase 설정이 비어 있으면 데모 모드)
 ```
 외부 npm 패키지가 없어 `npm install`이 필요 없습니다 (Node 22 이상).
+
+## 보안·개인정보
+- **보안 헤더**(`firebase.json`): CSP로 이 사이트·Firebase SDK(gstatic)·Gemini·Firestore 주소만 허용, 클릭재킹 차단(`frame-ancestors 'none'`), HSTS, COOP, Permissions-Policy. 테스트가 CSP 필수 항목과 인라인 스크립트 금지를 검사해요.
+- **개인정보**: 회원가입·추적 쿠키 없음. 질문 원문 미저장, 답 못 한 질문만 전화번호·이메일·주민번호를 가려 기록(최대 90일). 자세한 내용은 `/privacy`.
+- 360·390px 모바일과 보안 헤더 적용 상태에서 전 페이지·챗봇을 점검했어요 ([테스트 보고서 4장](docs/TEST_REPORT.md)).
 
 ## 수정한 내용 저장하기 (커밋 + GitHub 올리기)
 ```bash
@@ -50,7 +57,7 @@ Windows에서는 [Git for Windows](https://git-scm.com)가 필요해요 (GitHub 
 6. GitHub 저장소 → Settings → Secrets and variables → Actions
    - Secret `FIREBASE_SERVICE_ACCOUNT` = JSON 파일 내용 전체
    - Variable `FIREBASE_PROJECT_ID` = 프로젝트 ID
-7. `main`에 push → Actions가 테스트·빌드 후 `https://<프로젝트ID>.web.app`에 배포
+7. `main`에 push → Actions가 테스트·빌드 후 **미리보기 채널 `share`(30일)**에 배포. 공개 주소로 바꾸려면 `deploy.yml`의 `channelId`를 `live`로
 8. (권장) App Check에서 reCAPTCHA Enterprise 키 발급 → `RECAPTCHA_SITE_KEY`에 입력
 
 ## 새 글 쓰기
