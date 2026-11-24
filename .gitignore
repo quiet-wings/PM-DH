@@ -14,3 +14,6 @@ node_modules/
 .DS_Store
 .vscode/
 .idea/
+
+# 단일 파일 미리보기 결과물
+preview/
