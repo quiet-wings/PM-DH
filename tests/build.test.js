@@ -74,3 +74,14 @@ test('모든 페이지가 같은 앱 아이콘(클로버 요정)과 매니페스
     assert.ok(!html.includes('font-size=%2290%22>🍀'), `${f}: 예전 이모지 아이콘`);
   }
 });
+
+test('배포마다 자산 주소가 바뀐다: HTML과 JS 상대 import에 같은 ?v=버전', () => {
+  const r = build();
+  const html = readFileSync(pub('index.html'), 'utf8');
+  assert.match(html, new RegExp(`/assets/chat\\.js\\?v=${r.version}`));
+  const chat = readFileSync(pub('assets', 'chat.js'), 'utf8');
+  assert.match(chat, new RegExp(`from '\\./firebase-config\\.js\\?v=${r.version}'`));
+  assert.match(chat, new RegExp(`from '\\./lib/clover\\.js\\?v=${r.version}'`));
+  const clover = readFileSync(pub('assets', 'lib', 'clover.js'), 'utf8');
+  assert.match(clover, new RegExp(`from '\\./safety\\.js\\?v=${r.version}'`));
+});

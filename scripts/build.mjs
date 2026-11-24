@@ -4,12 +4,14 @@ import { mkdirSync, writeFileSync, cpSync, rmSync, readdirSync, readFileSync, ex
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadPosts, chunkPost } from '../lib/posts.js';
-import { renderIndex, renderPost, render404, renderPrivacy } from '../lib/templates.js';
+import { renderIndex, renderPost, render404, renderPrivacy, setAssetVersion } from '../lib/templates.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const out = join(root, 'public');
 
 export function build() {
+  const version = process.env.GITHUB_SHA ? process.env.GITHUB_SHA.slice(0, 8) : Date.now().toString(36);
+  setAssetVersion(version);
   const posts = loadPosts(join(root, 'posts'));
   rmSync(out, { recursive: true, force: true });
   mkdirSync(join(out, 'posts'), { recursive: true });
@@ -38,7 +40,8 @@ export function build() {
   for (const f of browserLibs) cpSync(join(root, 'lib', f), join(out, 'assets', 'lib', f));
 
   injectFirebaseConfig();
-  return { posts: posts.length, chunks: chunks.length };
+  versionImports(join(out, 'assets'), version);
+  return { posts: posts.length, chunks: chunks.length, version };
 }
 
 /**
@@ -58,6 +61,18 @@ export function injectFirebaseConfig(env = process.env) {
   }
   if (existsSync(local)) { cpSync(local, target); return 'local'; }
   return 'sample';
+}
+
+/** 자산 JS 안의 상대 import에도 ?v=버전을 붙여, 연결된 모듈까지 새 주소로 받게 한다 (성공·실패 #18) */
+export function versionImports(dir, version) {
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const p = join(dir, entry.name);
+    if (entry.isDirectory()) { versionImports(p, version); continue; }
+    if (!entry.name.endsWith('.js')) continue;
+    const src = readFileSync(p, 'utf8');
+    const next = src.replace(/(from\s+['"])(\.{1,2}\/[^'"?]+\.js)(['"])/g, `$1$2?v=${version}$3`);
+    if (next !== src) writeFileSync(p, next);
+  }
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
