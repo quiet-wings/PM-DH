@@ -6,7 +6,7 @@
 | 테스트 일자 | 2026-11-24 |
 | 대상 | `main` 브랜치 (PRD v1.0 기준 기능) |
 | 환경 | Node 22 `node:test` · Chromium(Playwright) 390×844 모바일 / 1280×800 데스크톱 · 로컬 서버 `npm run dev` |
-| 결과 | **단위테스트 59개 중 59개 통과 (100%)** · 유저플로우 11개 화면 정상 · 콘솔 오류 0건 |
+| 결과 | **단위테스트 59/59 통과 (100%)** · 유저플로우 11개 화면 정상 · 콘솔 오류 0건 → P0·P1 기능 모두 통과, **출시 가능** (4장은 배포 직후 확인 후 v1.1로 갱신) |
 
 ## 1. 기능별 단위테스트 (`npm test`)
 
@@ -26,16 +26,15 @@ PRD 4장 지표와의 연결: 위기 대응 100%(안전 13/13), 범위 밖 정�
 
 | ① 홈 | ② 글 하단 기능 버튼 | ③ 챗봇 열기 | ④ 답변 + 출처(데모) |
 |---|---|---|---|
-| <img src="screenshots/01-home-mobile.png" width="160"> | <img src="screenshots/03-post-cta.png" width="160"> | <img src="screenshots/04-chat-open.png" width="160"> | <img src="screenshots/05-answer-demo.png" width="160"> |
+| <img src="screenshots/01-home-mobile.png" width="104"> | <img src="screenshots/03-post-cta.png" width="104"> | <img src="screenshots/04-chat-open.png" width="104"> | <img src="screenshots/05-answer-demo.png" width="104"> |
 | 글 목록 + 질문 버튼 | 글 → 마음버블 유입 | 추천 질문 칩 4개 | 근거 글 2개 + 기능 링크 |
 
 | ⑤ 범위 밖 질문 | ⑥ 진단·약 질문 | ⑦ 위기 표현 | ⑧ AI 답변(모의) |
 |---|---|---|---|
-| <img src="screenshots/06-out-of-scope.png" width="160"> | <img src="screenshots/07-medical.png" width="160"> | <img src="screenshots/08-crisis.png" width="160"> | <img src="screenshots/09-answer-ai-mock.png" width="160"> |
+| <img src="screenshots/06-out-of-scope.png" width="104"> | <img src="screenshots/07-medical.png" width="104"> | <img src="screenshots/08-crisis.png" width="104"> | <img src="screenshots/09-answer-ai-mock.png" width="104"> |
 | 지어내지 않음 + 갭 기록 | 의료진 상담 권유 | 109·1577-0199·119 + 전화 버튼 | 근거 번호 [1][2] 표시 |
 
-그 밖에 `02-post-top.png`(글 상세), `10-404.png`(없는 주소), `11-desktop-chat.png`(데스크톱 패널)도 정상.
-⑧은 실제 Gemini 대신 **Firebase SDK를 모의 응답으로 바꿔** 화면 표시만 검증한 것이다. 실제 AI 응답은 배포 후 4장의 항목으로 확인한다.
+그 밖에 글 상세·404·데스크톱 화면도 정상(`docs/screenshots/`). ⑧은 실제 Gemini 대신 **Firebase SDK를 모의 응답으로 바꿔** 화면 표시만 검증한 것이다. 실제 AI 응답은 배포 후 4장의 항목으로 확인한다.
 
 ## 3. 발견한 결함과 조치 (자세한 내용: `logs/SUCCESS_FAILURE_LOG.md`)
 
@@ -47,15 +46,7 @@ PRD 4장 지표와의 연결: 위기 대응 100%(안전 13/13), 범위 밖 정�
 | 4 | 데모 답변에서 목록이 한 줄로 붙음 | 화면 캡처 | 목록 기호 보존 | ✅ |
 | 5 | 390px에서 헤더 두 줄로 깨짐, 버튼 문구 어색 | 화면 캡처 | 좁은 화면 메뉴 정리, 문구 수정 | ✅ |
 
-## 4. 미검증 항목과 배포 후 확인 계획
+## 4. 미검증 항목 (배포 직후 확인)
 
-| 항목 | 이유 | 확인 방법 |
-|---|---|---|
-| 실제 Gemini 답변 품질·속도(평균 5초) | 작업 환경에서 외부 API 접속 불가 | 배포 후 질문 20개로 출처 표기·응답 시간 측정 |
-| Firestore `content_gaps` 쓰기 규칙 | 에뮬레이터 미설치 | 콘솔 Rules Playground로 create 허용 / read 거부 확인 |
-| App Check 차단 | 사이트 키 발급 전 | 다른 도메인에서 호출 시 거부되는지 확인 |
-| 웹폰트(Gowun Dodum) | 작업 환경 오프라인 → 스크린샷은 대체 글꼴 | 배포 주소에서 확인 |
-
-## 5. 결론
-
-P0 기능(블로그, 근거 기반 답변, 모르면 모른다고, 위기 대응, 입력 검증·남용 방지)과 P1 기능(기능 추천, 갭 로그, 데모 모드)이 모두 테스트를 통과했다. **출시 가능**으로 판단하며, 4장 항목은 배포 직후 확인해 이 문서를 v1.1로 갱신한다.
+- **실제 Gemini 답변·속도**(작업 환경 외부 API 차단): 질문 20개로 출처 표기·평균 5초 확인
+- **Firestore 규칙·App Check·웹폰트**: Rules Playground, 타 도메인 호출 차단, 배포 화면 확인
