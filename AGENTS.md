@@ -2,6 +2,16 @@
 
 이 저장소에서 작업하는 AI 에이전트(Claude Code, Codex, Cursor 등)와 사람 기여자가 따라야 할 규칙입니다.
 작업 전에 이 파일과 `docs/PRD.md`를 먼저 읽으세요.
+(Claude Code는 루트 `CLAUDE.md`가 이 파일을 import해서 자동으로 읽습니다. 지침은 이 파일에만 쓰세요.)
+
+## 0. 명령어 (Node 22 이상, `npm install` 불필요)
+| 명령 | 하는 일 |
+|---|---|
+| `npm test` | `node:test` 단위테스트 전체 실행 — 커밋 전에 반드시 통과 |
+| `npm run build` | `posts/*.md` → `public/` HTML + 검색 색인 생성 |
+| `npm run dev` | 빌드 후 http://localhost:5173 미리보기 (Firebase 설정이 비어 있으면 데모 모드) |
+| `node scripts/preview.mjs` | 블로그 전체를 HTML 한 파일(`preview/`)로 묶은 오프라인 미리보기 |
+| `npm run save -- "종류: 내용"` | 메시지 검사 → pull → 테스트 → 커밋 → push (실패 시 커밋 안 함, 연습은 끝에 `--dry`) |
 
 ## 1. 프로젝트 한 줄 요약
 마음버블 블로그: 정적 사이트(`posts/*.md` → `public/`, Firebase Hosting) + 블로그 글만 근거로 답하는 Q&A 챗봇 「클로버에게 물어보기」(브라우저에서 Firebase AI Logic으로 Gemini 호출).
@@ -23,11 +33,16 @@
 | `site/` | 정적 자산 (CSS, 챗봇 위젯 `chat.js`, 사이트 설정 `config.js`, `firebase-config.js`) |
 | `scripts/build.mjs` | 원고 → HTML + 검색 색인 생성 |
 | `scripts/dev.mjs` | 로컬 미리보기 서버 |
+| `scripts/preview.mjs` | 오프라인 단일 HTML 미리보기 생성 (결과물 `preview/`는 커밋하지 않음) |
+| `scripts/save.mjs` | `npm run save` — 테스트 통과 시에만 커밋·push |
 | `lib/` | 공용 로직 (마크다운, 문단 나누기, 검색, 안전 규칙, 프롬프트, 검증, 챗봇 흐름 `clover.js`) |
 | `firebase.json`, `firestore.rules` | Hosting 설정, 콘텐츠 갭 로그 보안 규칙 |
 | `.github/workflows/deploy.yml` | push 시 테스트 → 빌드 → Firebase 배포 |
 | `tests/` | `node:test` 단위테스트 |
 | `docs/` | PRD, 테스트 보고서, 로그, 스크린샷 |
+| `versions/` | 블로그 HTML·PRD HTML·README의 버전별 스냅샷 (`*_new_vN`). 기존 버전은 고치지 말고 `vN+1` 파일을 새로 추가 |
+| `AGENTS.md` / `CLAUDE.md` | 에이전트 지침 (내용은 AGENTS.md에만, CLAUDE.md는 import 한 줄) |
+| `README.md` | 사람을 위한 소개·실행·배포 안내 (에이전트 규칙은 넣지 않음) |
 
 ## 4. 작업 순서
 1. `npm run build` → `npm test` → `npm run dev` 로 로컬 확인 (Firebase 설정이 비어 있으면 데모 모드로 동작)
