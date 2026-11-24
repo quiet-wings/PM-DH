@@ -32,6 +32,7 @@ test('AI 정상 응답 → 답변 + 출처 글 + 마음버블 기능 링크', as
   assert.ok(res.sources.length >= 1 && res.sources[0].url.startsWith('/posts/'));
   assert.equal(res.feature.key, 'breathing');
   assert.match(res.feature.url, /^https:\/\//);
+  assert.match(res.feature.url, /utm_source=maeum-blog&utm_medium=chatbot/);
   assert.match(seen.prompt, /\[근거\]/);
 });
 
