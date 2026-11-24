@@ -13,7 +13,7 @@ export const FEATURES = {
   breathing: { label: '마음버블 호흡 쉼터 열기', emoji: '🌬️', path: '/' },
   game: { label: '마음버블 미니게임 하러 가기', emoji: '🎮', path: '/game' },
   typing: { label: '마음버블에서 긍정 글귀 따라 쓰기', emoji: '⌨️', path: '/typing' },
-  books: { label: '마음버블서점 둘러보기', emoji: '📚', path: '/books' },
+  books: { label: '마음버블서점에서 책 추천받기', emoji: '📚', path: '/bookstore/' },
 };
 
 // 블로그에서 마음버블로 간 유입을 셀 수 있게 UTM 표시를 붙여요 (PRD 지표: 기능 링크 클릭률)

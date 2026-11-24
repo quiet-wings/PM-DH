@@ -1,0 +1,1245 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>마음버블서점 - 당신의 마음을 비우고 채우다</title>
+<meta name="description" content="마음을 비우고, 원하는 만큼 채워가세요. 지금 마음을 한 문장으로 적거나 감정 버튼을 고르면, 그 마음에 맞는 책 세 권을 골라 드려요.">
+<link rel="canonical" href="https://maeumbubble-test.pages.dev/bookstore/">
+<meta name="theme-color" content="#cfe7f6">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="마음버블서점">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:title" content="마음버블서점 - 당신의 마음을 비우고 채우다">
+<meta property="og:description" content="마음을 비우고, 원하는 만큼 채워가세요. 지금 마음에 맞는 책 세 권을 골라 드려요.">
+<meta property="og:url" content="https://maeumbubble-test.pages.dev/bookstore/">
+<meta property="og:image" content="https://maeumbubble-test.pages.dev/bookstore/og-image.png?v=3">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="마음버블서점 - 당신의 마음을 비우고 채우다. 푸른 강물 위 하얀 구름">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="마음버블서점 - 당신의 마음을 비우고 채우다">
+<meta name="twitter:description" content="마음을 비우고, 원하는 만큼 채워가세요. 지금 마음에 맞는 책 세 권을 골라 드려요.">
+<meta name="twitter:image" content="https://maeumbubble-test.pages.dev/bookstore/og-image.png?v=3">
+<meta name="claude:viewport-fit-sides" content="cover">
+<script>/* 저장해 둔 밝은/다크 모드를 화면이 그려지기 전에 적용해서 깜빡임을 막아요 */try{var mbT=localStorage.getItem("mb-theme");if(mbT==="light"||mbT==="dark")document.documentElement.dataset.theme=mbT;var mbZ=parseFloat(localStorage.getItem("mb-zoom"));if(mbZ>=1&&mbZ<=1.5)document.documentElement.style.setProperty("--zoom",mbZ)}catch(e){}</script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Gaegu:wght@400;700&family=Jua&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* Layout: one calm column — bubble header, two soft tabs, one input card, latest result only */
+:root{
+  --bg:#fdf8f5; --surface:#ffffff; --ink:#3a302d; --muted:#8a7d78; --line:#f0e4de;
+  --accent:#d9718f; --accent-ink:#ffffff; --accent-soft:#fbe6ec; --ai:#8c78c9; --ai-soft:#efeafa;
+  --warn-soft:#fdf1e3;
+  --display:"Gowun Dodum","Noto Sans KR",system-ui,sans-serif;
+  --sans:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --r:18px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#1e1a1a; --surface:#292323; --ink:#f2e9e6; --muted:#b4a6a1; --line:#3b3231;
+  --accent:#ee9ab2; --accent-ink:#2a1a1f; --accent-soft:#45282f; --ai:#b9a8ec; --ai-soft:#2f2a40;
+  --warn-soft:#3a2f22; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1e1a1a; --surface:#292323; --ink:#f2e9e6; --muted:#b4a6a1; --line:#3b3231;
+  --accent:#ee9ab2; --accent-ink:#2a1a1f; --accent-soft:#45282f; --ai:#b9a8ec; --ai-soft:#2f2a40;
+  --warn-soft:#3a2f22; color-scheme:dark}
+/* 버전2: 푸른 윤슬 강물 배경 (canvas#river에 직접 그려요) */
+:root{--river:#cfe7f6;--on-river:#33414d}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--river:#0e2438;--on-river:#dbe7f2}}
+:root[data-theme="dark"]{--river:#0e2438;--on-river:#dbe7f2}
+#river{position:fixed;inset:0;width:100%;height:100%;z-index:-1;display:block;pointer-events:none}
+main > section > .chips .lbl, main > section > .result > .mood, .pick-l, main .privacy{color:var(--on-river)}
+*{box-sizing:border-box}
+body{background:var(--river);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.65;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:36px 56px}
+main{max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:22px;zoom:var(--zoom,1)}
+/* 버전2: 오른쪽 위 도구줄(언어 + BGM) */
+.topbar{align-self:stretch;display:flex;gap:8px;align-items:center;margin-bottom:-8px}
+.topbar-gap{flex:1}
+.bgm.home{margin-left:0;text-decoration:none}
+/* 버전2: 왼쪽 위 밝은/다크 모드 버튼 (밝을 땐 달, 어두울 땐 해 아이콘) */
+.theme{display:inline-grid;place-items:center;width:36px;height:36px;border:1px solid var(--line);background:var(--surface);color:var(--hero-sub,#0a2e70);border-radius:50%;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:0}
+.theme:hover{border-color:var(--accent)}
+.theme .i-sun{display:none;color:#f2c14e}
+.theme[data-mode="dark"] .i-sun{display:block}
+.theme[data-mode="dark"] .i-moon{display:none}
+.lang{display:flex;gap:2px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:3px}
+.bgm{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);background:var(--surface);color:var(--muted);font:inherit;font-size:.8rem;font-weight:600;padding:6px 12px;border-radius:999px;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+.bgm:hover{border-color:var(--accent)}
+.bgm[aria-pressed=true]{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
+.lang button{border:0;background:transparent;color:var(--muted);font:inherit;font-size:.8rem;padding:3px 12px;border-radius:999px;cursor:pointer}
+.lang button[aria-pressed=true]{background:var(--accent-soft);color:var(--accent);font-weight:500}
+header{text-align:center;display:flex;flex-direction:column;gap:4px;align-items:center}
+.bubble{font-size:2.2rem;line-height:1}
+h1{font-family:var(--display);font-size:1.7rem;font-weight:400;margin:0}
+header p{margin:0;color:var(--muted)}
+/* 버전2: 로고 썸네일 + 흰 반투명 제목 카드 */
+:root{--hero-bg:rgba(255,255,255,.8);--hero-h:#061b42;--hero-sub:#0a2e70dd;--hero-desc:#444}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--hero-bg:rgba(41,35,35,.85);--hero-h:#e3ebff;--hero-sub:#b3c6f0;--hero-desc:#c9bdb8}}
+:root[data-theme="dark"]{--hero-bg:rgba(41,35,35,.85);--hero-h:#e3ebff;--hero-sub:#b3c6f0;--hero-desc:#c9bdb8}
+/* 버전2: 상자 없이 물 위에 반투명하게 떠 있는 큰 구름 */
+.thumb{display:block;width:340px;max-width:82%;height:auto;margin:-6px auto -18px;opacity:.9;filter:drop-shadow(0 22px 18px rgba(40,90,140,.22));animation:cloud-float 8s ease-in-out infinite;position:relative;z-index:1}
+@keyframes cloud-float{0%,100%{transform:translate(0,0)}50%{transform:translate(6px,-9px)}}
+@media (prefers-reduced-motion:reduce){.thumb{animation:none}}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .thumb{opacity:.82;filter:drop-shadow(0 22px 18px rgba(0,0,0,.35))}}
+:root[data-theme="dark"] .thumb{opacity:.82;filter:drop-shadow(0 22px 18px rgba(0,0,0,.35))}
+.header-area{align-self:stretch;text-align:left;background:var(--hero-bg);border-radius:12px;padding:1.8rem 2rem;box-shadow:0 4px 8px rgba(0,0,0,.05)}
+.header-area h1{font-family:var(--sans);font-weight:700;font-size:2.4rem;letter-spacing:.1em;margin:0 0 .4rem;color:var(--hero-h);line-height:1.3}
+.header-area p.subtitle{font-weight:500;font-size:1.2rem;letter-spacing:.08em;margin:0 0 .8rem;color:var(--hero-sub)}
+.header-area p.desc{font-weight:400;font-size:1rem;letter-spacing:.05em;margin:0;color:var(--hero-desc)}
+@media (max-width:520px){.header-area{padding:1.4rem 1.3rem}.header-area h1{font-size:2rem}}
+/* 버전2: 오른쪽 아래 언어 표시 */
+.lang-label{position:fixed;bottom:16px;right:16px;background:rgba(255,255,255,.7);color:#555;font-size:12px;padding:4px 8px;border-radius:6px;font-weight:500;user-select:none;box-shadow:0 0 8px rgba(0,0,0,.05);z-index:10}
+/* 버전2: 왼쪽 아래 글자 크기(확대 비율) 버튼 - 눈이 잘 안 보이는 분들을 위해. 손가락으로 누르기 쉽게 44px 이상 */
+.zoom-ctl{position:fixed;left:max(12px,env(safe-area-inset-left,0px));bottom:max(12px,env(safe-area-inset-bottom,0px));z-index:10;display:flex;align-items:center;gap:2px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:3px;box-shadow:0 2px 10px rgba(0,0,0,.14)}
+.zoom-ctl button{min-width:44px;height:44px;border:0;background:transparent;color:var(--ink);font:inherit;font-weight:700;line-height:1;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:1px}
+.zoom-ctl button:hover:not(:disabled){background:var(--accent-soft);color:var(--accent)}
+.zoom-ctl button:disabled{opacity:.35;cursor:default}
+#zoom-out{font-size:.9rem}
+#zoom-in{font-size:1.25rem}
+#zoom-reset{font-size:.8rem;font-weight:600;color:var(--muted);min-width:54px}
+body{padding-bottom:88px;word-break:keep-all;overflow-wrap:anywhere}
+/* 크게 볼 때 위쪽 버튼이 찌그러지지 않게: 글자는 한 줄, 공간이 모자라면 다음 줄로 */
+.topbar{flex-wrap:wrap;row-gap:8px}
+.lang button,.bgm{white-space:nowrap}
+.bgm{margin-left:auto}
+/* 크게 볼 때 감정 버튼이 좁아지면 2줄 배치(그림 옆에 글자)로 */
+/* (자바스크립트가 실제 폭을 재서 .narrow를 붙여요) */
+.pick.narrow .pick-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.pick.narrow .feel{flex-direction:row;justify-content:center;gap:6px;padding:10px 6px;font-size:.95rem}
+
+[role=tablist]{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px}
+[role=tab]{appearance:none;border:0;background:transparent;color:var(--muted);font:inherit;font-weight:500;padding:8px 10px;border-radius:999px;cursor:pointer}
+[role=tab][aria-selected=true]#t-rule{background:var(--accent-soft);color:var(--accent)}
+[role=tab][aria-selected=true]#t-ai{background:var(--ai-soft);color:var(--ai)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+[role=tabpanel]{display:flex;flex-direction:column;gap:14px}
+[role=tabpanel][hidden]{display:none}
+
+form{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:10px}
+form label{font-family:var(--display);font-size:1.05rem}
+textarea{width:100%;min-height:76px;resize:vertical;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);font:inherit;padding:10px 12px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.count{font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums}
+form button{border:0;border-radius:999px;padding:9px 20px;font:inherit;font-weight:500;cursor:pointer;color:var(--accent-ink);background:var(--accent)}
+#p-ai form button{background:var(--ai)}
+form button:disabled{opacity:.5;cursor:default}
+.hint{margin:0;font-size:.82rem;color:var(--muted)}
+
+.chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.chips .lbl{font-size:.82rem;color:var(--muted);margin-right:2px}
+.chip{border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:.86rem;padding:4px 12px;border-radius:999px;cursor:pointer}
+.chip:hover{border-color:var(--accent)}
+.pick{display:flex;flex-direction:column;gap:8px}
+.pick-l{margin:0;font-weight:500}
+.pick-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+@media (max-width:520px){.pick-grid{gap:6px}.feel{font-size:.76rem;padding:8px 2px;word-break:keep-all;text-align:center;line-height:1.3}}
+.feel{display:flex;flex-direction:column;align-items:center;gap:2px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:.86rem;padding:10px 4px;border-radius:14px;cursor:pointer}
+.feel .fe{font-size:1.4rem;line-height:1.2}
+.feel:hover{border-color:var(--accent)}
+.feel[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);font-weight:600}
+
+.result{display:flex;flex-direction:column;gap:12px}
+.result:empty{display:none}
+.mood{font-family:var(--display);font-size:1.1rem;margin:0}
+.mood b{font-weight:400;color:var(--accent)}
+#p-ai .mood b{color:var(--ai)}
+.read{margin:0;background:var(--ai-soft);border-radius:12px;padding:10px 14px}
+.soft{margin:0;background:var(--warn-soft);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.soft p{margin:0}
+.thinking{margin:0;color:var(--ai);font-family:var(--display);font-size:1.05rem}
+.books{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
+.books li{display:flex;gap:14px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+.books .em{font-size:1.6rem;line-height:1.3;width:44px;height:44px;display:grid;place-items:center;border-radius:50%;background:var(--accent-soft);flex-shrink:0}
+#p-ai .books .em{background:var(--ai-soft)}
+.books .cover{width:64px;height:auto;flex-shrink:0;border-radius:4px;background:var(--line);box-shadow:0 1px 4px rgba(0,0,0,.18)}
+.books .bk{min-width:0}
+.books .t{font-weight:700}
+.books .a{color:var(--muted);font-size:.85rem}
+.books .w{margin-top:4px;font-size:.93rem}
+.fb{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:10px}
+.fb h2{font-family:var(--display);font-size:1.05rem;font-weight:400;margin:0}
+.fb .stars{display:flex;gap:2px;border:0;margin:0;padding:0}
+.fb .stars legend{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.fb .stars label{cursor:pointer;font-size:1.5rem;line-height:1;color:var(--line);padding:2px}
+.fb .stars input{position:absolute;opacity:0;width:1px;height:1px}
+.fb .stars label.on{color:var(--accent)}
+.fb .stars input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.fb textarea{min-height:60px}
+.fb button{border:0;border-radius:999px;padding:8px 18px;font:inherit;font-weight:500;cursor:pointer;color:var(--accent-ink);background:var(--accent)}
+.fb button:disabled{opacity:.5;cursor:default}
+.fb .msg{font-size:.86rem;color:var(--muted);margin:0}
+.privacy{margin:0;text-align:center;font-size:.78rem;color:var(--muted)}
+/* 버전2: '쪽지 도착' 알림 + 인용 카드 쪽지 */
+:root{--paper:#fffaf0;--paper-line:rgba(10,46,112,.07);--paper-ink:#2f3a46}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#2e2928;--paper-line:rgba(255,255,255,.05);--paper-ink:#efe6e2}}
+:root[data-theme="dark"]{--paper:#2e2928;--paper-line:rgba(255,255,255,.05);--paper-ink:#efe6e2}
+.note-toast{position:fixed;top:calc(64px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);z-index:30;display:flex;align-items:center;gap:2px;background:var(--surface);border:1px solid var(--accent);border-radius:999px;padding:4px 4px 4px 6px;box-shadow:0 8px 24px rgba(20,50,90,.22);zoom:var(--zoom,1);max-width:calc((100vw - 24px) / var(--zoom,1))}
+.note-toast[hidden]{display:none}
+.nt-open{display:flex;align-items:center;gap:10px;border:0;background:transparent;color:var(--ink);font:inherit;cursor:pointer;padding:6px 10px 6px 6px;border-radius:999px;text-align:left}
+.nt-ico{font-size:1.6rem;line-height:1}
+.nt-txt{display:flex;flex-direction:column;line-height:1.25}
+.nt-txt b{font-family:var(--pen);font-size:1.3rem;color:var(--accent)}
+.nt-txt small{font-size:.78rem;color:var(--muted)}
+.nt-x{width:36px;height:36px;border:0;background:transparent;color:var(--muted);font-size:1.3rem;border-radius:50%;cursor:pointer}
+.nt-x:hover,.nt-open:hover{background:var(--accent-soft)}
+@media (prefers-reduced-motion:no-preference){
+  .note-toast:not([hidden]){animation:nt-drop .5s cubic-bezier(.2,1.3,.4,1) both}
+  .note-toast:not([hidden]) .nt-ico{animation:nt-wiggle 1.4s ease-in-out .5s 2}
+  @keyframes nt-drop{from{opacity:0;transform:translate(-50%,-24px)}}
+  @keyframes nt-wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-12deg)}75%{transform:rotate(12deg)}}
+}
+dialog.note{width:min(560px,calc(100vw - 24px));max-height:88vh;border:0;border-radius:22px;padding:0;background:var(--surface);color:var(--ink);box-shadow:0 20px 60px rgba(10,30,60,.35);overflow:hidden}
+/* 창 크기는 화면에 맞추고, 안의 글자·카드만 확대해요 */
+.note-hd,.note-body{zoom:var(--zoom,1)}
+dialog.note[open]{display:flex;flex-direction:column}
+dialog.note::backdrop{background:rgba(10,30,55,.38);backdrop-filter:blur(2px)}
+.note-hd{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 6px 22px}
+.note-hd h2{margin:0;font-family:var(--pen);font-weight:700;font-size:1.6rem;color:var(--hero-h)}
+.note-close{width:40px;height:40px;border:0;background:transparent;color:var(--muted);font-size:1.5rem;border-radius:50%;cursor:pointer}
+.note-close:hover{background:var(--accent-soft)}
+.note-body{overflow-y:auto;padding:4px 22px 20px}
+.note-lead{margin:0 0 12px;font-family:var(--pen);font-size:1.25rem;line-height:1.4}
+.note-lead b{color:var(--accent);font-weight:700}
+.qcards{display:grid;grid-auto-flow:column;grid-auto-columns:86%;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 12px;scrollbar-width:thin}
+.qcard{scroll-snap-align:center;display:flex;flex-direction:column;justify-content:space-between;gap:16px;min-height:250px;padding:24px 20px 18px;border-radius:16px;border:1px solid var(--line);color:var(--paper-ink);
+  background:repeating-linear-gradient(180deg,transparent 0 31px,var(--paper-line) 31px 32px),var(--paper);box-shadow:0 4px 14px rgba(20,50,90,.10)}
+.qcard .q{margin:0;font-family:var(--pen);font-size:1.4rem;line-height:1.6;white-space:pre-line;letter-spacing:-.02em}
+.qcard .who{margin:0;font-size:.85rem;color:var(--muted)}
+.qcard .who b{color:var(--ink);font-weight:600}
+.qbtn{align-self:flex-start;border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);font:inherit;font-size:.86rem;font-weight:600;padding:8px 14px;border-radius:999px;cursor:pointer;min-height:40px}
+.qbtn:hover{background:var(--accent);color:var(--accent-ink)}
+.qdots{display:flex;justify-content:center;gap:6px;margin:2px 0 8px}
+.qdots span{width:7px;height:7px;border-radius:50%;background:var(--line)}
+.qdots span.on{background:var(--accent)}
+.note-hint{margin:0;text-align:center;font-size:.78rem;color:var(--muted)}
+.au-back{border:0;background:transparent;color:var(--accent);font:inherit;font-weight:600;padding:6px 0;cursor:pointer}
+.au-name{margin:6px 0 2px;font-family:var(--pen);font-weight:700;font-size:1.7rem;line-height:1.2}
+.au-meta{margin:0 0 8px;font-size:.82rem;color:var(--muted)}
+.au-intro{margin:0 0 14px;font-size:.92rem}
+.works{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.works li{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--bg)}
+.works .wt{margin:0;font-weight:600}
+.works .wy{font-size:.78rem;color:var(--muted);font-weight:400;margin-left:4px}
+.works .wd{margin:2px 0 0;font-size:.85rem;color:var(--muted)}
+.works .badge{display:inline-block;margin-top:6px;font-size:.72rem;font-weight:600;color:var(--accent);background:var(--accent-soft);padding:2px 8px;border-radius:999px}
+.works a{flex:none;font-size:.82rem;font-weight:600;color:var(--accent);text-decoration:none;border:1px solid var(--line);background:var(--surface);padding:8px 10px;border-radius:999px;white-space:nowrap}
+.works a:hover{border-color:var(--accent)}
+.note-foot{margin:14px 0 0;font-size:.74rem;color:var(--muted);text-align:center}
+@media (max-width:520px){.note-hd{padding:12px 10px 4px 16px}.note-body{padding:4px 14px 16px}.qcards{grid-auto-columns:92%}.qcard{padding:18px 14px 14px;min-height:220px}.works li{flex-direction:column;align-items:flex-start}}
+@media (prefers-reduced-motion:no-preference){.result>*{animation:rise .3s ease both}@keyframes rise{from{opacity:0;transform:translateY(6px)}}}
+/* 버전2: 편지처럼 말을 거는 문장은 손글씨(Gaegu), 제목은 굵고 동글한 Jua + 유리처럼 투명한 그림자 효과.
+   버튼·입력칸·작은 안내·책 제목은 읽기 쉽게 기존 글꼴 그대로. 둘 다 Google Fonts(SIL OFL)라 무료로 써도 돼요. */
+:root{--pen:"Gaegu","Gowun Dodum","Noto Sans KR",cursive;
+  --title-top:rgba(96,150,222,.62);--title-bottom:rgba(6,27,66,.92);--title-edge:rgba(255,255,255,.75);--title-shadow:rgba(20,60,110,.28)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--title-top:rgba(255,255,255,.96);--title-bottom:rgba(165,195,240,.72);--title-edge:rgba(255,255,255,.28);--title-shadow:rgba(0,0,0,.5)}}
+:root[data-theme="dark"]{--title-top:rgba(255,255,255,.96);--title-bottom:rgba(165,195,240,.72);--title-edge:rgba(255,255,255,.28);--title-shadow:rgba(0,0,0,.5)}
+.header-area h1{font-family:"Jua",var(--sans);font-weight:400;font-size:3.3rem;letter-spacing:.06em;line-height:1.2;
+  background:linear-gradient(180deg,var(--title-top) 0%,var(--title-bottom) 78%);-webkit-background-clip:text;background-clip:text;color:transparent;
+  -webkit-text-stroke:1.2px var(--title-edge);
+  filter:drop-shadow(0 2px 1px var(--title-shadow)) drop-shadow(0 9px 12px var(--title-shadow));
+  padding-bottom:.06em}
+.header-area p.subtitle{font-family:var(--pen);font-weight:700;font-size:1.6rem;letter-spacing:-.01em;line-height:1.35}
+.header-area p.desc{font-family:var(--pen);font-size:1.3rem;letter-spacing:-.02em;line-height:1.5}
+.pick-l,form label,.fb h2{font-family:var(--pen);font-weight:700;font-size:1.32rem;line-height:1.35;letter-spacing:-.03em}
+.mood{font-family:var(--pen);font-weight:700;font-size:1.5rem;line-height:1.4;letter-spacing:-.03em}
+.read,.thinking{font-family:var(--pen);font-size:1.25rem;line-height:1.5;letter-spacing:-.02em}
+.books .w{font-family:var(--pen);font-size:1.15rem;line-height:1.5;margin-top:6px;letter-spacing:-.02em}
+@media (max-width:520px){.header-area h1{font-size:2.7rem}.header-area p.subtitle{font-size:1.45rem}}
+</style>
+</head>
+<body>
+<canvas id="river" aria-hidden="true"></canvas>
+
+<main>
+  <div class="topbar">
+    <a class="bgm home" href="/" aria-label="마음버블 홈으로"><span aria-hidden="true">←</span><span>마음버블</span></a>
+    <button type="button" class="theme" id="theme-toggle" aria-label="다크 모드로 바꾸기" title="다크 모드로 바꾸기">
+      <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z" fill="currentColor"/></svg>
+      <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></g></svg>
+    </button>
+    <span class="topbar-gap"></span>
+    <div class="lang" role="group" aria-label="언어 / Language">
+      <button type="button" data-lang="ko" aria-pressed="true">한국어</button>
+      <button type="button" data-lang="en" aria-pressed="false">English</button>
+    </div>
+    <button type="button" class="bgm" id="bgm-toggle" aria-pressed="false"><span aria-hidden="true">🎵</span><span data-bgm>BGM 켜기</span></button>
+  </div>
+
+  <header>
+    <img class="thumb" src="cloud.svg" alt="마음버블서점 구름 로고" width="340" height="204">
+    <div class="header-area">
+      <h1 data-i18n="title">마음버블서점</h1>
+      <p class="subtitle" data-i18n="sub">당신의 마음을 비우고 채우다</p>
+      <p class="desc" data-i18n="desc">마음을 비우고, 원하는 만큼 채워가세요.</p>
+    </div>
+  </header>
+
+  <nav role="tablist" aria-label="찾는 방식">
+    <button role="tab" id="t-rule" aria-controls="p-rule" aria-selected="true" data-i18n="tabRule">마음 단어로 찾기</button>
+    <button role="tab" id="t-ai" aria-controls="p-ai" aria-selected="false" tabindex="-1" data-i18n="tabAi">AI에게 물어보기</button>
+  </nav>
+
+  <section role="tabpanel" id="p-rule" aria-labelledby="t-rule">
+    <div class="pick" role="group" aria-labelledby="pick-l">
+      <p class="pick-l" id="pick-l" data-i18n="pick">지금 마음을 골라 보세요</p>
+      <div class="pick-grid" id="pick-rule"></div>
+    </div>
+    <form id="f-rule">
+      <label for="q-rule" data-i18n="ask">오늘 마음을 한 문장으로 적어 주세요</label>
+      <textarea id="q-rule" maxlength="300" placeholder="예: 발표 앞두고 불안해" data-i18n-ph="phRule"></textarea>
+      <div class="row"><span class="count" id="c-rule">0/300</span><button type="submit" data-i18n="submit">책 추천받기</button></div>
+      <p class="hint" data-i18n="hintRule" hidden></p>
+    </form>
+    <div class="chips" id="chips-rule"></div>
+    <div class="result" id="out-rule" aria-live="polite"></div>
+  </section>
+
+  <section role="tabpanel" id="p-ai" aria-labelledby="t-ai" hidden>
+    <form id="f-ai">
+      <label for="q-ai" data-i18n="ask">오늘 마음을 한 문장으로 적어 주세요</label>
+      <textarea id="q-ai" maxlength="300" placeholder="예: 불안한 건 아닌데 마음이 허해" data-i18n-ph="phAi"></textarea>
+      <div class="row"><span class="count" id="c-ai">0/300</span><button type="submit" id="b-ai" data-i18n="submit">책 추천받기</button></div>
+      <p class="hint" data-i18n="hintAi">감정 단어가 없어도 괜찮아요. 처음 한 번은 Claude 사용 허용 창이 떠요.</p>
+    </form>
+    <div class="chips" id="chips-ai"></div>
+    <div class="result" id="out-ai" aria-live="polite"></div>
+  </section>
+
+  <form class="fb" id="fb" hidden>
+    <h2 data-i18n="fbTitle">추천이 마음에 닿았나요?</h2>
+    <fieldset class="stars" id="fb-stars">
+      <legend data-i18n="fbRating">별점</legend>
+    </fieldset>
+    <textarea id="fb-msg" maxlength="1000" data-i18n-ph="fbPh" placeholder="하고 싶은 말을 남겨 주세요 (선택)"></textarea>
+    <div class="row"><p class="msg" id="fb-out" aria-live="polite"></p><button type="submit" data-i18n="fbSend">보내기</button></div>
+  </form>
+  <p class="privacy" id="privacy" data-i18n="privacy" hidden>AI에게 물어본 문장은 추천에만 쓰고 저장하지 않아요. 별점과 한마디만 서비스를 다듬기 위해 이름 없이 30일 보관해요.</p>
+</main>
+
+<div class="lang-label" data-i18n="langLabel">한국어 (ko)</div>
+<div class="zoom-ctl" id="zoom-ctl" role="group" aria-label="글자 크기">
+  <button type="button" id="zoom-out" aria-label="글자 작게" title="글자 작게">가<span aria-hidden="true">−</span></button>
+  <button type="button" id="zoom-reset" aria-label="기본 크기로" title="기본 크기로"><span id="zoom-val">100%</span></button>
+  <button type="button" id="zoom-in" aria-label="글자 크게" title="글자 크게">가<span aria-hidden="true">+</span></button>
+</div>
+<!-- 버전2: 고민을 적을 때마다 오는 '쪽지 도착' 알림과 인용 카드 쪽지 -->
+<div class="note-toast" id="note-toast" role="status" aria-live="polite" hidden>
+  <button type="button" class="nt-open" id="note-open"><span class="nt-ico" aria-hidden="true">💌</span><span class="nt-txt"><b data-i18n="noteArrived">쪽지 도착</b><small data-i18n="noteSub">작가들이 보낸 문장 3장</small></span></button>
+  <button type="button" class="nt-x" id="note-dismiss" aria-label="닫기">×</button>
+</div>
+<dialog class="note" id="note" aria-labelledby="note-h">
+  <div class="note-hd"><h2 id="note-h"><span aria-hidden="true">📮 </span><span data-i18n="noteArrived">쪽지 도착</span></h2><button type="button" class="note-close" id="note-close" aria-label="닫기">×</button></div>
+  <div class="note-body" id="note-body"></div>
+</dialog>
+<!-- 직접 합성한 저작권 없는 BGM (32초 반복) -->
+<audio id="bgm-audio" src="calm-bgm.wav" loop preload="auto"></audio>
+
+<script src="mb-cloud.js"></script>
+<script src="quotes.js"></script>
+<script>
+"use strict";
+(() => {
+  // prototype/emotion-cards/recommend.ts
+  var BOOKS = [
+    // 💼 일 & 학업
+    { id: "atomic-habits", title: "아주 작은 습관의 힘", author: "제임스 클리어", category: "work", mood: "해야 할 일이 너무 커 보여서 시작이 안 될 때", note: "거창한 결심 대신 1%짜리 작은 변화부터. 부담을 잘게 쪼개는 법을 알려줘요.", keywords: ["막막함", "미루기", "게으름", "의욕", "자책", "부담"], emoji: "🧱" },
+    { id: "deep-work", title: "딥 워크", author: "칼 뉴포트", category: "work", mood: "하루 종일 바빴는데 한 게 없는 것 같을 때", note: "알림과 산만함에서 벗어나 정말 중요한 일에 집중하는 시간을 되찾게 해줘요.", keywords: ["산만함", "집중", "조급함", "허무", "바쁨"], emoji: "🎯" },
+    { id: "hamatomyeon", title: "하마터면 열심히 살 뻔했다", author: "하완", category: "work", mood: "열심히 사는데도 늘 뒤처지는 기분일 때", note: '"꼭 그렇게까지 해야 하나?" 하고 한숨 돌리게 해주는 유쾌한 에세이예요.', keywords: ["뒤처짐", "비교", "압박", "조급함", "지침", "회의감"], emoji: "🛋️" },
+    { id: "joy-and-sorrow-of-work", title: "일의 기쁨과 슬픔", author: "장류진", category: "work", mood: "회사에서 내 자리가 작게만 느껴질 때", note: '직장인의 하루를 담담하고 재치 있게 그린 소설집. "나만 이런 게 아니구나" 하고 웃게 돼요.', keywords: ["회사", "직장", "억울함", "현타", "씁쓸함", "공감"], emoji: "🏢" },
+    { id: "essentialism", title: "에센셜리즘", author: "그렉 맥커운", category: "work", mood: "부탁을 거절 못 해서 할 일이 산더미일 때", note: "모든 걸 다 하려는 대신 정말 중요한 몇 가지만 고르는 연습. 마음의 짐이 가벼워져요.", keywords: ["과부하", "거절", "벅참", "압박", "정리", "부담"], emoji: "✂️" },
+    { id: "grit", title: "그릿", author: "앤절라 더크워스", category: "work", mood: "재능이 없는 것 같아 포기하고 싶을 때", note: "타고난 재능보다 꾸준함이 더 멀리 간다는 이야기. 시험·공부에 지친 날 다시 힘을 줘요.", keywords: ["포기", "좌절", "시험", "열등감", "실패", "자신감"], emoji: "🌱" },
+    // 👥 인간관계
+    { id: "courage-to-be-disliked", title: "미움받을 용기", author: "기시미 이치로 · 고가 후미타케", category: "people", mood: "남들의 시선과 기대가 너무 신경 쓰일 때", note: "타인의 과제와 나의 과제를 나누는 법. 관계의 무게를 덜어줘요.", keywords: ["눈치", "시선", "인정욕구", "미움", "부담", "자존감"], emoji: "🕊️" },
+    { id: "i-decided-to-live-as-me", title: "나는 나로 살기로 했다", author: "김수현", category: "people", mood: "누구에게도 맞추느라 내가 사라진 것 같을 때", note: "남의 기준이 아닌 나의 기준으로 살아도 괜찮다고 다정하게 말해줘요.", keywords: ["자존감", "눈치", "비교", "상처", "위축", "자기혐오"], emoji: "🌷" },
+    { id: "you-are-right", title: "당신이 옳다", author: "정혜신", category: "people", mood: "누군가에게 온전히 이해받고 싶을 때", note: "충고보다 공감이 사람을 살린다는 이야기. 나와 주변을 대하는 법이 달라져요.", keywords: ["서운함", "공감", "이해", "상처", "외로움", "위로"], emoji: "🤝" },
+    { id: "almond", title: "아몬드", author: "손원평", category: "people", mood: "마음을 표현하는 게 서툴러 외로울 때", note: "감정을 잘 느끼지 못하는 소년이 사람을 통해 변해가는 따뜻한 소설이에요.", keywords: ["외로움", "고립", "표현", "서툼", "공허"], emoji: "🌰" },
+    { id: "reading-relationships", title: "관계를 읽는 시간", author: "문요한", category: "people", mood: "가까운 사람 때문에 자꾸 지치고 상처받을 때", note: '나와 너 사이의 적당한 거리, "바운더리"를 세우는 법을 차분하게 알려줘요.', keywords: ["갈등", "상처", "배신", "거리두기", "서운함", "지침", "가족"], emoji: "🪢" },
+    { id: "need-to-be-lonely", title: "가끔은 격하게 외로워야 한다", author: "김정운", category: "people", mood: "사람들 속에 있어도 혼자인 것 같을 때", note: "외로움을 피할 대상이 아니라 나를 만나는 시간으로 바꿔 보자는 유쾌한 제안이에요.", keywords: ["외로움", "혼자", "쓸쓸함", "고독", "소외감"], emoji: "🏝️" },
+    // ❤️ 사랑
+    { id: "essays-in-love", title: "왜 나는 너를 사랑하는가", author: "알랭 드 보통", category: "love", mood: "사랑의 시작과 흔들림, 이별까지 마음이 복잡할 때", note: "사랑에 빠지고 아파하는 우리의 마음을 가장 섬세하고 지적인 언어로 어루만져 줘요.", keywords: ["설렘", "혼란", "이별", "집착", "연애"], emoji: "❤️" },
+    { id: "art-of-loving", title: "사랑의 기술", author: "에리히 프롬", category: "love", mood: "나를 잃지 않으면서 건강하게 사랑하고 싶을 때", note: "사랑은 감정에만 머무는 게 아니라 나를 먼저 돌보는 단단한 힘에서 시작된다고 말해줘요.", keywords: ["집착", "불안", "의존", "연애", "자존감"], emoji: "💌" },
+    { id: "moments-of-love", title: "모든 순간이 너였다", author: "하태완", category: "love", mood: "지친 연애나 짝사랑 끝에 따뜻한 위로가 필요할 때", note: "반짝이던 순간과 아팠던 마음을 다정하게 토닥여 주는 에세이예요.", keywords: ["짝사랑", "그리움", "이별", "위로", "설렘"], emoji: "🌸" },
+    { id: "course-of-love", title: "낭만적 연애와 그 후의 일상", author: "알랭 드 보통", category: "love", mood: "오래된 관계가 예전 같지 않아 서운할 때", note: "설렘이 지나간 뒤의 사랑을 솔직하게 들여다봐요. 다툼도 사랑의 일부라고 알려줘요.", keywords: ["권태", "서운함", "다툼", "결혼", "연애", "실망"], emoji: "🏡" },
+    { id: "life-of-love", title: "사랑의 생애", author: "이승우", category: "love", mood: "사랑 앞에서 내 마음을 나도 모르겠을 때", note: "사랑이 사람에게 들어와 머물다 가는 과정을 깊이 있게 그린 소설. 복잡한 마음이 정리돼요.", keywords: ["혼란", "짝사랑", "질투", "설렘", "그리움"], emoji: "🫧" },
+    { id: "unbearable-lightness", title: "참을 수 없는 존재의 가벼움", author: "밀란 쿤데라", category: "love", mood: '이별 뒤에 "그때 다른 선택을 했다면" 하고 맴돌 때', note: "사랑과 선택, 무거움과 가벼움을 묻는 소설. 아픈 마음을 조금 멀리서 바라보게 해줘요.", keywords: ["이별", "후회", "미련", "선택", "그리움"], emoji: "🎈" },
+    // 🌫️ 미래 & 불안
+    { id: "tteokbokki", title: "죽고 싶지만 떡볶이는 먹고 싶어", author: "백세희", category: "future", mood: "이유 없이 불안하고 마음이 가라앉을 때", note: '가벼운 우울과 불안을 솔직하게 들여다본 상담 기록. "나만 그런 게 아니구나" 싶어져요.', keywords: ["우울", "불안", "무기력", "공허", "자기혐오"], emoji: "🍢" },
+    { id: "namiya", title: "나미야 잡화점의 기적", author: "히가시노 게이고", category: "future", mood: "어떤 선택을 해야 할지 막막할 때", note: "고민 편지에 답장을 해주는 잡화점 이야기. 내 고민에도 답이 올 것 같은 기분이 들어요.", keywords: ["막막함", "선택", "진로", "고민", "희망"], emoji: "✉️" },
+    { id: "fish-dont-exist", title: "물고기는 존재하지 않는다", author: "룰루 밀러", category: "future", mood: "세상이 정한 정답에서 벗어난 것 같아 두려울 때", note: "혼돈 속에서도 의미를 찾아가는 과정. 불확실함을 조금 덜 무섭게 만들어줘요.", keywords: ["두려움", "혼란", "불확실", "좌절", "의미"], emoji: "🐟" },
+    { id: "midnight-library", title: "미드나잇 라이브러리", author: "매트 헤이그", category: "future", mood: '"그때 다른 길을 갔다면" 하는 후회가 클 때', note: "살아보지 못한 삶들을 둘러보는 도서관 이야기. 지금 내 삶을 다시 보듬게 돼요.", keywords: ["후회", "우울", "절망", "선택", "진로", "희망"], emoji: "📖" },
+    { id: "status-anxiety", title: "불안", author: "알랭 드 보통", category: "future", mood: "남들보다 뒤처질까 봐 늘 초조할 때", note: "왜 우리는 지위와 성공 때문에 불안해할까? 그 뿌리를 알면 불안이 조금 작아져요.", keywords: ["불안", "초조", "비교", "뒤처짐", "성공", "조급함"], emoji: "🌀" },
+    { id: "mans-search-for-meaning", title: "죽음의 수용소에서", author: "빅터 프랭클", category: "future", mood: "살아가는 이유를 잘 모르겠을 때", note: "가장 어두운 곳에서도 의미를 찾은 기록. 버티는 힘이 어디서 오는지 알려줘요.", keywords: ["절망", "허무", "의미", "고통", "희망", "공허"], emoji: "🕯️" },
+    // 🔋 피로 & 번아웃
+    { id: "stop-and-see", title: "멈추면, 비로소 보이는 것들", author: "혜민", category: "burnout", mood: "멈추면 안 될 것 같아서 계속 달리고 있을 때", note: "짧은 글들이라 지친 날에도 한 페이지씩 읽기 좋아요. 쉬어도 된다는 허락 같은 책.", keywords: ["지침", "피곤", "조급함", "휴식", "위로"], emoji: "🍃" },
+    { id: "dallergut", title: "달러구트 꿈 백화점", author: "이미예", category: "burnout", mood: "잠들기 전까지 머리가 쉬지 않을 때", note: "꿈을 사고파는 상점이라는 포근한 상상. 잠들기 전에 읽기 딱 좋은 소설이에요.", keywords: ["불면", "피곤", "잠", "휴식", "포근함"], emoji: "🌙" },
+    { id: "convenience-store", title: "불편한 편의점", author: "김호연", category: "burnout", mood: "사람의 온기가 그리운 지친 날", note: "동네 편의점에 모인 사람들이 서로를 조금씩 회복시키는 이야기. 읽고 나면 마음이 데워져요.", keywords: ["지침", "외로움", "회복", "따뜻함", "위로"], emoji: "🏪" },
+    { id: "hyunam-dong-bookshop", title: "어서 오세요, 휴남동 서점입니다", author: "황보름", category: "burnout", mood: "다 내려놓고 잠시 숨고 싶을 때", note: "번아웃 끝에 작은 서점을 연 사람과 손님들의 이야기. 천천히 살아도 괜찮다고 말해줘요.", keywords: ["번아웃", "무기력", "퇴사", "지침", "휴식", "회복"], emoji: "☕" },
+    { id: "forest-capitalist", title: "숲속의 자본주의자", author: "박혜윤", category: "burnout", mood: "더 많이 벌고 더 바쁘게 사는 게 지겨울 때", note: '시골에서 최소한으로 일하며 사는 가족의 이야기. "덜 해도 된다"는 감각을 되찾아줘요.', keywords: ["번아웃", "회의감", "지침", "권태", "쉼"], emoji: "🌲" },
+    { id: "walden", title: "월든", author: "헨리 데이비드 소로", category: "burnout", mood: "복잡한 일상에서 잠시 벗어나고 싶을 때", note: "호숫가 오두막에서 보낸 단순한 삶의 기록. 한 장씩 천천히 읽으면 숨이 고르게 쉬어져요.", keywords: ["번아웃", "피로", "복잡함", "도피", "쉼", "자연"], emoji: "🛶" },
+    // 💭 사소한 생각
+    { id: "temperature-of-language", title: "언어의 온도", author: "이기주", category: "thoughts", mood: "누군가의 말 한마디가 계속 마음에 남을 때", note: "말과 글에 담긴 온도를 다룬 에세이. 내가 쓰는 말도, 들은 말도 다시 보게 돼요.", keywords: ["상처", "말", "서운함", "곱씹음", "예민함"], emoji: "💬" },
+    { id: "reasons-for-travel", title: "여행의 이유", author: "김영하", category: "thoughts", mood: "생각이 꼬리를 물어 어디론가 떠나고 싶을 때", note: "여행을 통해 나를 돌아보는 산문. 복잡한 머릿속에 창문을 하나 열어주는 느낌이에요.", keywords: ["답답함", "권태", "도피", "복잡함", "떠나고싶음"], emoji: "🧳" },
+    { id: "little-prince", title: "어린 왕자", author: "앙투안 드 생텍쥐페리", category: "thoughts", mood: "어른이 되면서 잊어버린 것이 그리울 때", note: "다시 읽을 때마다 다르게 다가오는 책. 정말 중요한 게 무엇인지 조용히 묻게 돼요.", keywords: ["그리움", "공허", "순수", "외로움", "허무"], emoji: "🌹" },
+    { id: "ordinary-existence", title: "보통의 존재", author: "이석원", category: "thoughts", mood: "나만 특별히 못난 것 같은 밤", note: "평범한 사람의 솔직한 고백들. 누구나 이 정도는 흔들린다는 걸 알게 돼요.", keywords: ["자기혐오", "자존감", "우울", "공허", "쓸쓸함"], emoji: "🌃" },
+    { id: "too-many-thoughts", title: "나는 생각이 너무 많아", author: "크리스텔 프티콜랭", category: "thoughts", mood: "사소한 일도 끝없이 곱씹느라 지칠 때", note: "생각이 많은 건 결함이 아니라 특성이라고 말해줘요. 예민한 나를 이해하는 데 도움이 돼요.", keywords: ["생각많음", "예민함", "곱씹음", "걱정", "불면", "과민"], emoji: "🧠" },
+    { id: "frame", title: "프레임", author: "최인철", category: "thoughts", mood: "같은 일도 늘 나쁜 쪽으로만 보일 때", note: '세상을 보는 "마음의 창"을 바꾸면 같은 하루도 달라진다는 심리학 이야기예요.', keywords: ["부정적", "비관", "걱정", "관점", "불만"], emoji: "🖼️" }
+  ];
+  var EMOTION_TO_CATEGORY = {
+    work: ["일", "공부", "시험", "회사", "직장", "야근", "마감", "성적", "취업", "압박", "스트레스", "미루기", "집중"],
+    people: ["관계", "친구", "가족", "외로", "눈치", "서운", "상처", "미움", "갈등", "소외", "혼자"],
+    love: ["사랑", "연애", "이별", "짝사랑", "설렘", "그리움", "헤어", "미련", "질투", "권태"],
+    future: ["불안", "두려", "걱정", "진로", "미래", "우울", "막막", "초조", "절망", "후회"],
+    burnout: ["지침", "지쳐", "지친", "피곤", "번아웃", "무기력", "힘들", "쉬고", "휴식", "불면", "퇴사"],
+    thoughts: ["생각", "잡념", "곱씹", "예민", "복잡", "답답", "공허", "허무", "자존감"]
+  };
+  function tokenize(input) {
+    return input.split(/[\s,./!?~·]+/).map((w) => w.trim()).filter((w) => w.length > 0);
+  }
+  function stem(word) {
+    return word.replace(/(했어요|해요|하고|하다|해서|하게|해|요|감|함|이|가|을|를|은|는|과|와|에|도)$/u, "") || word;
+  }
+  function matches(a, b) {
+    if (a.length < 1 || b.length < 1) return false;
+    return a.includes(b) || b.includes(a);
+  }
+  var DEFAULT_BOOK_IDS = ["convenience-store", "stop-and-see", "little-prince"];
+  function recommendByKeyword(input, count = 3) {
+    const words = tokenize(input).map(stem).filter((w) => w.length > 0);
+    if (words.length === 0) return { recommendations: [], category: null, exact: false };
+    const categoryScore = {};
+    for (const [cat, emotions] of Object.entries(EMOTION_TO_CATEGORY)) {
+      for (const w of words) {
+        if (emotions.some((e) => matches(w, e))) categoryScore[cat] = (categoryScore[cat] ?? 0) + 1;
+      }
+    }
+    const topCategory = Object.entries(categoryScore).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
+    const scored = BOOKS.map((book, index) => {
+      let score = 0;
+      const matched = /* @__PURE__ */ new Set();
+      for (const w of words) {
+        for (const k of book.keywords) {
+          if (matches(w, k)) {
+            score += 3;
+            matched.add(k);
+          }
+        }
+        if (w.length >= 2 && (book.mood.includes(w) || book.note.includes(w))) score += 1;
+      }
+      score += (categoryScore[book.category] ?? 0) * 2;
+      return { book, matched: [...matched], score, tie: index };
+    });
+    const inTop = (s) => Number(topCategory !== null && s.book.category === topCategory);
+    const hits = scored.filter((s) => s.score > 0).sort((a, b) => inTop(b) - inTop(a) || b.score - a.score || a.tie - b.tie);
+    const exact = hits.length > 0;
+    if (!exact && topCategory === null) {
+      const defaults2 = DEFAULT_BOOK_IDS.map((id) => BOOKS.find((b) => b.id === id)).slice(0, count);
+      return { recommendations: defaults2.map((book) => ({ book, matched: [] })), category: null, exact: false };
+    }
+    const picked = hits.slice(0, count);
+    if (picked.length < count) {
+      const used = new Set(picked.map((p) => p.book.id));
+      const fallback = scored.filter((s) => !used.has(s.book.id)).sort(
+        (a, b) => Number(b.book.category === topCategory) - Number(a.book.category === topCategory) || a.tie - b.tie
+      );
+      picked.push(...fallback.slice(0, count - picked.length));
+    }
+    return {
+      recommendations: picked.map(({ book, matched }) => ({ book, matched })),
+      category: topCategory,
+      exact
+    };
+  }
+
+  // prototype/emotion-cards/emotion-lexicon.ts
+  var EMOTION_LEXICON = [
+    { emotion: "불안", keyword: "불안", words: ["불안", "초조", "조마조마", "마음이불편", "긴장", "떨려", "떨리", "떨린"] },
+    { emotion: "걱정", keyword: "걱정", words: ["걱정", "염려", "신경쓰여", "신경쓰이"] },
+    { emotion: "두려움", keyword: "두려움", words: ["두렵", "두려", "무섭", "무서워", "겁나", "겁이나"] },
+    { emotion: "지침", keyword: "지침", words: ["지침", "지치", "지쳐", "지쳤", "지친", "피곤", "힘들", "힘드", "녹초", "기운없", "기운이없"] },
+    { emotion: "번아웃", keyword: "번아웃", words: ["번아웃", "탈진", "다타버", "소진"] },
+    { emotion: "무기력", keyword: "무기력", words: ["무기력", "의욕없", "의욕이없", "귀찮", "아무것도하기싫", "아무것도못하"] },
+    { emotion: "우울", keyword: "우울", words: ["우울", "가라앉", "울적", "기분이안좋", "기분이나빠"] },
+    { emotion: "슬픔", keyword: "위로", words: ["슬프", "슬퍼", "슬픔", "눈물", "울고싶", "울었", "서러", "서럽", "서운하고슬"] },
+    { emotion: "외로움", keyword: "외로움", words: ["외롭", "외로", "쓸쓸", "혼자인", "혼자라", "고독", "소외"] },
+    { emotion: "상처", keyword: "상처", words: ["상처", "속상", "서운", "섭섭", "마음아프", "마음이아프", "잊어버렸", "잊었", "까먹었", "무시당"] },
+    { emotion: "화남", keyword: "억울함", words: ["화나", "화가나", "화났", "짜증", "열받", "빡치", "억울", "분노"] },
+    { emotion: "이별", keyword: "이별", words: ["이별", "헤어지", "헤어졌", "헤어져", "차였"] },
+    { emotion: "그리움", keyword: "그리움", words: ["그립", "그리워", "그리움", "보고싶", "생각나"] },
+    { emotion: "짝사랑", keyword: "짝사랑", words: ["짝사랑", "고백못", "혼자좋아"] },
+    { emotion: "설렘", keyword: "설렘", words: ["설레", "설렘", "두근", "신나", "신난", "기대돼", "기대된"] },
+    { emotion: "질투", keyword: "질투", words: ["질투", "샘나", "부럽", "부러워"] },
+    { emotion: "후회", keyword: "후회", words: ["후회", "아쉽", "아쉬워", "그때왜", "했어야"] },
+    { emotion: "막막함", keyword: "막막함", words: ["막막", "답이없", "어떻게해야할지", "뭘해야할지"] },
+    { emotion: "답답함", keyword: "답답함", words: ["답답", "숨막", "갑갑"] },
+    { emotion: "압박", keyword: "압박", words: ["압박", "부담", "스트레스", "마감압박", "마감때문", "시험걱정", "시험때문", "시험압박", "쫓기"] },
+    { emotion: "비교", keyword: "비교", words: ["비교", "뒤처", "나만못", "남들은"] },
+    { emotion: "자존감 낮음", keyword: "자존감", words: ["자존감", "못난", "한심", "자책", "자괴감", "쓸모없"] },
+    { emotion: "공허", keyword: "공허", words: ["공허", "허무", "텅빈", "허전", "의미없", "허해", "허하"] },
+    { emotion: "생각 많음", keyword: "생각많음", words: ["생각이많", "생각많", "잡생각", "곱씹", "머리가복잡", "생각이꼬리"] },
+    { emotion: "불면", keyword: "불면", words: ["불면", "잠이안", "잠을못", "못자", "못잤"] }
+  ];
+  function normalize(sentence) {
+    return sentence.toLowerCase().replace(/[\s\p{P}\p{S}]+/gu, "");
+  }
+  var PATTERNS = EMOTION_LEXICON.flatMap((entry) => entry.words.map((word) => ({ word, entry }))).sort(
+    (a, b) => b.word.length - a.word.length
+  );
+  function isNegated(text, start, end) {
+    const before = text[start - 1];
+    if (before === "안" || before === "못") return true;
+    const after = text.slice(end, end + 6);
+    return /^.{0,2}(지않|진않|건아니|건아닌|게아니|게아닌|는아니|는아닌)/.test(after);
+  }
+  function findEmotions(sentence) {
+    const text = normalize(sentence);
+    const used = new Array(text.length).fill(false);
+    const hits = [];
+    for (const { word, entry } of PATTERNS) {
+      let from = 0;
+      while (true) {
+        const pos = text.indexOf(word, from);
+        if (pos === -1) break;
+        from = pos + 1;
+        const end = pos + word.length;
+        if (used.slice(pos, end).some(Boolean)) continue;
+        for (let i = pos; i < end; i++) used[i] = true;
+        hits.push({
+          pos,
+          negated: isNegated(text, pos, end),
+          found: { emotion: entry.emotion, keyword: entry.keyword, word }
+        });
+      }
+    }
+    const seen = /* @__PURE__ */ new Set();
+    return hits.filter((h) => !h.negated).sort((a, b) => a.pos - b.pos).filter((h) => seen.has(h.found.emotion) ? false : (seen.add(h.found.emotion), true)).map((h) => h.found);
+  }
+
+  // prototype/emotion-cards/ai-tabs.ts
+  var I18N = {
+    ko: {
+      title: "마음버블서점",
+      docTitle: "마음버블서점 - 당신의 마음을 비우고 채우다",
+      sub: "당신의 마음을 비우고 채우다",
+      desc: "마음을 비우고, 원하는 만큼 채워가세요.",
+      noteArrived: "쪽지 도착",
+      noteSub: "작가들이 보낸 문장 3장",
+      noteLead: "{e}에 가까운 오늘의 마음에게, 작가들이 보낸 문장이에요.",
+      noteLeadAny: "오늘의 마음에게, 작가들이 보낸 문장이에요.",
+      noteSwipe: "옆으로 넘겨 다른 쪽지도 읽어 보세요",
+      noteAuthorBooks: "{a}의 책 보기 →",
+      noteBack: "← 쪽지로 돌아가기",
+      noteKyobo: "교보문고에서 찾기 ↗",
+      noteInShop: "마음버블서점 추천 책",
+      noteClose: "닫기",
+      noteFoot: "외국 작가의 문장은 마음버블서점이 우리말로 옮겼어요.",
+      zoomGroup: "글자 크기",
+      zoomOut: "글자 작게",
+      zoomIn: "글자 크게",
+      zoomReset: "기본 크기로",
+      toDark: "다크 모드로 바꾸기",
+      toLight: "밝은 모드로 바꾸기",
+      bgmOn: "BGM 켜기",
+      bgmOff: "BGM 끄기",
+      langLabel: "한국어 (ko)",
+      tabRule: "마음 단어로 찾기",
+      tabAi: "AI에게 물어보기",
+      pick: "지금 마음을 골라 보세요",
+      ask: "오늘 마음을 한 문장으로 적어 주세요",
+      phRule: "예: 발표 앞두고 불안해",
+      phAi: "예: 불안한 건 아닌데 마음이 허해",
+      submit: "책 추천받기",
+      hintRule: "",
+      hintAi: "감정 단어가 없어도 괜찮아요. 처음 한 번은 Claude 사용 허용 창이 떠요.",
+      tryThis: "이렇게 써 보세요",
+      moodPre: "지금 마음은 ",
+      moodPost: "에 가까워 보여요",
+      unknown: "아직 잘 모르는 말이에요. 이 중에 가까운 마음이 있나요?",
+      howAbout: "이 책들은 어때요?",
+      thinking: "마음을 읽고 있어요…",
+      noEmotion: "마음이 잘 드러나지 않았어요. 지금 기분을 조금 더 적어 주세요.",
+      noAi: "여기서는 AI에게 물어볼 수 없어요. claude.ai에 로그인한 상태로 열어 주세요.",
+      goRule: "마음 단어로 찾기",
+      err_not_granted: 'Claude 사용을 허용하지 않아 AI에게 물어볼 수 없어요. "마음 단어로 찾기"는 계속 쓸 수 있어요.',
+      err_sampling_disabled: '이 계정에서는 AI에게 물어볼 수 없어요. "마음 단어로 찾기"를 써 주세요.',
+      err_rate_limited: "잠깐 쉬었다가 다시 눌러 주세요.",
+      err_session_expired: "로그인이 만료됐어요. 다시 로그인한 뒤 눌러 주세요.",
+      err_invalid_json: "답을 제대로 받지 못했어요. 한 번 더 눌러 주세요.",
+      err_refused: "이 문장에는 답하기 어려워요. 표현을 바꿔 다시 적어 주세요.",
+      err_other: "연결이 잠시 끊겼어요. 다시 눌러 주세요.",
+      err_ai_disabled: '지금은 AI에게 물어볼 수 없어요. "마음 단어로 찾기"를 써 주세요.',
+      err_daily_limit: "오늘 AI 추천이 모두 소진됐어요. 내일 다시 와 주세요.",
+      hintAiCloud: "감정 단어가 없어도 괜찮아요. AI가 문장 전체를 읽고 골라 드려요.",
+      fbTitle: "추천이 마음에 닿았나요?",
+      fbRating: "별점",
+      fbPh: "하고 싶은 말을 남겨 주세요 (선택)",
+      fbSend: "보내기",
+      fbThanks: "고마워요. 잘 받았어요.",
+      fbFail: "보내지 못했어요. 잠시 뒤 다시 눌러 주세요.",
+      fbEmpty: "별점이나 한마디를 남겨 주세요.",
+      privacy: "AI에게 물어본 문장은 추천에만 쓰고 저장하지 않아요. 별점과 한마디만 서비스를 다듬기 위해 이름 없이 30일 보관해요."
+    },
+    en: {
+      title: "Maeum Bubble Books",
+      docTitle: "Maeum Bubble Books - Empty your mind, fill it back up",
+      sub: "Empty your mind, then fill it back up",
+      desc: "Let go of what weighs on you, and fill up as much as you like.",
+      noteArrived: "A note arrived",
+      noteSub: "3 lines from writers",
+      noteLead: "For a heart close to {e} today, here are lines from writers.",
+      noteLeadAny: "For your heart today, here are lines from writers.",
+      noteSwipe: "Swipe to read the other notes",
+      noteAuthorBooks: "Books by {a} →",
+      noteBack: "← Back to the note",
+      noteKyobo: "Find at Kyobo ↗",
+      noteInShop: "In our picks",
+      noteClose: "Close",
+      noteFoot: "Quotes from non-Korean writers were translated into Korean by Maeum Bubble Books.",
+      zoomGroup: "Text size",
+      zoomOut: "Smaller text",
+      zoomIn: "Larger text",
+      zoomReset: "Reset size",
+      toDark: "Switch to dark mode",
+      toLight: "Switch to light mode",
+      bgmOn: "BGM on",
+      bgmOff: "BGM off",
+      langLabel: "English (en)",
+      tabRule: "Find by feeling words",
+      tabAi: "Ask AI",
+      pick: "Pick how you feel",
+      ask: "Tell us how you feel in one sentence",
+      phRule: "e.g. 발표 앞두고 불안해",
+      phAi: "e.g. I'm not anxious, just feeling empty",
+      submit: "Get books",
+      hintRule: 'This tab understands Korean sentences only. Use "Ask AI" for English.',
+      hintAi: "No feeling words needed. The first time, you'll be asked to allow Claude.",
+      tryThis: "Try",
+      moodPre: "You seem to be feeling ",
+      moodPost: "",
+      unknown: "We don't know that word yet. Is one of these close?",
+      howAbout: "How about these books?",
+      thinking: "Reading how you feel…",
+      noEmotion: "We couldn't tell how you feel. Tell us a little more.",
+      noAi: "AI isn't available here. Open this page while signed in to claude.ai.",
+      goRule: "Find by feeling words",
+      err_not_granted: `Claude access was not allowed, so AI can't be used. "Find by feeling words" still works.`,
+      err_sampling_disabled: 'AI is not available for this account. Please use "Find by feeling words".',
+      err_rate_limited: "Please wait a moment and try again.",
+      err_session_expired: "Your sign-in expired. Sign in again and try once more.",
+      err_invalid_json: "We didn't get a proper answer. Please try again.",
+      err_refused: "We can't answer that sentence. Try putting it differently.",
+      err_other: "The connection dropped. Please try again.",
+      err_ai_disabled: 'AI isn\'t available right now. Please use "Find by feeling words".',
+      err_daily_limit: "Today's AI picks are used up. Please come back tomorrow.",
+      hintAiCloud: "No feeling words needed. AI reads your whole sentence.",
+      fbTitle: "Did these picks feel right?",
+      fbRating: "Rating",
+      fbPh: "Anything you'd like to tell us? (optional)",
+      fbSend: "Send",
+      fbThanks: "Thank you. We got it.",
+      fbFail: "Couldn't send. Please try again in a moment.",
+      fbEmpty: "Leave a rating or a few words.",
+      privacy: "Sentences you ask the AI are used only for the picks and aren't stored. Only ratings and comments are kept for 30 days, without your name, to improve the service."
+    }
+  };
+  var EMO_EN = {
+    불안: "anxiety",
+    걱정: "worry",
+    두려움: "fear",
+    지침: "exhaustion",
+    번아웃: "burnout",
+    무기력: "lethargy",
+    우울: "depression",
+    슬픔: "sadness",
+    외로움: "loneliness",
+    상처: "hurt",
+    화남: "anger",
+    이별: "breakup",
+    그리움: "longing",
+    짝사랑: "unrequited love",
+    설렘: "excitement",
+    질투: "jealousy",
+    후회: "regret",
+    막막함: "feeling lost",
+    답답함: "frustration",
+    압박: "pressure",
+    비교: "comparison",
+    "자존감 낮음": "low self-esteem",
+    공허: "emptiness",
+    "생각 많음": "overthinking",
+    불면: "sleeplessness"
+  };
+  // 감정 선택 프로토타입: 버튼으로 고르는 감정 10가지
+  var FEELINGS = [
+    { name: "불안", emoji: "😟" },
+    { name: "지침", emoji: "🔋" },
+    { name: "외로움", emoji: "🌙" },
+    { name: "우울", emoji: "🌧️" },
+    { name: "상처", emoji: "🩹" },
+    { name: "이별", emoji: "💔" },
+    { name: "압박", emoji: "🧱" },
+    { name: "후회", emoji: "🔁" },
+    { name: "공허", emoji: "🫙" },
+    { name: "생각 많음", emoji: "🌀" }
+  ];
+  var picked = "";
+  var NINE = ["불안", "지침", "외로움", "이별", "생각 많음", "압박", "무기력", "후회", "상처"];
+  var EXAMPLES_KO = ["발표 앞두고 불안해", "요즘 지치고 외로워", "불안한 건 아닌데 마음이 허해", "서러워서 눈물 나"];
+  var EXAMPLES_EN = ["Nervous before my presentation", "Tired and lonely lately", "Not anxious, just empty", "So upset I could cry"];
+  var lang = "ko";
+  try {
+    if (localStorage.getItem("mb-lang") === "en") lang = "en";
+  } catch {
+  }
+  var t = (k) => I18N[lang][k];
+  var emo = (name) => lang === "en" ? EMO_EN[name] ?? name : name;
+  var $ = (s) => document.querySelector(s);
+  var esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+// 표지 이미지를 못 불러오면 원래 이모지로 바꿔요
+  document.addEventListener("error", (e) => {
+    const img = e.target;
+    if (!(img instanceof HTMLImageElement) || !img.classList.contains("cover")) return;
+    const span = document.createElement("span");
+    span.className = "em";
+    span.setAttribute("aria-hidden", "true");
+    span.textContent = img.dataset.em ?? "";
+    img.replaceWith(span);
+  }, true);
+  var cardsHTML = (items) => '<ol class="books">' + items.map(
+    ({ book, why }) => `<li><img class="cover" src="${esc(book.cover_url || `covers/${book.id}.jpg`)}" alt="${esc(book.title)} 표지" width="64" height="94" loading="lazy" data-em="${book.emoji}">
+      <div class="bk"><div class="t">『${esc(book.title)}』</div><div class="a">${esc(book.author)}</div>
+      <div class="w">${esc(why)}</div></div></li>`
+  ).join("") + "</ol>";
+  var chipsHTML = (items) => items.map((c) => `<button type="button" class="chip" data-q="${esc(c.q)}">${esc(c.label)}</button>`).join("");
+  var moodHTML = (names) => `<p class="mood">${esc(t("moodPre"))}<b>${names}</b>${esc(t("moodPost"))}</p>`;
+  var defaults = () => {
+    const picked = DEFAULT_BOOK_IDS.map((id) => BOOKS.find((b) => b.id === id)).filter(Boolean);
+    for (const b of BOOKS) if (picked.length < 3 && !picked.includes(b)) picked.push(b);
+    return picked;
+  };
+  var cloud = window.MB_CLOUD || { enabled: false, visit() {}, search() {} };
+  var track = (mode, query, emotions, books) => cloud.search({ mode, query, emotions, books: books.map((b) => b.book.id), lang });
+  var lastRule = "";
+  function ruleRespond(raw, log = false) {
+    const input = raw.trim();
+    if (!input) return;
+    lastRule = input;
+    const found = findEmotions(input);
+    const out = $("#out-rule");
+    let books;
+    if (found.length) {
+      books = recommendByKeyword(found.map((f) => f.keyword).join(" "), 3).recommendations.map((r) => ({
+        book: r.book,
+        why: r.book.note
+      }));
+      out.innerHTML = moodHTML(found.map((f) => esc(emo(f.emotion))).join(", ")) + cardsHTML(books);
+    } else {
+      books = defaults().map((book) => ({ book, why: book.note }));
+      out.innerHTML = `<div class="soft"><p>${esc(t("unknown"))}</p><div class="chips">${chipsHTML(NINE.map((n) => ({ label: emo(n), q: n })))}</div></div><p class="mood">${esc(t("howAbout"))}</p>` + cardsHTML(books);
+    }
+    if (log) {
+      track("rule", input, found.map((f) => f.emotion), books);
+      sendNote(found.map((f) => f.emotion));
+    }
+  }
+  var samplePromise = null;
+  function getSample() {
+    const w = window;
+    if (!samplePromise) samplePromise = (w.claude ? w.claude.use("sample") : Promise.resolve(null)).catch(() => null);
+    return samplePromise;
+  }
+  var aiOff = false;
+  var catalog = () => BOOKS.map(
+    (b) => `${b.id} | 『${b.title}』 ${b.author} | 이런 마음일 때: ${b.mood} | 키워드: ${b.keywords.join(", ")}`
+  ).join("\n");
+  function buildPrompt(input) {
+    const out = lang === "en" ? "emotion, secondary, why, read 는 모두 자연스러운 영어로 쓴다(emotion은 1~3단어 소문자)." : "emotion은 짧은 한국어 명사(1~6자), why와 read는 한국어 해요체로 쓴다.";
+    return `너는 독서 큐레이터다. 사용자가 지금 마음을 한 문장으로 적었다(한국어 또는 영어). 문장 전체의 뜻을 읽고 감정을 판단한 뒤, 아래 책 목록에서만 책 3권을 골라라.
+
+규칙:
+- ${out}
+- emotion: 가장 강한 감정 하나. secondary: 함께 느껴지는 감정 최대 2개, 없으면 빈 배열.
+- 부정 표현("안 ~해", "~지 않아", "~한 건 아닌데", "not ~")이 붙은 감정은 제외한다.
+- books: 반드시 아래 목록의 id로만, 서로 다른 책 3권. 목록에 없는 책은 고르지 않는다.
+- why: 사용자의 문장을 직접 반영한 한 문장(60자/100 characters 이내). 책 줄거리를 지어내지 말고 감정과의 연결만 말한다.
+- read: 사용자의 마음을 다정하게 짚어 주는 한 문장.
+- 감정 표현이 전혀 없으면 emotion을 null, books를 빈 배열로 한다.
+
+책 목록:
+${catalog()}
+
+JSON 하나만 답한다:
+{"emotion":"감정 또는 null","secondary":["감정"],"read":"한 문장","books":[{"id":"책 id","why":"이유"}]}
+
+사용자 문장: """${input.slice(0, 300)}"""`;
+  }
+  var STOP_CODES = ["not_granted", "sampling_disabled", "not_declared", "capability_disabled", "capability_removed", "ai_disabled", "daily_limit"];
+  var errText = (code) => {
+    const k = `err_${code}`;
+    return k in I18N.ko ? t(k) : t("err_other");
+  };
+  var strList = (v, n) => (Array.isArray(v) ? v : []).filter((x) => typeof x === "string" && x.trim() !== "").slice(0, n);
+  var goRuleHTML = () => `<div class="chips"><button type="button" class="chip" data-go="rule">${esc(t("goRule"))}</button></div>`;
+  async function aiRespond(raw, log = false) {
+    const input = raw.trim();
+    if (!input || aiOff) return;
+    const out = $("#out-ai");
+    const btn = $("#b-ai");
+    out.innerHTML = `<p class="thinking">${esc(t("thinking"))}</p>`;
+    btn.disabled = true;
+    const sample = await getSample();
+    if (!sample && !cloud.enabled) {
+      out.innerHTML = `<div class="soft"><p>${esc(t("noAi"))}</p>${goRuleHTML()}</div>`;
+      btn.disabled = false;
+      return;
+    }
+    try {
+      const res = sample ? await sample.json(buildPrompt(input), { modelTier: "quick" }) : await cloud.ai(input.slice(0, 300), lang);
+      const emotion = typeof res?.emotion === "string" && res.emotion.trim() && res.emotion.trim() !== "null" ? res.emotion.trim().slice(0, 24) : null;
+      const secondary = strList(res?.secondary, 2).filter((s) => s !== emotion);
+      const read = typeof res?.read === "string" ? res.read : "";
+      if (!emotion) {
+        const books = defaults().map((book) => ({ book, why: book.note }));
+        out.innerHTML = `<div class="soft"><p>${esc(t("noEmotion"))}</p></div><p class="mood">${esc(t("howAbout"))}</p>` + cardsHTML(books);
+        if (log) {
+          track("ai", input, [], books);
+          sendNote([]);
+        }
+      } else {
+        const picked = [];
+        for (const b of Array.isArray(res?.books) ? res.books : []) {
+          const item = b ?? {};
+          const book = BOOKS.find((x) => x.id === String(item.id ?? "").trim());
+          if (book && !picked.some((p) => p.book.id === book.id) && picked.length < 3)
+            picked.push({ book, why: String(item.why ?? "").slice(0, 160) || book.note });
+        }
+        for (const r of recommendByKeyword([emotion, ...secondary].join(" "), 6).recommendations) {
+          if (picked.length < 3 && !picked.some((p) => p.book.id === r.book.id)) picked.push({ book: r.book, why: r.book.note });
+        }
+        out.innerHTML = moodHTML(esc(emotion) + (secondary.length ? ", " + secondary.map(esc).join(", ") : "")) + (read ? `<p class="read">${esc(read)}</p>` : "") + cardsHTML(picked);
+        if (log) {
+          track("ai", input, [emotion, ...secondary], picked);
+          sendNote([emotion, ...secondary]);
+        }
+      }
+    } catch (e) {
+      const code = e?.code ?? "";
+      const stop = STOP_CODES.includes(code);
+      out.innerHTML = `<div class="soft"><p>${esc(errText(code))}</p>${stop ? goRuleHTML() : ""}</div>`;
+      if (stop) {
+        aiOff = true;
+        $("#q-ai").disabled = true;
+        return;
+      }
+    }
+    btn.disabled = false;
+  }
+  function applyLang() {
+    document.documentElement.lang = lang;
+    document.title = t("docTitle");
+    document.querySelectorAll("[data-i18n]").forEach((el) => {
+      const v = t(el.dataset.i18n);
+      el.textContent = v;
+      if (el.classList.contains("hint")) el.hidden = !v;
+    });
+    document.querySelectorAll("[data-i18n-ph]").forEach((el) => {
+      el.placeholder = t(el.dataset.i18nPh);
+    });
+    document.querySelectorAll("[data-lang]").forEach((b) => {
+      b.setAttribute("aria-pressed", String(b.dataset.lang === lang));
+    });
+    $("#pick-rule").innerHTML = FEELINGS.map(
+      (f) => `<button type="button" class="feel" data-q="${esc(f.name)}" aria-pressed="${f.name === picked}"><span class="fe" aria-hidden="true">${f.emoji}</span>${esc(emo(f.name))}</button>`
+    ).join("");
+    $("#chips-rule").innerHTML =`<span class="lbl">${esc(t("tryThis"))}</span>` + chipsHTML(EXAMPLES_KO.map((q) => ({ label: q, q })));
+    $("#chips-ai").innerHTML = `<span class="lbl">${esc(t("tryThis"))}</span>` + chipsHTML((lang === "en" ? EXAMPLES_EN : EXAMPLES_KO).map((q) => ({ label: q, q })));
+    if (cloud.enabled && !window.claude) $('#p-ai .hint').textContent = t("hintAiCloud");
+    renderStars();
+    if (lastRule) ruleRespond(lastRule);
+    $("#out-ai").innerHTML = "";
+    if (bgm) bgmLabel();
+    if (themeBtn) themeLabel();
+    if (zoomCtl) zoomLabels();
+    if (noteDlg) noteLabels();
+  }
+  document.querySelectorAll("[data-lang]").forEach(
+    (b) => b.addEventListener("click", () => {
+      lang = b.dataset.lang === "en" ? "en" : "ko";
+      try {
+        localStorage.setItem("mb-lang", lang);
+      } catch {
+      }
+      applyLang();
+    })
+  );
+  for (const [form, q, count, fn] of [
+    ["#f-rule", "#q-rule", "#c-rule", ruleRespond],
+    ["#f-ai", "#q-ai", "#c-ai", aiRespond]
+  ]) {
+    const ta = $(q);
+    ta.addEventListener("input", () => $(count).textContent = `${ta.value.length}/300`);
+    ta.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey && !e.isComposing) {
+        e.preventDefault();
+        $(form).requestSubmit();
+      }
+    });
+    $(form).addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (fn === aiRespond && $("#b-ai").disabled) return;
+      fn(ta.value, true);
+    });
+  }
+  function fillAndRun(panel, text, log = false) {
+    const ta = $(`#q-${panel}`);
+    ta.value = text;
+    $(`#c-${panel}`).textContent = `${text.length}/300`;
+    if (panel === "rule") ruleRespond(text, log);
+    else if (!$("#b-ai").disabled) aiRespond(text, log);
+  }
+  for (const panel of ["rule", "ai"]) {
+    $(`#p-${panel}`).addEventListener("click", (e) => {
+      const el = e.target;
+      if (el.closest("button[data-go]")) {
+        location.hash = "rule";
+        show("rule");
+        return;
+      }
+      const b = el.closest("button[data-q]");
+      if (b) fillAndRun(panel, b.dataset.q ?? "", true);
+    });
+  }
+  function setPicked(name) {
+    picked = name;
+    document.querySelectorAll("#pick-rule .feel").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.q === name)));
+  }
+  $("#pick-rule").addEventListener("click", (e) => {
+    const b = e.target.closest("button.feel");
+    if (b) setPicked(b.dataset.q ?? "");
+  });
+  $("#q-rule").addEventListener("input", () => setPicked(""));
+  $("#chips-rule").addEventListener("click", (e) => {
+    if (e.target.closest("button[data-q]")) setPicked("");
+  });
+  var TABS = {
+    rule: [$("#t-rule"), $("#p-rule")],
+    ai: [$("#t-ai"), $("#p-ai")]
+  };
+  function show(name) {
+    if (!TABS[name]) name = "rule";
+    for (const [k, [tab, p]] of Object.entries(TABS)) {
+      const on = k === name;
+      tab.setAttribute("aria-selected", String(on));
+      tab.tabIndex = on ? 0 : -1;
+      p.hidden = !on;
+    }
+  }
+  for (const k of Object.keys(TABS)) {
+    TABS[k][0].addEventListener("click", () => {
+      location.hash = k;
+      show(k);
+    });
+  }
+  $("[role=tablist]").addEventListener("keydown", (e) => {
+    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+    const next = TABS.rule[0].getAttribute("aria-selected") === "true" ? "ai" : "rule";
+    location.hash = next;
+    show(next);
+    TABS[next][0].focus();
+  });
+  addEventListener("hashchange", () => show(location.hash.slice(1)));
+  // 피드백 (Supabase 연결 시에만 보여요)
+  var rating = 0;
+  function renderStars() {
+    const box = $("#fb-stars");
+    box.querySelectorAll("label").forEach((l) => l.remove());
+    for (let i = 1; i <= 5; i++) {
+      const l = document.createElement("label");
+      l.className = i <= rating ? "on" : "";
+      l.innerHTML = `<input type="radio" name="fb-r" value="${i}"${i === rating ? " checked" : ""}><span aria-hidden="true">★</span>`;
+      l.title = lang === "en" ? `${i} / 5` : `${i}점`;
+      l.querySelector("input").setAttribute("aria-label", l.title);
+      box.append(l);
+    }
+  }
+  $("#fb-stars").addEventListener("change", (e) => {
+    rating = Number(e.target.value) || 0;
+    $("#fb-stars").querySelectorAll("label").forEach((l, i) => l.classList.toggle("on", i < rating));
+  });
+  $("#fb").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const msg = $("#fb-msg").value.trim();
+    const outEl = $("#fb-out");
+    if (!rating && !msg) {
+      outEl.textContent = t("fbEmpty");
+      return;
+    }
+    const btn = $("#fb button[type=submit]");
+    btn.disabled = true;
+    const ok = await cloud.feedback({ rating, message: msg, lang });
+    btn.disabled = false;
+    outEl.textContent = ok ? t("fbThanks") : t("fbFail");
+    if (ok) {
+      rating = 0;
+      $("#fb-msg").value = "";
+      renderStars();
+    }
+  });
+  if (cloud.enabled) {
+    $("#fb").hidden = false;
+    $("#privacy").hidden = false;
+  }
+
+  show(location.hash.slice(1));
+
+  // 버전2: BGM (자동재생 시도 → 브라우저가 막으면 첫 클릭·키 입력 때 시작, 끄면 다음 방문에도 꺼진 채로)
+  // 버전2: '쪽지 도착' — 고민을 적을 때마다 그 마음에 맞는 작가·철학자의 문장 카드 3장(전체 100장 중)을 보내요.
+  var QDATA = window.MB_QUOTES;
+  var noteDlg = $("#note");
+  var noteToast = $("#note-toast");
+  var noteBody = $("#note-body");
+  var noteState = null; // { emotions, picks: [인용 번호] }
+  var noteTimer = 0;
+  var tf = (k, v) => t(k).replace(/\{(\w)\}/g, (_, n) => v[n] ?? "");
+  function recentQuotes() {
+    try {
+      return JSON.parse(sessionStorage.getItem("mb-qrecent") || "[]");
+    } catch {
+      return [];
+    }
+  }
+  function pickQuotes(emotions) {
+    const recent = recentQuotes();
+    const scored = QDATA.quotes.map((q, i) => {
+      let s = Math.random() * 0.9;
+      emotions.forEach((e, k) => {
+        if (q[3].includes(e)) s += k === 0 ? 3 : 1.5;
+      });
+      if (recent.includes(i)) s -= 2.5;
+      return { i, s, a: q[0] };
+    }).sort((x, y) => y.s - x.s);
+    const picks = [], authors = new Set();
+    for (const c of scored) {
+      if (picks.length === 3) break;
+      if (authors.has(c.a)) continue;
+      authors.add(c.a);
+      picks.push(c.i);
+    }
+    try {
+      sessionStorage.setItem("mb-qrecent", JSON.stringify([...picks, ...recent].slice(0, 15)));
+    } catch {
+    }
+    return picks;
+  }
+  function sendNote(emotions) {
+    if (!QDATA || !noteDlg) return;
+    noteState = { emotions: emotions.filter(Boolean), picks: pickQuotes(emotions.filter(Boolean)) };
+    noteToast.hidden = true;
+    void noteToast.offsetWidth; // 알림 애니메이션을 다시 시작해요
+    noteToast.hidden = false;
+    clearTimeout(noteTimer);
+    noteTimer = setTimeout(() => noteToast.hidden = true, 15e3);
+  }
+  function noteLabels() {
+    for (const el of [$("#note-dismiss"), $("#note-close")]) el.setAttribute("aria-label", t("noteClose"));
+    if (noteDlg.open) noteState?.author ? showAuthor(noteState.author) : showCards();
+  }
+  function showCards() {
+    noteState.author = null;
+    const em = noteState.emotions.slice(0, 2).map((e) => `<b>${esc(emo(e))}</b>`).join(", ");
+    const cards = noteState.picks.map((i) => {
+      const [aid, text, src] = QDATA.quotes[i];
+      const a = QDATA.authors[aid];
+      const q = text.replace(/ \/\/ /g, "\n\n").replace(/ \/ /g, "\n");
+      return `<article class="qcard"><p class="q">${esc(q)}</p><div><p class="who">— <b>${esc(a.name)}</b>, 『${esc(src.replace(/^[「『]|[」』]$/g, ""))}』</p></div>
+        <button type="button" class="qbtn" data-author="${esc(aid)}">${esc(tf("noteAuthorBooks", { a: a.name }))}</button></article>`;
+    }).join("");
+    noteBody.innerHTML = `<p class="note-lead">${em ? tf("noteLead", { e: em }) : esc(t("noteLeadAny"))}</p>
+      <div class="qcards" id="qcards" tabindex="0" aria-roledescription="carousel">${cards}</div>
+      <div class="qdots" aria-hidden="true">${noteState.picks.map((_, k) => `<span class="${k ? "" : "on"}"></span>`).join("")}</div>
+      <p class="note-hint">${esc(t("noteSwipe"))}</p><p class="note-foot">${esc(t("noteFoot"))}</p>`;
+    const strip = $("#qcards");
+    strip.addEventListener("scroll", () => {
+      const w = strip.firstElementChild?.getBoundingClientRect().width || 1;
+      const k = Math.round(strip.scrollLeft / (w + 12));
+      noteBody.querySelectorAll(".qdots span").forEach((d, j) => d.classList.toggle("on", j === k));
+    });
+  }
+  function showAuthor(aid) {
+    const a = QDATA.authors[aid];
+    if (!a) return;
+    noteState.author = aid;
+    const works = a.books.map(([title, year, desc, bookId]) => {
+      const inShop = bookId && BOOKS.some((b) => b.id === bookId);
+      const url = "https://search.kyobobook.co.kr/search?keyword=" + encodeURIComponent(`${title} ${a.name}`);
+      return `<li><div><p class="wt">『${esc(title)}』<span class="wy">${esc(year)}</span></p><p class="wd">${esc(desc)}</p>${inShop ? `<span class="badge">${esc(t("noteInShop"))}</span>` : ""}</div>
+        <a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(t("noteKyobo"))}</a></li>`;
+    }).join("");
+    noteBody.innerHTML = `<button type="button" class="au-back" id="au-back">${esc(t("noteBack"))}</button>
+      <h3 class="au-name">${esc(a.name)}</h3><p class="au-meta">${esc(a.orig)} · ${esc(a.years)}</p><p class="au-intro">${esc(a.intro)}</p>
+      <ul class="works">${works}</ul>`;
+    noteBody.scrollTop = 0;
+    $("#au-back").focus();
+  }
+  if (noteDlg) {
+    $("#note-open").addEventListener("click", () => {
+      if (!noteState) return;
+      noteToast.hidden = true;
+      clearTimeout(noteTimer);
+      showCards();
+      noteDlg.showModal();
+    });
+    $("#note-dismiss").addEventListener("click", () => {
+      noteToast.hidden = true;
+      clearTimeout(noteTimer);
+    });
+    $("#note-close").addEventListener("click", () => noteDlg.close());
+    noteDlg.addEventListener("click", (e) => {
+      if (e.target === noteDlg) noteDlg.close(); // 바깥 어두운 곳을 누르면 닫혀요
+      const b = e.target.closest?.("button[data-author]");
+      if (b) showAuthor(b.dataset.author);
+      if (e.target.closest?.("#au-back")) showCards();
+    });
+  }
+
+  // 버전2: 글자 크기(확대 비율) 버튼 — 100% · 115% · 130% · 150%, 선택은 다음 방문에도 기억
+  var zoomCtl = $("#zoom-ctl");
+  var ZOOMS = [1, 1.15, 1.3, 1.5];
+  var zoomIdx = 0;
+  try {
+    const saved = ZOOMS.indexOf(parseFloat(localStorage.getItem("mb-zoom")));
+    if (saved >= 0) zoomIdx = saved;
+  } catch {
+  }
+  function zoomLabels() {
+    zoomCtl.setAttribute("aria-label", t("zoomGroup"));
+    for (const [id, key] of [["#zoom-out", "zoomOut"], ["#zoom-in", "zoomIn"], ["#zoom-reset", "zoomReset"]]) {
+      $(id).setAttribute("aria-label", t(key));
+      $(id).title = t(key);
+    }
+  }
+  function setZoom(i, save) {
+    zoomIdx = Math.max(0, Math.min(ZOOMS.length - 1, i));
+    const z = ZOOMS[zoomIdx];
+    document.documentElement.style.setProperty("--zoom", String(z));
+    $("#zoom-val").textContent = Math.round(z * 100) + "%";
+    $("#zoom-out").disabled = zoomIdx === 0;
+    $("#zoom-in").disabled = zoomIdx === ZOOMS.length - 1;
+    $("#zoom-reset").disabled = zoomIdx === 0;
+    if (pickBox) fitPick();
+    if (save) {
+      try {
+        localStorage.setItem("mb-zoom", String(z));
+      } catch {
+      }
+    }
+  }
+  $("#zoom-out").addEventListener("click", () => setZoom(zoomIdx - 1, true));
+  $("#zoom-in").addEventListener("click", () => setZoom(zoomIdx + 1, true));
+  $("#zoom-reset").addEventListener("click", () => setZoom(0, true));
+  // 감정 버튼 칸이 좁아지면(크게 볼 때) 2줄 배치로 바꿔요. clientWidth는 확대가 반영된 실제 배치 폭이에요.
+  var pickBox = document.querySelector(".pick");
+  function fitPick() {
+    if (pickBox.clientWidth) pickBox.classList.toggle("narrow", pickBox.clientWidth < 280);
+  }
+  addEventListener("resize", fitPick);
+  addEventListener("hashchange", () => setTimeout(fitPick));
+  setZoom(zoomIdx, false);
+
+  // 버전2: 밝은/다크 모드 버튼 (누르면 반대 모드로, 선택은 다음 방문에도 기억)
+  var themeBtn = $("#theme-toggle");
+  var darkMQ = matchMedia("(prefers-color-scheme: dark)");
+  function isDarkNow() {
+    const th = document.documentElement.dataset.theme;
+    return th === "dark" || (th !== "light" && darkMQ.matches);
+  }
+  function themeLabel() {
+    const d = isDarkNow();
+    const label = t(d ? "toLight" : "toDark");
+    themeBtn.dataset.mode = d ? "dark" : "light";
+    themeBtn.setAttribute("aria-label", label);
+    themeBtn.title = label;
+  }
+  themeBtn.addEventListener("click", () => {
+    const next = isDarkNow() ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    try {
+      localStorage.setItem("mb-theme", next);
+    } catch {
+    }
+    themeLabel();
+  });
+  darkMQ.addEventListener("change", themeLabel);
+
+  var bgm = $("#bgm-audio");
+  var bgmBtn = $("#bgm-toggle");
+  bgm.volume = 0.15;
+  var bgmWanted = true;
+  try {
+    if (localStorage.getItem("mb-bgm") === "off") bgmWanted = false;
+  } catch {
+  }
+  function bgmLabel() {
+    const on = !bgm.paused;
+    bgmBtn.setAttribute("aria-pressed", String(on));
+    bgmBtn.querySelector("[data-bgm]").textContent = t(on ? "bgmOff" : "bgmOn");
+  }
+  function bgmSave(v) {
+    try {
+      localStorage.setItem("mb-bgm", v);
+    } catch {
+    }
+  }
+  var bgmPlay = () => bgm.play().catch(() => {
+  });
+  bgm.addEventListener("play", bgmLabel);
+  bgm.addEventListener("pause", bgmLabel);
+  bgmBtn.addEventListener("click", () => {
+    bgmUnkick();
+    if (bgm.paused) {
+      bgmWanted = true;
+      bgmSave("on");
+      bgmPlay();
+    } else {
+      bgmWanted = false;
+      bgmSave("off");
+      bgm.pause();
+    }
+  });
+  var KICK = ["pointerdown", "keydown"];
+  function bgmKick(e) {
+    if (e.target instanceof Element && e.target.closest("#bgm-toggle")) return;
+    bgmUnkick();
+    if (bgmWanted && bgm.paused) bgmPlay();
+  }
+  function bgmUnkick() {
+    KICK.forEach((n) => removeEventListener(n, bgmKick, true));
+  }
+  if (bgmWanted) {
+    KICK.forEach((n) => addEventListener(n, bgmKick, true));
+    bgmPlay().then(() => {
+      if (!bgm.paused) bgmUnkick();
+    });
+  }
+
+  applyLang();
+  fillAndRun("rule", EXAMPLES_KO[0]);
+  cloud.visit(lang);
+
+  // 관리자 페이지에서 고친 책 목록을 불러와요 (실패하면 기본 목록 그대로)
+  if (cloud.enabled) {
+    cloud.books().then((rows) => {
+      if (!rows) return;
+      const fresh = rows.map((r) => ({
+        id: r.id, title: r.title, author: r.author, category: r.category, mood: r.mood, note: r.note,
+        keywords: Array.isArray(r.keywords) ? r.keywords : [], emoji: r.emoji || "📘", cover_url: r.cover_url || ""
+      }));
+      BOOKS.length = 0;
+      BOOKS.push(...fresh);
+      if (lastRule) ruleRespond(lastRule);
+    });
+  }
+})();
+
+</script>
+<script src="river.js"></script>
+</body></html>
