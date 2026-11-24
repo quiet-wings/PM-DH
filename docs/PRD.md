@@ -2,7 +2,7 @@
 
 | 버전 | 작성일 | 작성자 | 관련 문서 |
 |---|---|---|---|
-| v1.7 (이력은 `docs: PRD v0.x~v1.x` 커밋, HTML은 `versions/PRD_new_v5.html`) | 2026-11-24 | quiet-wings (기획·개발 1인) | [테스트 보고서](./TEST_REPORT.md) · [의사결정 로그](./logs/DECISION_LOG.md) · [제출 체크리스트](./SUBMISSION_CHECKLIST.md) |
+| v1.7 (이력은 `docs: PRD v0.x~v1.x` 커밋, HTML은 [`versions/PRD_new_v5.html`](../versions/PRD_new_v5.html)) | 2026-11-24 | quiet-wings (기획·개발 1인) | [테스트 보고서](./TEST_REPORT.md) · [의사결정 로그](./logs/DECISION_LOG.md) · [제출 체크리스트](./SUBMISSION_CHECKLIST.md) |
 
 ## 1. 개요
 
