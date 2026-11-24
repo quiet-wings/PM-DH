@@ -9,6 +9,9 @@ import {
   BookOpen,
   Share2,
   Globe,
+  Settings,
+  ChevronDown,
+  ShieldCheck,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { CloverMascot } from '../components/CloverMascot'
@@ -16,6 +19,7 @@ import { FloatingBubbleItem, BubbleData } from '../components/FloatingBubbleItem
 import { BreathingGuide } from '../components/BreathingGuide'
 import { AffirmationModal } from '../components/AffirmationModal'
 import { SoundBar } from '../components/SoundBar'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { ThemeToggle } from '../components/ThemeToggle'
 import { BottomNav } from '../components/BottomNav'
 import { soundManager } from '../lib/sound'
@@ -95,6 +99,11 @@ function StressReliefHome() {
   const [currentAffirmation, setCurrentAffirmation] = useState<Affirmation | null>(null)
 
   const t = translations[lang]
+
+  // 배경음 자동재생 (브라우저 정책상 첫 터치·클릭 순간 소리가 시작돼요)
+  useEffect(() => {
+    soundManager.autoStartAmbientIfAllowed()
+  }, [])
 
   // Mascot emotive state
   const [mascotMessage, setMascotMessage] = useState<string>(translations.ko.mascotDefault)
@@ -289,11 +298,6 @@ function StressReliefHome() {
 
   return (
     <div className="relative min-h-screen flex flex-col justify-between overflow-x-hidden pb-16 md:pb-0">
-      {/* Ambient background decorative floating orbs */}
-      <div className="fixed top-20 left-10 w-72 h-72 rounded-full bg-emerald-200/20 dark:bg-emerald-900/15 blur-3xl pointer-events-none -z-10" />
-      <div className="fixed top-1/3 right-10 w-80 h-80 rounded-full bg-sky-200/25 dark:bg-sky-900/15 blur-3xl pointer-events-none -z-10" />
-      <div className="fixed bottom-20 left-1/3 w-96 h-96 rounded-full bg-indigo-100/30 dark:bg-purple-950/20 blur-3xl pointer-events-none -z-10" />
-
       {/* Navigation / Header */}
       <header className="sticky top-0 z-40 w-full backdrop-blur-md bg-white/70 dark:bg-zinc-950/70 border-b border-emerald-100/80 dark:border-zinc-800 transition-colors">
         <div className="max-w-6xl mx-auto px-3 sm:px-4 py-3 flex items-center justify-between gap-2 sm:gap-3">
@@ -317,18 +321,6 @@ function StressReliefHome() {
 
           {/* Header Action Tools */}
           <div className="flex items-center gap-1 sm:gap-2 shrink-0">
-            {/* Global Release Count Badge */}
-            <div className="hidden lg:flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50/80 dark:bg-zinc-800 text-emerald-800 dark:text-emerald-300 text-xs font-medium border border-emerald-200/60 dark:border-zinc-700">
-              <Sparkles className="w-3.5 h-3.5 text-emerald-600 animate-spin [animation-duration:10s]" />
-              <span>
-                {t.worriesReleasedTogether} {globalCount.toLocaleString()}
-                {t.countUnit ? `${t.countUnit}` : ''}
-              </span>
-            </div>
-
-            {/* Sound bar */}
-            <SoundBar lang={lang} />
-
             {/* Breathing Guide Button */}
             <button
               onClick={() => setIsBreathingOpen(true)}
@@ -356,40 +348,56 @@ function StressReliefHome() {
               )}
             </button>
 
+            {/* 화면 테마는 자주 누르는 버튼이라 헤더에 따로 둬요 */}
             <ThemeToggle />
 
-            {/* Language Switcher Button (Top Right) */}
-            <button
-              type="button"
-              onClick={handleToggleLanguage}
-              className="shrink-0 h-8 min-w-8 flex items-center justify-center gap-1.5 px-2 lg:px-3 rounded-full bg-white/80 dark:bg-zinc-800/80 border border-emerald-200 dark:border-zinc-700 text-xs font-semibold text-stone-700 dark:text-stone-200 hover:bg-emerald-50 dark:hover:bg-zinc-700 transition-all shadow-xs cursor-pointer"
-              title={t.languageToggleTitle}
-              aria-label={t.languageToggleAria}
-            >
-              <Globe className="hidden lg:block w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-              <span className="lg:hidden">{lang === 'ko' ? '한' : 'EN'}</span>
-              <span className="hidden lg:inline">
-                <span
-                  className={
-                    lang === 'ko'
-                      ? 'text-emerald-700 dark:text-emerald-300 font-bold underline underline-offset-2'
-                      : 'text-stone-400 dark:text-stone-500'
-                  }
+            {/* 설정 하나로 묶기: 소리 · 언어 · 함께 날려보낸 걱정 수 (PRD 6장 단순화) */}
+            <Popover>
+              <PopoverTrigger asChild>
+                <button
+                  type="button"
+                  className="shrink-0 h-8 min-w-8 flex items-center justify-center gap-1.5 px-2 lg:px-3 rounded-full bg-white/80 dark:bg-zinc-800/80 border border-emerald-100 dark:border-zinc-700 text-xs font-medium text-stone-700 dark:text-stone-200 hover:bg-emerald-50 dark:hover:bg-zinc-700 transition-all shadow-xs cursor-pointer"
+                  title={lang === 'ko' ? '설정' : 'Settings'}
+                  aria-label={lang === 'ko' ? '설정 열기' : 'Open settings'}
                 >
-                  한국어
-                </span>
-                <span className="mx-1 text-stone-300 dark:text-stone-600">/</span>
-                <span
-                  className={
-                    lang === 'en'
-                      ? 'text-emerald-700 dark:text-emerald-300 font-bold underline underline-offset-2'
-                      : 'text-stone-400 dark:text-stone-500'
-                  }
+                  <Settings className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                  <span className="hidden lg:inline">{lang === 'ko' ? '설정' : 'Settings'}</span>
+                </button>
+              </PopoverTrigger>
+              <PopoverContent align="end" className="w-64 rounded-2xl space-y-3">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-xs font-semibold text-stone-600 dark:text-stone-300">{lang === 'ko' ? '소리' : 'Sound'}</span>
+                  <SoundBar lang={lang} />
+                </div>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-xs font-semibold text-stone-600 dark:text-stone-300">{lang === 'ko' ? '언어' : 'Language'}</span>
+                  <button
+                    type="button"
+                    onClick={handleToggleLanguage}
+                    className="h-8 flex items-center gap-1.5 px-3 rounded-full bg-white/80 dark:bg-zinc-800/80 border border-emerald-200 dark:border-zinc-700 text-xs font-semibold text-stone-700 dark:text-stone-200 hover:bg-emerald-50 dark:hover:bg-zinc-700 transition-all cursor-pointer"
+                    title={t.languageToggleTitle}
+                    aria-label={t.languageToggleAria}
+                  >
+                    <Globe className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                    <span>{lang === 'ko' ? '한국어 → English' : 'English → 한국어'}</span>
+                  </button>
+                </div>
+                <p className="pt-2 border-t border-stone-100 dark:border-zinc-800 flex items-center gap-1.5 text-[11px] text-emerald-800 dark:text-emerald-300">
+                  <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>
+                    {t.worriesReleasedTogether} {globalCount.toLocaleString()}
+                    {t.countUnit ? `${t.countUnit}` : ''}
+                  </span>
+                </p>
+                <Link
+                  to="/privacy"
+                  className="flex items-center gap-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-400 underline underline-offset-2"
                 >
-                  English
-                </span>
-              </span>
-            </button>
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                  <span>{lang === 'ko' ? '개인정보 처리방침' : 'Privacy policy'}</span>
+                </Link>
+              </PopoverContent>
+            </Popover>
           </div>
         </div>
       </header>
@@ -547,6 +555,11 @@ function StressReliefHome() {
                       <li>저장된 고민은 30일 뒤 자동으로 지워지고, 운영자가 그 전에 지울 수도 있어요.</li>
                       <li>동의하지 않아도 마음버블의 모든 기능을 똑같이 쓸 수 있어요.</li>
                       <li>이름, 연락처처럼 나를 알아볼 수 있는 내용은 적지 말아 주세요.</li>
+                      <li>
+                        <Link to="/privacy" className="underline font-semibold text-emerald-700 dark:text-emerald-400">
+                          개인정보 처리방침 전체 보기
+                        </Link>
+                      </li>
                     </>
                   ) : (
                     <>
@@ -615,73 +628,81 @@ function StressReliefHome() {
           </section>
         )}
 
-        {/* Mind Clarity Progress Bar */}
-        <section className="w-full max-w-2xl mb-6 flex items-center justify-between gap-4 p-4 rounded-2xl bg-white/50 dark:bg-zinc-900/50 border border-stone-200/60 dark:border-zinc-800 backdrop-blur-xs">
-          <div className="flex-1">
-            <div className="flex items-center justify-between text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1.5">
-              <span className="flex items-center gap-1.5">
-                <span>{t.releasedToday}</span>
-                <span className="text-emerald-600 dark:text-emerald-400 font-bold text-sm">
-                  {clearedCount}
-                  {t.countUnit ? `${t.countUnit}` : ''}
-                </span>
-              </span>
-              <span>
-                {clarityPercent >= 100
-                  ? t.clarityRainbow
-                  : clarityPercent >= 50
-                    ? t.clarityClearing
-                    : t.clarityStarting}
-              </span>
-            </div>
-            <div className="w-full h-2 rounded-full bg-stone-200/70 dark:bg-zinc-800 overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-emerald-400 via-teal-400 to-sky-400 transition-all duration-700 rounded-full"
-                style={{ width: `${clarityPercent}%` }}
-              />
-            </div>
-          </div>
-        </section>
-
         {/* Floating Bubble Garden Canvas */}
         <section className="w-full max-w-5xl rounded-[2.25rem] bg-gradient-to-b from-sky-100/55 via-white/50 to-emerald-50/45 dark:from-zinc-900/70 dark:via-slate-900/60 dark:to-zinc-900/70 border border-white/90 dark:border-zinc-800 p-5 md:p-8 shadow-[0_16px_40px_-15px_rgba(56,189,248,0.15)] backdrop-blur-md">
           {/* Controls toolbar */}
           <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
+            {/* 통계·분류는 접어 두기 (PRD 6장 단순화) — 필요할 때만 펼쳐요 */}
+            <details className="group w-full sm:w-auto sm:flex-1 min-w-0" onToggle={(e) => { if (!(e.currentTarget as HTMLDetailsElement).open) setActiveFilter('all') }}>
+              <summary className="list-none cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/80 dark:bg-zinc-800/90 border border-sky-100/80 dark:border-zinc-700 text-xs font-bold text-stone-600 dark:text-stone-300 shadow-2xs [&::-webkit-details-marker]:hidden">
+                <span>{lang === 'ko' ? `오늘 기록 · 분류 보기 (${clearedCount})` : `Today & filters (${clearedCount})`}</span>
+                <ChevronDown className="w-3.5 h-3.5 transition-transform group-open:rotate-180" />
+              </summary>
+              <div className="mt-3 space-y-3">
+                <div className="p-3 rounded-2xl bg-white/60 dark:bg-zinc-900/50 border border-stone-200/60 dark:border-zinc-800">
+          <div className="flex-1">
+                    <div className="flex items-center justify-between text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1.5">
+                      <span className="flex items-center gap-1.5">
+                        <span>{t.releasedToday}</span>
+                        <span className="text-emerald-600 dark:text-emerald-400 font-bold text-sm">
+                          {clearedCount}
+                          {t.countUnit ? `${t.countUnit}` : ''}
+                        </span>
+                      </span>
+                      <span>
+                        {clarityPercent >= 100
+                          ? t.clarityRainbow
+                          : clarityPercent >= 50
+                            ? t.clarityClearing
+                            : t.clarityStarting}
+                      </span>
+                    </div>
+                    <div className="w-full h-2 rounded-full bg-stone-200/70 dark:bg-zinc-800 overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-emerald-400 via-teal-400 to-sky-400 transition-all duration-700 rounded-full"
+                        style={{ width: `${clarityPercent}%` }}
+                      />
+                    </div>
+                  </div>
+                </div>
             {/* Category filter tabs */}
-            <div className="flex items-center gap-1 max-w-full overflow-x-auto scrollbar-none bg-white/80 dark:bg-zinc-800/90 p-1.5 rounded-2xl border border-sky-100/80 dark:border-zinc-700 shadow-2xs [&>button]:shrink-0 [&>button]:whitespace-nowrap">
-              <button
-                type="button"
-                onClick={() => setActiveFilter('all')}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                  activeFilter === 'all'
-                    ? 'bg-emerald-600 text-white shadow-2xs'
-                    : 'text-stone-600 dark:text-stone-400 hover:text-stone-900'
-                }`}
-              >
-                {t.filterAll} ({bubbles.length})
-              </button>
-              {STRESS_CATEGORIES.map((cat) => {
-                const count = bubbles.filter((b) => b.category === cat.id).length
-                const isActive = activeFilter === cat.id
-                const isLove = cat.id === 'love'
-                return (
+                <div className="flex items-center gap-1 max-w-full overflow-x-auto scrollbar-none bg-white/80 dark:bg-zinc-800/90 p-1.5 rounded-2xl border border-sky-100/80 dark:border-zinc-700 shadow-2xs [&>button]:shrink-0 [&>button]:whitespace-nowrap">
                   <button
-                    key={cat.id}
                     type="button"
-                    onClick={() => setActiveFilter(cat.id)}
+                    onClick={() => setActiveFilter('all')}
                     className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                      isActive
-                        ? isLove
-                          ? 'bg-rose-500 text-white shadow-2xs'
-                          : 'bg-emerald-600 text-white shadow-2xs'
+                      activeFilter === 'all'
+                        ? 'bg-emerald-600 text-white shadow-2xs'
                         : 'text-stone-600 dark:text-stone-400 hover:text-stone-900'
                     }`}
                   >
-                    {getCategoryShortLabel(cat.id, lang)} {count > 0 && `(${count})`}
+                    {t.filterAll} ({bubbles.length})
                   </button>
-                )
-              })}
-            </div>
+                  {STRESS_CATEGORIES.map((cat) => {
+                    const count = bubbles.filter((b) => b.category === cat.id).length
+                    const isActive = activeFilter === cat.id
+                    const isLove = cat.id === 'love'
+                    return (
+                      <button
+                        key={cat.id}
+                        type="button"
+                        onClick={() => setActiveFilter(cat.id)}
+                        className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                          isActive
+                            ? isLove
+                              ? 'bg-rose-500 text-white shadow-2xs'
+                              : 'bg-emerald-600 text-white shadow-2xs'
+                            : 'text-stone-600 dark:text-stone-400 hover:text-stone-900'
+                        }`}
+                      >
+                        {getCategoryShortLabel(cat.id, lang)} {count > 0 && `(${count})`}
+                      </button>
+                    )
+                  })}
+                </div>
+
+              </div>
+            </details>
 
             {/* Bulk Release button */}
             {bubbles.length > 0 && (
@@ -745,6 +766,13 @@ function StressReliefHome() {
           </div>
 
           <div className="flex items-center gap-3">
+            <Link
+              to="/privacy"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-white dark:bg-zinc-800 border border-emerald-200 dark:border-zinc-700 text-emerald-800 dark:text-emerald-300 text-xs font-semibold hover:bg-emerald-50 dark:hover:bg-zinc-700 transition-colors shadow-2xs"
+            >
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>{lang === 'ko' ? '개인정보 처리방침' : 'Privacy'}</span>
+            </Link>
             <button
               onClick={() => {
                 if (navigator.share) {

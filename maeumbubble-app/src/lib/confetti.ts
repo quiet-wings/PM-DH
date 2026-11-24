@@ -8,7 +8,7 @@ export function triggerBubblePopConfetti(x?: number, y?: number) {
   const colors = ['#86efac', '#c084fc', '#fde047', '#93c5fd', '#fca5a5', '#6ee7b7']
 
   confetti({
-    particleCount: 28,
+    particleCount: 14, // PRD 6장 단순화: 폭죽을 절반으로
     spread: 60,
     startVelocity: 18,
     ticks: 80,
@@ -22,7 +22,7 @@ export function triggerBubblePopConfetti(x?: number, y?: number) {
 }
 
 export function triggerBreezeCelebration() {
-  const end = Date.now() + 1200
+  const end = Date.now() + 600 // PRD 6장 단순화: 1.2초 → 0.6초
   const colors = ['#86efac', '#a7f3d0', '#bfdbfe', '#e9d5ff', '#fef08a']
 
   const frame = () => {

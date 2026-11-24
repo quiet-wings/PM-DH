@@ -50,6 +50,7 @@ export default defineConfig({
         { path: '/typing' },
         { path: '/books' },
         { path: '/admin' },
+        { path: '/privacy' },
       ],
       prerender: {
         enabled: true,

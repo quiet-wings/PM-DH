@@ -1,0 +1,16 @@
+# Cloudflare Pages 보안 헤더 (빌드할 때 그대로 복사돼요)
+# CSP: 이 사이트 파일과 Google Fonts만 허용. 외부 스크립트·추적 도구 차단.
+# - script 'unsafe-inline': 화면 그리기용 내장 스크립트(테마 미리 적용·화면 이어받기)에 필요
+# - worker blob: 폭죽 효과(canvas-confetti)가 씀 / img data: blob: 위로카드 이미지 저장에 씀
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self'; worker-src 'self' blob:; media-src 'self' data: blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
+  X-Robots-Tag: noindex, nofollow
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: no-referrer
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()
+  Cross-Origin-Opener-Policy: same-origin
+  Strict-Transport-Security: max-age=31536000
+
+/admin/*
+  Cache-Control: no-store

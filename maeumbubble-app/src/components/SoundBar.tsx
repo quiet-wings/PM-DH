@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Volume2, VolumeX, Music } from 'lucide-react'
 import { soundManager } from '../lib/sound'
 import { Language, translations } from '../lib/i18n'
@@ -13,6 +13,12 @@ export function SoundBar({ lang = 'ko' }: SoundBarProps) {
 
   const t = translations[lang]
 
+  // 배경음은 페이지에 들어올 때 자동으로 켜져요(index.tsx). 여기서는 현재 상태만 맞춰요.
+  useEffect(() => {
+    setIsMuted(soundManager.getMuted())
+    setIsAmbientPlaying(soundManager.isAmbientActive())
+  }, [])
+
   const handleToggleMute = () => {
     const nextMuted = !isMuted
     setIsMuted(nextMuted)
@@ -22,6 +28,7 @@ export function SoundBar({ lang = 'ko' }: SoundBarProps) {
   const handleToggleAmbient = () => {
     const nextState = soundManager.toggleAmbientSound()
     setIsAmbientPlaying(nextState)
+    soundManager.saveAmbientPref(nextState)
   }
 
   return (

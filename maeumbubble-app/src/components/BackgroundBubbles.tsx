@@ -1,13 +1,11 @@
 // 모든 페이지 뒤에 은은하게 떠다니는 장식
 // - 라이트 모드: 반투명 거품(구름) 일러스트
 // - 다크 모드: 잔잔하게 반짝이는 작은 별빛
+// PRD 6장 단순화: 화면이 덜 복잡하도록 장식 거품을 6개 → 3개로 줄였어요
 const BUBBLES = [
   { left: '4%', top: '16%', size: 120, delay: '0s', duration: '9s' },
-  { left: '82%', top: '12%', size: 88, delay: '1.5s', duration: '7.5s' },
   { left: '72%', top: '48%', size: 140, delay: '0.8s', duration: '11s' },
-  { left: '10%', top: '64%', size: 96, delay: '2.2s', duration: '8.5s' },
   { left: '46%', top: '82%', size: 112, delay: '1.1s', duration: '10s' },
-  { left: '88%', top: '75%', size: 78, delay: '3s', duration: '7.5s' },
 ]
 
 // 서버와 브라우저에서 항상 같은 위치가 나오도록 고정된 규칙으로 별 위치를 만들어요.
@@ -20,7 +18,7 @@ function seeded(seed: number) {
 }
 
 const rand = seeded(20261112)
-const STARS = Array.from({ length: 56 }, () => {
+const STARS = Array.from({ length: 28 }, () => {
   const r = rand()
   return {
     left: `${(rand() * 100).toFixed(2)}%`,

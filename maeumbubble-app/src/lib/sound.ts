@@ -235,6 +235,39 @@ class SoundManager {
   public isAmbientActive(): boolean {
     return this.isAmbientPlaying
   }
+
+  // 페이지에 들어오면 배경음을 켜 둬요.
+  // 브라우저는 소리 자동재생을 막기 때문에, 첫 터치·클릭·키 입력 순간에 소리가 나기 시작해요.
+  public autoStartAmbient(): boolean {
+    if (typeof window === 'undefined') return false
+    if (!this.isAmbientPlaying && !this.toggleAmbientSound(true)) return false
+    if (this.ctx && this.ctx.state !== 'running') {
+      const events = ['pointerdown', 'touchstart', 'keydown'] as const
+      const unlock = () => {
+        this.ctx?.resume().catch(() => {})
+        events.forEach((e) => window.removeEventListener(e, unlock, true))
+      }
+      events.forEach((e) => window.addEventListener(e, unlock, { capture: true, passive: true }))
+    }
+    return true
+  }
+
+  // 사용자가 배경음을 직접 끈 적이 없을 때만 자동으로 켜요.
+  public autoStartAmbientIfAllowed(): boolean {
+    let off = false
+    try {
+      off = localStorage.getItem(AMBIENT_PREF_KEY) === 'off'
+    } catch {}
+    return off ? false : this.autoStartAmbient()
+  }
+
+  public saveAmbientPref(on: boolean) {
+    try {
+      localStorage.setItem(AMBIENT_PREF_KEY, on ? 'on' : 'off')
+    } catch {}
+  }
 }
+
+export const AMBIENT_PREF_KEY = 'maeum-ambient'
 
 export const soundManager = new SoundManager()

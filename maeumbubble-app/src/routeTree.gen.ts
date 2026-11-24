@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as BooksRouteImport } from './routes/books'
 import { Route as GameRouteImport } from './routes/game'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as TypingRouteImport } from './routes/typing'
 import { Route as ApiReleaseRouteImport } from './routes/api.release'
 import { Route as ApiStatsRouteImport } from './routes/api.stats'
@@ -36,6 +37,11 @@ const BooksRoute = BooksRouteImport.update({
 const GameRoute = GameRouteImport.update({
   id: '/game',
   path: '/game',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TypingRoute = TypingRouteImport.update({
@@ -64,6 +70,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRoute
   '/books': typeof BooksRoute
   '/game': typeof GameRoute
+  '/privacy': typeof PrivacyRoute
   '/typing': typeof TypingRoute
   '/api/release': typeof ApiReleaseRoute
   '/api/stats': typeof ApiStatsRoute
@@ -74,6 +81,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminRoute
   '/books': typeof BooksRoute
   '/game': typeof GameRoute
+  '/privacy': typeof PrivacyRoute
   '/typing': typeof TypingRoute
   '/api/release': typeof ApiReleaseRoute
   '/api/stats': typeof ApiStatsRoute
@@ -85,6 +93,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRoute
   '/books': typeof BooksRoute
   '/game': typeof GameRoute
+  '/privacy': typeof PrivacyRoute
   '/typing': typeof TypingRoute
   '/api/release': typeof ApiReleaseRoute
   '/api/stats': typeof ApiStatsRoute
@@ -97,6 +106,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/books'
     | '/game'
+    | '/privacy'
     | '/typing'
     | '/api/release'
     | '/api/stats'
@@ -107,6 +117,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/books'
     | '/game'
+    | '/privacy'
     | '/typing'
     | '/api/release'
     | '/api/stats'
@@ -117,6 +128,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/books'
     | '/game'
+    | '/privacy'
     | '/typing'
     | '/api/release'
     | '/api/stats'
@@ -128,6 +140,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRoute
   BooksRoute: typeof BooksRoute
   GameRoute: typeof GameRoute
+  PrivacyRoute: typeof PrivacyRoute
   TypingRoute: typeof TypingRoute
   ApiReleaseRoute: typeof ApiReleaseRoute
   ApiStatsRoute: typeof ApiStatsRoute
@@ -162,6 +175,13 @@ declare module '@tanstack/react-router' {
       path: '/game'
       fullPath: '/game'
       preLoaderRoute: typeof GameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/typing': {
@@ -200,6 +220,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRoute,
   BooksRoute: BooksRoute,
   GameRoute: GameRoute,
+  PrivacyRoute: PrivacyRoute,
   TypingRoute: TypingRoute,
   ApiReleaseRoute: ApiReleaseRoute,
   ApiStatsRoute: ApiStatsRoute,
