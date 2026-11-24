@@ -1,0 +1,125 @@
+<title>감정책추천 테스트 보고서</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* Layout: single report column — summary tiles, fix table, scenario table, open items */
+:root{
+  --bg:#eef1f4; --panel:#ffffff; --fg:#1d2733; --muted:#5e6b7a; --line:#d5dbe2;
+  --accent:#2f5d8a; --ai:#6b4f9e; --pass:#2e7d4f; --pass-soft:#e3f2e8; --warn:#9a5b14; --warn-soft:#fbf0e1;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --sans:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141a21; --panel:#1c242d; --fg:#e3e8ee; --muted:#93a1b0; --line:#2e3a46;
+  --accent:#8ab6e0; --ai:#bba4e6; --pass:#7fd1a0; --pass-soft:#1d3327; --warn:#e2b170; --warn-soft:#3a2d1c; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141a21; --panel:#1c242d; --fg:#e3e8ee; --muted:#93a1b0; --line:#2e3a46;
+  --accent:#8ab6e0; --ai:#bba4e6; --pass:#7fd1a0; --pass-soft:#1d3327; --warn:#e2b170; --warn-soft:#3a2d1c; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.65;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:32px 48px}
+main{max-width:920px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+.tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;color:var(--muted)}
+h1{font-size:1.45rem;margin:0;text-wrap:balance}
+h2{font-size:1.08rem;margin:0 0 10px}
+header p,section>p{margin:4px 0 0;color:var(--muted);font-size:.92rem}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.tile .num{font-family:var(--mono);font-size:1.5rem;font-weight:600;font-variant-numeric:tabular-nums}
+.tile .lbl{color:var(--muted);font-size:.85rem}
+.tile.ok .num{color:var(--pass)} .tile.todo .num{color:var(--warn)}
+.tbl{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:.86rem}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+thead th{color:var(--muted);font-weight:500;white-space:nowrap}
+td.n{font-family:var(--mono);color:var(--muted);white-space:nowrap}
+td.in{font-family:var(--mono);font-size:.82rem}
+.pill{display:inline-block;font-family:var(--mono);font-size:.72rem;font-weight:600;padding:1px 8px;border-radius:999px;white-space:nowrap}
+.pill.pass{background:var(--pass-soft);color:var(--pass)}
+.pill.todo{background:var(--warn-soft);color:var(--warn)}
+.kind{font-size:.8rem;color:var(--muted);white-space:nowrap}
+.note{background:var(--warn-soft);border-radius:8px;padding:12px 16px}
+.note ul{margin:6px 0 0;padding-left:1.2em}
+.note li+li{margin-top:4px}
+footer{color:var(--muted);font-size:.8rem}
+</style>
+
+<main>
+  <header>
+    <span class="tag">TEST REPORT · 2026-11-13 · 감정 키워드 책 추천 프로토타입 (탭 1 규칙 / 탭 2 AI)</span>
+    <h1>감정책추천 테스트 보고서</h1>
+    <p>지난 테스트에서 나온 문제 7건을 고친 뒤, 문제별 확인 항목과 정상·예외·실패 시나리오를 다시 돌린 결과입니다.</p>
+  </header>
+
+  <section aria-labelledby="h-sum">
+    <h2 id="h-sum">요약</h2>
+    <div class="tiles">
+      <div class="tile ok"><div class="num">7 / 7</div><div class="lbl">문제 수정 확인 통과</div></div>
+      <div class="tile ok"><div class="num">16 / 16</div><div class="lbl">탭 1 규칙 시나리오 통과</div></div>
+      <div class="tile ok"><div class="num">6 / 6</div><div class="lbl">탭 2 화면 처리 통과 (AI 응답은 모의)</div></div>
+      <div class="tile todo"><div class="num">2</div><div class="lbl">실제 AI 연결로 확인할 항목</div></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-fix">
+    <h2 id="h-fix">① 문제 수정 확인</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>번호</th><th>문제</th><th>해결 내용</th><th>테스트 입력</th><th>실제 결과</th><th>판정</th></tr></thead>
+      <tbody>
+        <tr><td class="n">1</td><td>단어장에 없는 표현은 감정을 찾지 못함</td><td>떨려, 서러워, 잊어버렸어, 허해, 신나 등 표현 추가</td><td class="in">발표 앞두고 손이 떨려</td><td>감정: 불안</td><td><span class="pill pass">PASS</span></td></tr>
+        <tr><td class="n">2</td><td>돌려 말하는 부정을 감정으로 잘못 인식</td><td>"~한 건 아닌데", "~는 아니고" 등도 부정으로 처리</td><td class="in">불안한 건 아닌데 마음이 허해</td><td>불안 제외, 감정: 공허</td><td><span class="pill pass">PASS</span></td></tr>
+        <tr><td class="n">3</td><td>감정과 주제가 다른 책이 섞임</td><td>감정과 같은 분류의 책을 먼저 추천</td><td class="in">불안해요</td><td>『죽고 싶지만 떡볶이는 먹고 싶어』 / 『불안』 / 『나미야 잡화점의 기적』 (『사랑의 기술』 빠짐)</td><td><span class="pill pass">PASS</span></td></tr>
+        <tr><td class="n">4</td><td>못 찾았을 때 추천 도서가 무작위</td><td>고정 기본 추천 3권</td><td class="in">오늘 날씨 좋다</td><td>사전에 없음 + 『불편한 편의점』 / 『멈추면, 비로소 보이는 것들』 / 『어린 왕자』</td><td><span class="pill pass">PASS</span></td></tr>
+        <tr><td class="n">5</td><td>같은 문장을 다시 넣으면 책 순서가 바뀜</td><td>같은 입력은 항상 같은 순서</td><td class="in">불안해요 (2회)</td><td>두 번 모두 같은 순서</td><td><span class="pill pass">PASS</span></td></tr>
+        <tr><td class="n">6</td><td>넓은 단어가 감정이 아닌 문장에서도 걸림</td><td>"시험", "마감", "모르겠"을 빼고 "시험 걱정", "시험 때문" 등 구체 표현으로 교체</td><td class="in">시험 끝나서 신나</td><td>압박 아님 (감정: 설렘)</td><td><span class="pill pass">PASS</span></td></tr>
+        <tr><td class="n">7</td><td>AI 허용을 거절하면 다음 행동이 안내되지 않음</td><td>첫 화면에 "허용하지 않아도 탭 1은 계속 쓸 수 있어요" 안내, 거절 시 "탭 1로 가기" 버튼</td><td class="in">(AI 탭) 허용 거절</td><td>안내 문구 + 버튼 표시, 누르면 탭 1로 이동</td><td><span class="pill pass">PASS</span></td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section aria-labelledby="h-sc">
+    <h2 id="h-sc">② 시나리오 테스트</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>구분</th><th>사용자 입력</th><th>기대 결과</th><th>실제 결과</th><th>판정</th></tr></thead>
+      <tbody>
+        <tr><td class="kind">정상</td><td class="in">발표 앞두고 불안해</td><td>감정: 불안 / 불안 관련 책 3권</td><td>불안 / 『죽고 싶지만 떡볶이는 먹고 싶어』, 『불안』, 『나미야 잡화점의 기적』</td><td><span class="pill pass">PASS</span></td></tr>
+        <tr><td class="kind">정상</td><td class="in">요즘 지치고 외로워</td><td>감정: 지침, 외로움 / 책 3권</td><td>지침, 외로움 / 『가끔은 격하게 외로울 필요가 있다』, 『당신이 옳다』, 『아몬드』</td><td><span class="pill pass">PASS</span></td></tr>
+        <tr><td class="kind">정상</td><td class="in">생각이 많아서 잠이 안 와요</td><td>감정: 생각 많음, 불면 / 책 3권</td><td>생각 많음, 불면 / 『달러구트 꿈 백화점』, 『멈추면, 비로소 보이는 것들』, 『불편한 편의점』</td><td><span class="pill pass">PASS</span></td></tr>
+        <tr><td class="kind">정상</td><td class="in">감정 버튼 "이별"</td><td>감정: 이별 / 이별 관련 책 3권</td><td>이별 / 『왜 나는 너를 사랑하는가』, 『참을 수 없는 존재의 가벼움』, 『모든 순간이 너였다』</td><td><span class="pill pass">PASS</span></td></tr>
+        <tr><td class="kind">정상 (AI)</td><td class="in">서러워서 눈물 나</td><td>감정 판단 + 근거 표현 + 해석 + 책 3권, 이유는 문장에 맞춤</td><td>서러움 + 슬픔 / 근거 "서러워서", "눈물 나" / 책 3권과 맞춤 이유 표시, 탭 1 비교 줄 표시</td><td><span class="pill pass">PASS</span></td></tr>
+        <tr><td class="kind">예외</td><td class="in">친구가 내 생일을 잊어버렸어</td><td>감정: 상처 (문제 1 수정으로 기대 결과 변경)</td><td>상처 / 『관계를 읽는 시간』, 『나는 나로 살기로 했다』, 『당신이 옳다』</td><td><span class="pill pass">PASS</span></td></tr>
+        <tr><td class="kind">예외</td><td class="in">오늘 점심 뭐 먹지</td><td>사전에 없음 + 기본 추천 3권 + 감정 9개</td><td>사전에 없음 + 기본 추천 3권 + 감정 9개 버튼</td><td><span class="pill pass">PASS</span></td></tr>
+        <tr><td class="kind">예외</td><td class="in">불안하지 않아요. 그냥 외로워</td><td>불안 제외, 감정: 외로움</td><td>외로움</td><td><span class="pill pass">PASS</span></td></tr>
+        <tr><td class="kind">예외</td><td class="in">짝사랑하던 사람이랑 헤어졌어요</td><td>감정: 짝사랑, 이별</td><td>짝사랑, 이별</td><td><span class="pill pass">PASS</span></td></tr>
+        <tr><td class="kind">예외</td><td class="in">시험 때문에 스트레스 받아</td><td>감정: 압박 (한 번만)</td><td>압박</td><td><span class="pill pass">PASS</span></td></tr>
+        <tr><td class="kind">예외 (AI)</td><td class="in">발표 앞두고 손이 떨려 (AI가 목록에 없는 책을 고름)</td><td>목록 밖 책은 빼고 빈자리를 채움</td><td>3권 표시 + "2권을 채웠어요" 안내</td><td><span class="pill pass">PASS</span></td></tr>
+        <tr><td class="kind">예외 (AI)</td><td class="in">오늘 점심 뭐 먹지 (AI가 감정 없음)</td><td>감정 없음 안내</td><td>"감정이 드러난 말을 조금 더 적어 주세요"</td><td><span class="pill pass">PASS</span></td></tr>
+        <tr><td class="kind">실패</td><td class="in">(빈칸만 입력)</td><td>결과 없음, 입력창 그대로</td><td>결과 없음</td><td><span class="pill pass">PASS</span></td></tr>
+        <tr><td class="kind">실패 (AI)</td><td class="in">허용 창에서 거절</td><td>안내 + 탭 1 이동, AI 입력 비활성</td><td>안내 + "탭 1로 가기" 버튼 작동, 입력창 비활성</td><td><span class="pill pass">PASS</span></td></tr>
+        <tr><td class="kind">실패 (AI)</td><td class="in">질문을 너무 많이 반복</td><td>잠시 뒤 다시 누르라는 안내, 버튼은 다시 사용 가능</td><td>"요청이 너무 많아요" 안내, 버튼 다시 활성</td><td><span class="pill pass">PASS</span></td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section aria-labelledby="h-open">
+    <h2 id="h-open">남은 확인 사항과 관찰</h2>
+    <div class="note">
+      <b>아직 확인하지 못한 것</b>
+      <ul>
+        <li><b>실제 AI 응답:</b> 탭 2는 AI 답을 흉내 낸 응답으로 화면 처리만 확인했어요. 실제 Claude가 감정을 어떻게 읽는지는 링크에서 직접 눌러 봐야 해요.</li>
+        <li><b>실제 허용 창:</b> 첫 질문 때 뜨는 허용 창과 거절 흐름은 claude.ai에서 직접 확인해야 해요.</li>
+      </ul>
+    </div>
+    <div class="note" style="margin-top:10px">
+      <b>테스트는 통과했지만 다음에 볼 만한 점</b>
+      <ul>
+        <li>"시험 끝나서 신나"는 설렘으로 잡혀서 연애 관련 책이 추천돼요. 설렘에 연애가 아닌 책도 있으면 더 자연스러워요.</li>
+        <li>"요즘 지치고 외로워"처럼 감정이 둘이면 한쪽(외로움) 분류의 책만 나와요. 두 감정의 책을 섞어 보여줄지 정하면 좋아요.</li>
+        <li>단어장은 여전히 정해진 표현만 알아들어요. "가슴이 철렁했어" 같은 말은 계속 "사전에 없음"이에요. 이건 탭 2와의 차이를 보여주는 비교 예시로 남겨 두었어요.</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>테스트 대상: 감정 키워드 책 추천 프로토타입 Version 3 · 책 36권 · 감정 단어장 25개 감정</footer>
+</main>

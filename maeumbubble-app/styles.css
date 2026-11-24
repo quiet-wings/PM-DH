@@ -1,0 +1,276 @@
+:root {
+  --bg-page: #f5f0e1;
+  --bg-card: #faf6ea;
+  --bg-subtle: #ede8d8;
+  --bg-select: #f2ede0;
+  --border-soft: #dfd8c5;
+  --border-strong: #cfc7b2;
+  --text-main: #2e2922;
+  --text-muted: #5a5246;
+  --accent-btn: #239b56;
+  --accent-btn-hover: #1d864a;
+  --tab-active-bg: #332b22;
+  --tab-active-text: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--bg-page);
+  color: var(--text-main);
+  font-family: "Noto Sans KR", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 24px;
+  overflow-x: hidden;
+}
+
+.page {
+  width: 100%;
+  max-width: 1120px;
+  display: grid;
+  grid-template-columns: 1.15fr 0.95fr;
+  align-items: center;
+  gap: 40px;
+}
+
+/* 왼쪽 Hello 타이포그래피 영역 */
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 280px;
+  user-select: none;
+}
+
+.bubble-layer {
+  position: absolute;
+  inset: -40px;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.hello-display {
+  position: relative;
+  z-index: 1;
+  font-family: "Inter", "Noto Sans KR", sans-serif;
+  font-size: clamp(4.5rem, 11vw, 9.25rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  transition: font-size 0.25s ease;
+}
+
+.hello-display.is-korean {
+  font-family: "Noto Sans KR", "Inter", sans-serif;
+  font-size: clamp(3.4rem, 7.2vw, 6.2rem);
+  letter-spacing: -0.03em;
+}
+
+.hello-letter {
+  display: inline-block;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), color 0.3s ease;
+  cursor: default;
+}
+
+.hello-letter:hover {
+  transform: translateY(-8px) scale(1.06);
+}
+
+.hello-letter.is-bouncing {
+  animation: letterPop 0.72s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes letterPop {
+  0% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+  30% {
+    transform: translateY(-34px) rotate(var(--tilt, -8deg)) scale(1.16);
+  }
+  65% {
+    transform: translateY(6px) rotate(calc(var(--tilt, -8deg) * -0.4)) scale(0.95);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+}
+
+/* 스트레스 날리기 버블 파티클 */
+.stress-bubble {
+  position: absolute;
+  border-radius: 999px;
+  opacity: 0.85;
+  animation: floatUp 1.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translate(0, 0) scale(0.4);
+    opacity: 0.9;
+  }
+  70% {
+    opacity: 0.75;
+  }
+  100% {
+    transform: translate(var(--dx, 0px), var(--dy, -140px)) scale(1.25);
+    opacity: 0;
+  }
+}
+
+/* 오른쪽 컨트롤 카드 */
+.control-card {
+  background-color: var(--bg-card);
+  border: 1.5px solid var(--border-soft);
+  border-radius: 22px;
+  padding: 28px;
+  box-shadow: 0 8px 28px rgba(74, 62, 42, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.section-title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: -0.01em;
+}
+
+/* 버튼 · 드롭다운 */
+.action-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.primary-btn {
+  appearance: none;
+  border: none;
+  background-color: var(--accent-btn);
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 13px 22px;
+  border-radius: 13px;
+  cursor: pointer;
+  transition: background-color 0.18s ease, transform 0.12s ease, box-shadow 0.18s ease;
+  box-shadow: 0 3px 10px rgba(35, 155, 86, 0.22);
+}
+
+.primary-btn:hover {
+  background-color: var(--accent-btn-hover);
+  transform: translateY(-1px);
+}
+
+.primary-btn:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+.select-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-width: 170px;
+  flex: 1;
+}
+
+.palette-select {
+  width: 100%;
+  appearance: none;
+  background-color: var(--bg-select);
+  border: 1.5px solid var(--border-strong);
+  border-radius: 13px;
+  padding: 12px 38px 12px 16px;
+  font-family: inherit;
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: var(--text-main);
+  cursor: pointer;
+  transition: border-color 0.18s ease, background-color 0.18s ease;
+}
+
+.palette-select:hover,
+.palette-select:focus-visible {
+  border-color: #9e947e;
+  outline: none;
+}
+
+.select-chevron {
+  position: absolute;
+  right: 14px;
+  pointer-events: none;
+  color: var(--text-muted);
+}
+
+/* 탭 */
+.tab-list {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tab-btn {
+  appearance: none;
+  background-color: var(--bg-card);
+  border: 1.5px solid var(--border-soft);
+  border-radius: 999px;
+  padding: 10px 20px;
+  font-family: inherit;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--text-main);
+  cursor: pointer;
+  transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.12s ease;
+}
+
+.tab-btn:hover:not(.is-active) {
+  background-color: var(--bg-subtle);
+  border-color: var(--border-strong);
+}
+
+.tab-btn.is-active {
+  background-color: var(--tab-active-bg);
+  border-color: var(--tab-active-bg);
+  color: var(--tab-active-text);
+}
+
+.tab-preview {
+  background-color: var(--bg-subtle);
+  border-radius: 12px;
+  padding: 13px 18px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: -0.01em;
+}
+
+@media (max-width: 860px) {
+  .page {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .hero {
+    min-height: 180px;
+  }
+}

@@ -1,0 +1,12 @@
+node_modules
+.DS_Store
+dist
+dist-ssr
+dist-static
+*.local
+.env
+.netlify
+.tanstack
+# 로컬 전용 (Netlify는 pnpm-lock.yaml 사용)
+package-lock.json
+.claude/launch.json
