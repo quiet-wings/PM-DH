@@ -1,7 +1,7 @@
 # main 브랜치에 push하면: 테스트 → 빌드 → Firebase Hosting 배포
 # 필요한 GitHub 설정 (Settings → Secrets and variables → Actions)
 #   - Secret  FIREBASE_SERVICE_ACCOUNT : Firebase 서비스 계정 키(JSON 전체)
-#   - Variable FIREBASE_PROJECT_ID     : Firebase 프로젝트 ID
+#   - Variable FIREBASE_PROJECT_ID     : Firebase 프로젝트 ID (비어 있으면 배포 단계는 건너뛰고 테스트·빌드만 실행)
 name: Test & Deploy to Firebase Hosting
 
 on:
@@ -22,7 +22,7 @@ jobs:
       - name: 빌드
         run: npm run build
       - name: Firebase Hosting 배포
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.FIREBASE_PROJECT_ID != ''
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
