@@ -19,7 +19,7 @@
 ## 2. 절대 규칙
 1. **외부 npm 의존성 추가 금지.** Node 22 내장 기능(`node:test`, `node:fs`)만 사용한다. 브라우저의 Firebase SDK는 gstatic CDN에서 버전 고정으로 불러온다.
    이유: 빌드 단계를 단순하게 유지하고 공급망 위험을 없애기 위함 (DECISION_LOG D-002).
-2. **Gemini API 키를 코드·로그·커밋에 절대 넣지 않는다.** Gemini 키는 Firebase AI Logic이 서버 쪽에서 관리한다. `site/firebase-config.js`의 웹 설정값은 공개 식별자라 커밋해도 되지만, 서비스 계정 키(JSON)는 GitHub Secret에만 둔다.
+2. **Gemini API 키를 코드·로그·커밋에 절대 넣지 않는다.** Gemini 키는 Firebase AI Logic이 서버 쪽에서 관리한다. `site/firebase-config.js`에는 **샘플 값(YOUR_…)만** 커밋한다. 실제 웹 설정은 GitHub Secret `FIREBASE_WEB_CONFIG`(배포) 또는 `site/firebase-config.local.js`(내 컴퓨터, 커밋 금지)로 빌드 때 주입한다 (D-016). 서비스 계정 키(JSON)는 GitHub Secret에만 둔다.
 3. **챗봇은 검색된 블로그 문단만 근거로 답한다.** `lib/prompt.js`의 근거 제한 규칙을 지우거나 약화하지 않는다.
 4. **위기·의료 질문은 AI보다 먼저 규칙으로 처리한다** (`lib/safety.js`). 패턴을 줄일 때는 반드시 테스트를 함께 고친다.
 5. 사용자 입력은 항상 `lib/validate.js`를 거친다 (길이 제한, 빈 값, 타입).

@@ -1,15 +1,16 @@
 // Firebase 웹 앱 설정
-// Firebase 콘솔 → 프로젝트 설정 → 일반 → 내 앱(웹) → "SDK 설정 및 구성"의 firebaseConfig 값을 붙여 넣으세요.
-// 이 값들은 공개돼도 괜찮은 식별자예요(비밀번호가 아님). 대신 App Check로 내 사이트에서만 호출되게 막아요.
-// 값이 비어 있으면 챗봇은 AI 없이 "데모 모드"(블로그 문단 요약)로 동작해요.
+// 저장소에는 샘플 값(YOUR_…)만 둡니다. 실제 값은 빌드할 때 넣어요 (D-016).
+//   - 배포: GitHub Secret FIREBASE_WEB_CONFIG(JSON) → 빌드가 public/assets/firebase-config.js에 주입
+//   - 내 컴퓨터: 이 파일을 site/firebase-config.local.js로 복사해 실제 값 입력 (커밋 안 됨, .gitignore)
+// 값이 샘플이거나 비어 있으면 챗봇은 AI 없이 "데모 모드"(블로그 문단 요약)로 동작해요.
 
 export const firebaseConfig = {
-  apiKey: 'AIzaSyA9lF4TPWXSht1g0WAGEIVassqSB_c1Uy4',
-  authDomain: 'mindbubble-wings.firebaseapp.com',
-  projectId: 'mindbubble-wings',
-  storageBucket: 'mindbubble-wings.firebasestorage.app',
-  messagingSenderId: '57471046972',
-  appId: '1:57471046972:web:9282d07a98ef2b09ab3a39',
+  apiKey: 'YOUR_FIREBASE_API_KEY',
+  authDomain: 'YOUR_PROJECT_ID.firebaseapp.com',
+  projectId: 'YOUR_PROJECT_ID',
+  storageBucket: 'YOUR_PROJECT_ID.firebasestorage.app',
+  messagingSenderId: 'YOUR_SENDER_ID',
+  appId: 'YOUR_APP_ID',
 };
 
 // Firebase AI Logic에서 쓸 Gemini 모델 (콘솔에서 지원 모델 확인 후 바꿀 수 있어요)

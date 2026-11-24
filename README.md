@@ -52,11 +52,12 @@ Windows에서는 [Git for Windows](https://git-scm.com)가 필요해요 (GitHub 
 ## Firebase 배포 (처음 한 번)
 1. [Firebase 콘솔](https://console.firebase.google.com)에서 프로젝트 만들기 (무료 Spark 요금제)
 2. **AI Logic** → 시작하기 → **Gemini Developer API** 선택
-3. 프로젝트 설정 → 내 앱 → 웹 앱 추가 → `firebaseConfig` 값을 [`site/firebase-config.js`](site/firebase-config.js)에 붙여 넣기
+3. 프로젝트 설정 → 내 앱 → 웹 앱 추가 → `firebaseConfig` 값을 확인. **저장소의 [`site/firebase-config.js`](site/firebase-config.js)에는 샘플 키(`YOUR_…`)만 둡니다.** 실제 값은 6번의 Secret으로 넣고, 내 컴퓨터에서 AI까지 보려면 이 파일을 `site/firebase-config.local.js`로 복사해 실제 값을 넣으세요(커밋되지 않음)
 4. **Firestore Database** 만들기 → 규칙 탭에 [`firestore.rules`](firestore.rules) 내용 붙여 넣기
 5. 프로젝트 설정 → 서비스 계정 → 새 비공개 키 생성(JSON)
 6. GitHub 저장소 → Settings → Secrets and variables → Actions
    - Secret `FIREBASE_SERVICE_ACCOUNT` = JSON 파일 내용 전체
+   - Secret `FIREBASE_WEB_CONFIG` = 웹 앱 설정 JSON, 예: `{"apiKey":"…","authDomain":"…","projectId":"…","storageBucket":"…","messagingSenderId":"…","appId":"…"}` (없으면 배포를 건너뜀)
    - Variable `FIREBASE_PROJECT_ID` = 프로젝트 ID
 7. `main`에 push → Actions가 테스트·빌드 후 **미리보기 채널 `share`(30일)**에 배포. 공개 주소로 바꾸려면 `deploy.yml`의 `channelId`를 `live`로
 8. (권장) App Check에서 reCAPTCHA Enterprise 키 발급 → `RECAPTCHA_SITE_KEY`에 입력

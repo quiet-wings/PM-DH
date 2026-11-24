@@ -18,7 +18,7 @@ const index = { posts: posts.map(({ slug, title }) => ({ slug, title })), chunks
 
 // ES 모듈들을 하나의 스크립트로 합치기 (import 줄 제거, export 키워드 제거)
 const strip = (src) => src.replace(/^import[\s\S]*?from\s+['"][^'"]+['"];?\s*$/gm, '').replace(/^export\s+(?=(const|function|async|class|let))/gm, '').replace(/^export\s*\{[^}]*\}.*$/gm, '');
-const mods = ['lib/markdown.js', 'lib/validate.js', 'lib/safety.js', 'lib/search.js', 'lib/prompt.js', 'lib/ratelimit.js', 'lib/clover.js', 'site/config.js']
+const mods = ['lib/markdown.js', 'lib/config-check.js', 'lib/validate.js', 'lib/safety.js', 'lib/search.js', 'lib/prompt.js', 'lib/ratelimit.js', 'lib/clover.js', 'site/config.js']
   .map((f) => `// ── ${f}\n${strip(readFileSync(join(root, f), 'utf8'))}`).join('\n');
 let chat = strip(readFileSync(join(root, 'site', 'chat.js'), 'utf8'))
   .replace("fetch('/search-index.json').then((r) => r.json()).then(prepareIndex)", 'Promise.resolve(prepareIndex(__INDEX__))')

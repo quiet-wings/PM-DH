@@ -4,6 +4,7 @@ import { askClover } from './lib/clover.js';
 import { prepareIndex } from './lib/search.js';
 import { createRateLimiter } from './lib/ratelimit.js';
 import { escapeHtml } from './lib/markdown.js';
+import { isRealConfig } from './lib/config-check.js';
 import { featureLink } from './config.js';
 import * as fb from './firebase-config.js';
 
@@ -22,7 +23,7 @@ function loadIndex() {
 function loadFirebase() {
   if (firebasePromise) return firebasePromise;
   firebasePromise = (async () => {
-    if (!fb.firebaseConfig.apiKey || !fb.firebaseConfig.projectId) return null;
+    if (!isRealConfig(fb.firebaseConfig)) return null;
     const base = `https://www.gstatic.com/firebasejs/${fb.FIREBASE_SDK_VERSION}`;
     try {
       const { initializeApp } = await import(`${base}/firebase-app.js`);

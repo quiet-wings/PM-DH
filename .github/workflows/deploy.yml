@@ -1,6 +1,7 @@
 # main 브랜치에 push하면: 테스트 → 빌드 → Firebase Hosting 미리보기 채널(share, 30일) 배포
 # 필요한 GitHub 설정 (Settings → Secrets and variables → Actions)
 #   - Secret  FIREBASE_SERVICE_ACCOUNT : Firebase 서비스 계정 키(JSON 전체)
+#   - Secret  FIREBASE_WEB_CONFIG      : Firebase 웹 앱 설정(JSON, apiKey·projectId·appId 등) — 저장소에는 샘플 키만 둠 (D-016)
 #   - Variable FIREBASE_PROJECT_ID     : Firebase 프로젝트 ID (비어 있으면 배포 단계는 건너뛰고 테스트·빌드만 실행)
 name: Test & Deploy to Firebase Hosting
 
@@ -12,6 +13,9 @@ on:
 jobs:
   test-build-deploy:
     runs-on: ubuntu-latest
+    env:
+      # secrets는 if 조건에서 바로 쓸 수 없어 여부만 환경변수로 옮김
+      HAS_WEB_CONFIG: ${{ secrets.FIREBASE_WEB_CONFIG != '' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -19,10 +23,13 @@ jobs:
           node-version: 22
       - name: 단위테스트
         run: npm test
-      - name: 빌드
+      - name: 빌드 (실제 Firebase 설정은 Secret에서 주입)
         run: npm run build
+        env:
+          FIREBASE_WEB_CONFIG: ${{ secrets.FIREBASE_WEB_CONFIG }}
       - name: Firebase Hosting 배포
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.FIREBASE_PROJECT_ID != ''
+        # FIREBASE_WEB_CONFIG가 없으면 데모 모드 사이트가 배포되므로 배포를 건너뜀
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.FIREBASE_PROJECT_ID != '' && env.HAS_WEB_CONFIG == 'true'
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
