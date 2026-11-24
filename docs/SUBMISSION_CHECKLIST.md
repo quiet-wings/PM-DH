@@ -12,11 +12,12 @@
 |---|---|---|---|---|
 | 필수 | 배포 URL | 최종 배포된 블로그 링크(URL 형식), 독자용 챗봇이 배포 주소에서 동작 | 비공개 미리보기 링크(12-24 만료, 제출란에 기입) · 테스트 보고서 4장 | ⏳ (사이트·챗봇 동작 ✅, Gemini 403 대기) |
 | 필수 | GitHub 링크 + 커밋 기록 | 저장소 1개, 중간 코드 커밋 과정이 기록되어 있을 것 | https://github.com/quiet-wings/PM-DH/commits/main | ✅ |
-| 필수 | PRD 기획서 | `.md`, 같은 저장소, **2쪽 이하**, 어떤 문제를 푸는지 명확히 정의, 버전별 관리 또는 커밋 메시지로 업데이트 과정 기록 | [`docs/PRD.md`](PRD.md) · 커밋 `docs: PRD v0.1`~`v1.4` · [`versions/PRD_new_v3.html`](../versions/PRD_new_v3.html) | ✅ (11-24 v1.4 A4 2쪽 확인) |
+| 필수 | PRD 기획서 | `.md`, 같은 저장소, **2쪽 이하**, 어떤 문제를 푸는지 명확히 정의, 버전별 관리 또는 커밋 메시지로 업데이트 과정 기록 | [`docs/PRD.md`](PRD.md) · 커밋 `docs: PRD v0.1`~`v1.5` · [`versions/PRD_new_v4.html`](../versions/PRD_new_v4.html) | ✅ (11-24 v1.5 A4 2쪽 확인) |
 | 필수 | 테스트 보고서 | `.md`, 같은 저장소, **2쪽 이하**, 전체 유저플로우 화면 스크린샷 + 기능별 단위테스트 포함 | [`docs/TEST_REPORT.md`](TEST_REPORT.md) · [`docs/screenshots/`](screenshots) | ✅ (11-24 v1.1, 배포 후 검증 포함, A4 2쪽) |
 | 필수 | 로그 ① 에이전트용 지침 | AI 에이전트용 지침 파일 | [`AGENTS.md`](../AGENTS.md) · [`CLAUDE.md`](../CLAUDE.md) | ✅ |
 | 필수 | 로그 ② 성공·실패 로그 | 시행착오 기록 (형식: 상황 → 결과 → 원인 → 조치 → 배운 점) | [`docs/logs/SUCCESS_FAILURE_LOG.md`](logs/SUCCESS_FAILURE_LOG.md) | ✅ |
 | 필수 | 로그 ③ 의사결정 로그 | 무엇을·누가·왜 결정했는지 한 줄씩 | [`docs/logs/DECISION_LOG.md`](logs/DECISION_LOG.md) | ⏳ (D-001·002·004·005·006 결정자 확인 필요) |
+| 참고 | 마음버블 앱 배포 | 블로그가 연결하는 서비스 (제출 URL은 **블로그** 주소) | https://maeumbubble-test.pages.dev (11-24 15:5x 홈·메뉴 링크 확인) | ✅ |
 | 필수 | 소스코드 | 같은 저장소 | `lib/` `site/` `scripts/` `posts/` `tests/` · 마음버블 앱 `maeumbubble-app/` | ✅ |
 | 제출 | 결과보고서 | 안내문 "github 링크 / 결과보고서까지 제출" — 별도 양식 언급 없음 | 강사님께 형식 확인 필요 (테스트 보고서로 갈음되는지) | ❌ |
 

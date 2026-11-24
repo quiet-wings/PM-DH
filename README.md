@@ -6,7 +6,7 @@
 | 제출물 | 위치 |
 |---|---|
 | 배포된 블로그 | Firebase Hosting **비공개 미리보기 링크**(30일) — 링크는 제출란으로만 공유 ([D-011](docs/logs/DECISION_LOG.md)) |
-| PRD 기획서 (v0.1 → v1.4) | [`docs/PRD.md`](docs/PRD.md) · 버전별 HTML [`versions/`](versions) |
+| PRD 기획서 (v0.1 → v1.5) | [`docs/PRD.md`](docs/PRD.md) · 버전별 HTML [`versions/`](versions) |
 | 제출 체크리스트 | [`docs/SUBMISSION_CHECKLIST.md`](docs/SUBMISSION_CHECKLIST.md) |
 | 개인정보 처리방침 | 사이트의 `/privacy` 페이지 (모든 페이지 하단·챗봇 안내문에 링크) |
 | 테스트 보고서 | [`docs/TEST_REPORT.md`](docs/TEST_REPORT.md) · 스크린샷 [`docs/screenshots/`](docs/screenshots) |
@@ -14,7 +14,7 @@
 | 의사결정 로그 | [`docs/logs/DECISION_LOG.md`](docs/logs/DECISION_LOG.md) |
 | 성공·실패 로그 | [`docs/logs/SUCCESS_FAILURE_LOG.md`](docs/logs/SUCCESS_FAILURE_LOG.md) |
 | 소스코드 | 블로그: `lib/`(챗봇·검색·안전 규칙), `site/`(화면), `scripts/`(빌드), `posts/`(글), `tests/` · 마음버블 앱: [`maeumbubble-app/`](maeumbubble-app) |
-| 마음버블 앱 | https://maeumbubble-test.pages.dev (Cloudflare Pages) — 배경음·단순화·처리방침·보안 헤더 반영 |
+| 마음버블 앱 | https://maeumbubble-test.pages.dev (Cloudflare Pages) — 배경음·단순화·처리방침·보안 헤더 반영, 동의한 고민만 암호화해 익명 전송(30일 자동 삭제)·운영자 페이지 |
 
 ## 어떤 문제를 푸나요
 - **독자**: 지친 순간에 긴 글을 다 읽기 어렵고, 답이 어느 글에 있는지 모른다.

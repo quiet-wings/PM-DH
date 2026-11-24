@@ -47,6 +47,7 @@ PRD 3장 지표와의 연결: 위기 대응 100%(안전 13/13), 범위 밖 정�
 |---|---|
 | 홈·글·처리방침·404, 모바일 가로 넘침·콘솔 오류 | ✅ 4개 화면 × 2개 폭 정상 |
 | 보안 헤더(CSP) 적용 후 기능 충돌 / 마음버블 링크(UTM) | ✅ 챗봇 질문 5종(출처·범위 밖·의료·위기) 동작, CSP 위반 0건 / UTM 포함 |
+| 마음버블 앱 배포 주소(maeumbubble-test.pages.dev) | ✅ 홈 화면 로드, 미니게임·타이핑·서점·처리방침 링크 확인 (익명 고민 전송·운영자 페이지는 별도 확인 필요) |
 | 실제 Gemini 답변 | ❌ 403 → **데모 답변으로 안전하게 대체**. Cloud API 설정 확인 후 재검증 |
 
 배포 주소 화면: [출처 답변](screenshots/deploy-02-answer.png) · [범위 밖](screenshots/deploy-04-out-of-scope.png) · [위기](screenshots/deploy-06-crisis.png) · [개인정보 처리방침](screenshots/deploy-07-privacy.png) (`docs/screenshots/deploy-*.png`)

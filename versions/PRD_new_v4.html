@@ -1,0 +1,212 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PRD — 마음버블 블로그 v1.5</title>
+<style>
+@page{size:A4;margin:14mm 14mm}
+body{font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR','Noto Sans CJK KR',sans-serif;color:#1f2a26;max-width:860px;margin:24px auto;padding:0 20px;line-height:1.6;font-size:11pt;word-break:keep-all}
+h1{font-size:18pt;border-bottom:3px solid #15803d;padding-bottom:6px;margin:0 0 10px}
+h2{font-size:13pt;color:#15803d;margin:16px 0 6px}
+h3{font-size:11.5pt;margin:10px 0 4px}
+table{border-collapse:collapse;width:100%;margin:6px 0;font-size:9.5pt}
+th,td{border:1px solid #cfe5d8;padding:4px 7px;vertical-align:top;text-align:left}
+th{background:#ecfdf5}
+blockquote{margin:6px 0;padding:6px 12px;background:#f0fdf4;border-left:4px solid #15803d}
+blockquote p{margin:4px 0}
+code{background:#eef6f1;padding:1px 4px;border-radius:4px;font-size:.92em}
+pre{background:#f4f8f6;padding:10px;border-radius:8px;overflow:auto;font-size:9pt}
+ul{padding-left:1.3em;margin:4px 0} li{margin:2px 0} p{margin:5px 0}
+img{max-width:100%}
+</style></head><body><h1>PRD — 마음버블 블로그 「클로버에게 물어보기」</h1>
+<table>
+<thead>
+<tr>
+<th>버전</th>
+<th>작성일</th>
+<th>작성자</th>
+<th>관련 문서</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>v1.5 (이력은 <code>docs: PRD v0.x~v1.x</code> 커밋, HTML은 <code>versions/PRD_new_v4.html</code>)</td>
+<td>2026-11-24</td>
+<td>quiet-wings (기획·개발 1인)</td>
+<td><a href="./TEST_REPORT.md">테스트 보고서</a> · <a href="./logs/DECISION_LOG.md">의사결정 로그</a> · <a href="./SUBMISSION_CHECKLIST.md">제출 체크리스트</a></td>
+</tr>
+</tbody></table>
+<h2>1. 개요</h2>
+<p><strong>마음버블</strong>은 걱정을 비눗방울에 적어 터뜨리는 스트레스 해소 웹서비스다. 서비스를 알리기 위해 <strong>마음버블 블로그</strong>를 열고, <strong>블로그 글만 근거로 답하는 AI 챗봇</strong>을 붙인다. 독자는 내 상황에 맞는 답·출처 글·바로 해 볼 기능을 받고, 운영자는 반복 응대를 자동화하며 <strong>답하지 못한 질문을 다음 글 주제로 쓴다.</strong></p>
+<h2>2. 문제</h2>
+<p><strong>문제 정의(한 문장)</strong>: 지친 독자는 답이 어느 글에 있는지 몰라 이탈하고, 1인 운영자는 같은 질문에 반복해서 답한다.</p>
+<blockquote>
+<p><strong>독자</strong>: 지친 20~30대는 긴 글을 읽을 여유가 없다. ① 답이 <strong>어느 글에 있는지 몰라</strong> ② 이탈하고, 호흡·게임 같은 마음버블 기능으로 이어지지 않는다(블로그 → 서비스 <strong>유입 경로 없음</strong>).
+<strong>운영자</strong>: 1인 운영이라 ④ <strong>같은 질문에 반복해서 답하고</strong>, ⑤ 독자가 <strong>무엇을 궁금해하는지 데이터가 없어</strong> 글 주제를 감으로 정한다. ③ 위기 표현은 놓치면 안 된다.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>데스크리서치</th>
+<th>현황</th>
+<th>시사점</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>블로그 검색(티스토리 등)</td>
+<td>키워드 일치 검색이라 &quot;잠이 안 와요&quot; 같은 문장 질문에 약함</td>
+<td>문장형 질문을 이해하는 검색 필요</td>
+</tr>
+<tr>
+<td>범용 AI 챗봇</td>
+<td>내 글·내 서비스를 모르고 출처가 없음</td>
+<td>답의 근거를 내 글로 묶어야(RAG) 신뢰·유입이 생김</td>
+</tr>
+<tr>
+<td>멘탈케어 앱</td>
+<td>기능은 많지만 가입·설치 장벽</td>
+<td>가입 없는 웹이라 &quot;블로그 → 바로 체험&quot;이 쉬움</td>
+</tr>
+</tbody></table>
+<p><strong>타깃 사용자</strong></p>
+<ul>
+<li><strong>지친 독자(주)</strong>: 20~30대 직장인·학생, 퇴근길·잠들기 전 모바일 접속.</li>
+<li><strong>정신건강의학과 환자(주, 상용화 단계)</strong>: 병원 치료 프로그램에서 의료진이 권하는 <strong>보조 도구</strong>로 진료 사이 자기관리를 돕는다. 선행 조건: 치료 대체 금지, 디지털의료제품법상 해당 여부 검토·인허가, 건강정보 별도 동의·암호화, 임상 근거. MVP는 진단·처방성 답변 금지, 개인 기록 미수집으로 설계한다.</li>
+<li><strong>운영자(부)</strong>: 응대 시간을 줄이고 글 주제를 데이터로 정하고 싶은 1인 기획자.</li>
+</ul>
+<h2>3. 목표와 성공 지표 (출시 후 4주)</h2>
+<table>
+<thead>
+<tr>
+<th>북극성 지표</th>
+<th>품질</th>
+<th>안전</th>
+<th>정직성</th>
+<th>마케팅</th>
+<th>운영</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>출처 붙은 답변 수 주 50건</td>
+<td>근거 있는 질문의 출처 포함률 90%↑</td>
+<td>위기 표현 안전 안내 100%</td>
+<td>범위 밖 질문 &quot;아직 없는 내용&quot; 100%</td>
+<td>답변 → 기능 링크 클릭률 15%↑</td>
+<td>갭 질문 → 새 글 월 2편</td>
+</tr>
+</tbody></table>
+<h2>4. 솔루션과 기능 요구사항</h2>
+<table>
+<thead>
+<tr>
+<th>순위</th>
+<th>기능</th>
+<th>설명</th>
+<th>문제</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>P0</td>
+<td>블로그</td>
+<td>마크다운 글 → 정적 페이지, 마음버블 톤 디자인, 모바일 우선</td>
+<td>②</td>
+</tr>
+<tr>
+<td>P0</td>
+<td>근거 기반 답변</td>
+<td>검색 상위 4개 문단만 근거로 3~5문장, 출처 글 링크</td>
+<td>①④</td>
+</tr>
+<tr>
+<td>P0</td>
+<td>모르면 모른다고</td>
+<td>근거가 없으면 AI를 부르지 않고 &quot;아직 블로그에 없는 내용&quot;</td>
+<td>⑤</td>
+</tr>
+<tr>
+<td>P0</td>
+<td>위기·의료 대응</td>
+<td>위기 표현은 AI 없이 109·1577-0199·119 안내, 진단·약 질문은 의료진 상담 권유</td>
+<td>③</td>
+</tr>
+<tr>
+<td>P0</td>
+<td>남용 방지</td>
+<td>300자 제한, 브라우저당 분당 10회, App Check, 키를 코드에 넣지 않음</td>
+<td>운영</td>
+</tr>
+<tr>
+<td>P1</td>
+<td>기능 추천·갭 로그·데모 모드</td>
+<td>글 주제에 맞는 기능 링크 / 답 못 한 질문을 개인정보 가려 Firestore에 기록 / AI 장애 시 문단 요약으로 대체</td>
+<td>②⑤</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>관리자 글쓰기 자동화</td>
+<td>초안 → 제목·요약·태그·SNS 문구 (<strong>이번 구현 범위 제외</strong>, 차기)</td>
+<td>④</td>
+</tr>
+</tbody></table>
+<p><strong>범위 밖</strong>: 로그인, 대화 기록 저장, 진단·상담 대체.</p>
+<h2>5. 출시·운영·마케팅과 리스크</h2>
+<ul>
+<li><strong>출시</strong>: push → Actions(테스트·빌드) → Firebase Hosting. Cloud Functions는 유료라 AI Logic(Gemini, 무료)을 브라우저에서 호출 + App Check(D-007).</li>
+<li><strong>운영</strong>: 주 1회 Firestore <code>content_gaps</code> 질문으로 글 주제 선정. 새 글은 push만 하면 챗봇이 바로 근거로 씀.</li>
+<li><strong>마케팅(마음버블 유입)</strong>: 블로그에서 서비스로 가는 경로가 없던 문제를 글마다 &quot;마음버블에서 해 보기&quot; 버튼, 답변의 기능 링크로 연결하고, 위로카드 공유에 블로그 주소를 넣어 되돌아오게 한다. 지표는 기능 링크 클릭률(UTM <code>utm_source=maeum-blog</code>).</li>
+<li><strong>기관 서비스로의 활용</strong>: 근거 문서로만 답하기·위기 규칙 우선·개인 기록 미수집은 병원·기관용 보조 도구의 필수 조건이다. 갭 로그·안전 테스트 방식을 기관 콘텐츠 검증 절차로 확장한다(D-008).</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>리스크</th>
+<th>대응</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AI 환각</td>
+<td>근거 문단만 쓰도록 지시, 근거 없으면 AI 호출 생략</td>
+</tr>
+<tr>
+<td>위기 사용자에게 부적절한 답</td>
+<td>규칙으로 먼저 처리, AI에 맡기지 않음</td>
+</tr>
+<tr>
+<td>무료 한도 초과·장애</td>
+<td>호출 제한, 실패·15초 초과 시 데모 답변</td>
+</tr>
+<tr>
+<td>개인정보</td>
+<td>질문 원문 미저장, 갭 로그 마스킹, 처리방침 공개</td>
+</tr>
+<tr>
+<td>병원 연계 규제</td>
+<td>웰니스 보조로 먼저 출시, 병원과 공동 검증 후 인허가 결정</td>
+</tr>
+</tbody></table>
+<h2>6. 추가 개선 기능 (v1.2~1.5, 11-24)</h2>
+<table>
+<thead>
+<tr>
+<th>영역</th>
+<th>개선 내용</th>
+<th>결정</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>배포·유입</td>
+<td>블로그 비공개 미리보기(30일), 마음버블 링크 → pages.dev + UTM</td>
+<td>D-011·012</td>
+</tr>
+<tr>
+<td>단순화</td>
+<td>헤더 버튼 7→4개, 소리·언어는 설정으로, 장식 절반, 배경음 첫 터치 재생</td>
+<td>D-013·014</td>
+</tr>
+<tr>
+<td>운영 데이터</td>
+<td>동의한 고민만 암호화·익명 전송(30일 삭제) → 운영자 통계로 글 주제 선정</td>
+<td>—</td>
+</tr>
+<tr>
+<td>개인정보·보안</td>
+<td>처리방침 페이지, 보안 헤더(CSP), 모바일 점검 위반 0건</td>
+<td>D-015</td>
+</tr>
+</tbody></table>
+</body></html>
