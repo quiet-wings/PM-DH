@@ -1,4 +1,4 @@
-# main 브랜치에 push하면: 테스트 → 빌드 → Firebase Hosting 배포
+# main 브랜치에 push하면: 테스트 → 빌드 → Firebase Hosting 미리보기 채널(share, 30일) 배포
 # 필요한 GitHub 설정 (Settings → Secrets and variables → Actions)
 #   - Secret  FIREBASE_SERVICE_ACCOUNT : Firebase 서비스 계정 키(JSON 전체)
 #   - Variable FIREBASE_PROJECT_ID     : Firebase 프로젝트 ID (비어 있으면 배포 단계는 건너뛰고 테스트·빌드만 실행)
@@ -28,4 +28,6 @@ jobs:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
           projectId: ${{ vars.FIREBASE_PROJECT_ID }}
-          channelId: live
+          # 링크를 공유한 사람만 보도록 비공개 미리보기 채널에 배포 (D-011). 공개 주소로 바꾸려면 live
+          channelId: share
+          expires: 30d
