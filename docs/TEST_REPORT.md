@@ -2,11 +2,11 @@
 
 | 항목 | 내용 |
 |---|---|
-| 문서 버전 | v1.1 (배포 후 검증 추가) |
+| 문서 버전 | v1.2 (Claude 중계 실서비스 검증) |
 | 테스트 일자 | 2026-11-24 |
 | 대상 | `main` 브랜치 (PRD v1.3 기준) · 배포: Firebase Hosting 비공개 미리보기 채널 |
 | 환경 | Node 22 `node:test` · Chromium(Playwright) 390×844 모바일 / 1280×800 데스크톱 · 로컬 서버 `npm run dev` |
-| 결과 | **단위테스트 61/61 통과 (100%)** · 유저플로우 11개 화면 + 배포 주소 화면 정상 · CSP 위반 0건 → P0 통과, **Gemini 연결(403)만 콘솔 설정 대기** |
+| 결과 | **단위테스트 68/68 통과 (100%)** · 유저플로우 11개 화면 + 배포 주소 화면 정상 · CSP 위반 0건 · **배포 주소에서 실제 AI(Claude) 답변 확인** → P0·P1 통과, **출시 가능** |
 
 ## 1. 기능별 단위테스트 (`npm test`)
 
@@ -48,6 +48,6 @@ PRD 3장 지표와의 연결: 위기 대응 100%(안전 13/13), 범위 밖 정�
 | 홈·글·처리방침·404, 모바일 가로 넘침·콘솔 오류 | ✅ 4개 화면 × 2개 폭 정상 |
 | 보안 헤더(CSP) 적용 후 기능 충돌 / 마음버블 링크(UTM) | ✅ 챗봇 질문 5종(출처·범위 밖·의료·위기) 동작, CSP 위반 0건 / UTM 포함 |
 | 마음버블 앱 배포 주소(maeumbubble-test.pages.dev) | ✅ 홈 화면 로드, 미니게임·타이핑·서점·처리방침 링크 확인 (익명 고민 전송·운영자 페이지는 별도 확인 필요) |
-| 실제 Gemini 답변 | ❌ 403 → **데모 답변으로 안전하게 대체**. Cloud API 설정 확인 후 재검증 |
+| 실제 AI 답변 (Cloudflare 중계 → Claude, D-017) | ✅ 근거 번호·출처 표시, 응답 4.6~5.1초. 타 도메인·직접 호출 403 차단. Gemini 경로는 403(API·초기 설정·App Check)로 전환 |
 
 배포 주소 화면: [출처 답변](screenshots/deploy-02-answer.png) · [범위 밖](screenshots/deploy-04-out-of-scope.png) · [위기](screenshots/deploy-06-crisis.png) · [개인정보 처리방침](screenshots/deploy-07-privacy.png) (`docs/screenshots/deploy-*.png`)
