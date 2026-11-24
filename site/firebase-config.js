@@ -13,6 +13,10 @@ export const firebaseConfig = {
   appId: 'YOUR_APP_ID',
 };
 
+// AI 중계 주소 (Cloudflare Pages Functions → Claude API, 키는 Cloudflare 비밀값에만 있음, D-016)
+// 값이 있으면 이 주소로 답변을 만들고, 비우면 Firebase AI Logic(Gemini)을 써요.
+export const AI_PROXY_URL = 'https://maeumbubble-test.pages.dev/api/ask';
+
 // Firebase AI Logic에서 쓸 Gemini 모델 (콘솔에서 지원 모델 확인 후 바꿀 수 있어요)
 export const GEMINI_MODEL = 'gemini-3.8-flash';
 

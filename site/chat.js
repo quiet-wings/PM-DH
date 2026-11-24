@@ -19,6 +19,20 @@ function loadIndex() {
   return indexPromise;
 }
 
+/** AI 중계 주소로 답변 만들기 (키는 서버에만 있음). 실패하면 예외 → clover.js가 데모 답변으로 대체 */
+const proxyGenerate = fb.AI_PROXY_URL
+  ? async ({ prompt }) => {
+      const res = await fetch(fb.AI_PROXY_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) throw new Error(`proxy ${res.status} ${data.error || ''}`);
+      return data.text;
+    }
+  : null;
+
 /** Firebase AI Logic 연결 — 설정이 없거나 실패하면 null (데모 모드) */
 function loadFirebase() {
   if (firebasePromise) return firebasePromise;
@@ -140,7 +154,7 @@ function mount(root) {
       const [index, firebase] = await Promise.all([loadIndex(), loadFirebase()]);
       const res = await askClover({
         question, index, featureLink,
-        generate: firebase?.generate,
+        generate: proxyGenerate || firebase?.generate,
         onGap: (q) => { console.info('[content-gap]', q); firebase?.onGap(q); },
       });
       typing.remove();

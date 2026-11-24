@@ -20,3 +20,4 @@
 | 14 | 11-24 | 보안 헤더(CSP) 추가 후 기능 충돌 점검 | ✅ | 강한 CSP는 외부 SDK·Worker·blob 이미지를 막아 기능이 멈출 수 있음 | 블로그: gstatic(Firebase SDK)·Gemini·Firestore만 허용, 마음버블: Google Fonts·blob Worker(폭죽)·blob 이미지(카드 저장)만 허용 → 로컬에서 헤더를 똑같이 붙여 360·390px로 전 페이지·챗봇·버블·게임 클릭 시험, 위반 0건 | 보안 설정은 "넣고 끝"이 아니라 기능별로 눌러 봐야 함 |
 | 15 | 11-24 | 마음버블 앱 작업을 별도 폴더(다른 계정 저장소)에서 진행 | ❌→✅ | 과제 저장소(quiet-wings/PM-DH)가 아닌 곳에 코드가 있어 커밋 기록이 남지 않음 | 원본을 `maeumbubble-app/`으로 먼저 커밋하고 오늘 개선분을 다음 커밋으로 올려 변경 이력이 보이게 함. 비밀값 파일은 제외 | 작업 시작 전에 "어느 저장소에 남길지"부터 확인 |
 | 16 | 11-24 | 배포 조건에 `secrets.FIREBASE_WEB_CONFIG` 사용 | ❌→✅ | GitHub Actions는 step의 `if`에서 `secrets`를 직접 읽지 못함 | job 환경변수 `HAS_WEB_CONFIG`로 옮겨 조건 판단 | 비밀값은 '있는지 여부'만 조건으로 쓴다 |
+| 16 | 11-24 | Gemini 403 원인 추적 | ❌→(전환) | 403의 원인이 한 겹씩 드러남: Gemini API 꺼짐 → AI Logic API 꺼짐 → AI Logic 초기 설정 없음(genai config not found) → App Check 적용(401) | 응답 메시지를 단계마다 읽으며 콘솔에서 하나씩 켬. 마감을 고려해 강사 제공 Claude 키 + Cloudflare 중계로 전환(D-016) | 외부 AI는 "API 켜기·초기 설정·접근 보호" 3단계를 첫날 체크리스트로 확인 |

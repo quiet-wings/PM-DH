@@ -44,7 +44,7 @@ test('firebase.json에 보안 헤더(CSP)가 있고 챗봇에 필요한 주소�
   const cfg = JSON.parse(readFileSync(join(root, 'firebase.json'), 'utf8'));
   const all = cfg.hosting.headers.flatMap((h) => h.headers);
   const csp = all.find((h) => h.key === 'Content-Security-Policy')?.value || '';
-  for (const need of ["default-src 'self'", 'https://www.gstatic.com', 'https://firebasevertexai.googleapis.com', 'https://firestore.googleapis.com', "frame-ancestors 'none'", "object-src 'none'"]) {
+  for (const need of ["default-src 'self'", 'https://www.gstatic.com', 'https://firebasevertexai.googleapis.com', 'https://firestore.googleapis.com', 'https://maeumbubble-test.pages.dev', "frame-ancestors 'none'", "object-src 'none'"]) {
     assert.ok(csp.includes(need), need);
   }
   assert.ok(!/script-src[^;]*'unsafe-inline'/.test(csp), '스크립트 인라인 허용 금지');
@@ -56,9 +56,9 @@ test('글 페이지에 마음버블 기능 버튼이 있다', () => {
 });
 
 test('서비스 계정 키·Gemini 키가 코드에 들어 있지 않다', () => {
-  const files = ['site/chat.js', 'lib/clover.js', 'lib/prompt.js', '.github/workflows/deploy.yml'];
+  const files = ['site/chat.js', 'site/firebase-config.js', 'lib/clover.js', 'lib/prompt.js', '.github/workflows/deploy.yml', 'maeumbubble-app/cloudflare/functions/api/ask.js'];
   for (const f of files) {
     const s = readFileSync(join(root, f), 'utf8');
-    assert.ok(!/"private_key"|BEGIN PRIVATE KEY|GEMINI_API_KEY\s*=/.test(s), f);
+    assert.ok(!/"private_key"|BEGIN PRIVATE KEY|GEMINI_API_KEY\s*=|sk-ant-[A-Za-z0-9_-]{10,}/.test(s), f);
   }
 });
