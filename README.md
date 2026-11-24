@@ -33,6 +33,14 @@ npm run dev     # 빌드 후 http://localhost:5173 (Firebase 설정이 비어 �
 ```
 외부 npm 패키지가 없어 `npm install`이 필요 없습니다 (Node 22 이상).
 
+## 수정한 내용 저장하기 (커밋 + GitHub 올리기)
+```bash
+npm run save -- "fix: 마음버블 실제 주소로 변경"
+```
+메시지 형식 검사 → 최신 내용 받기 → 테스트 → 커밋 → push를 한 번에 합니다. 테스트가 실패하면 커밋하지 않아요.
+메시지 종류: `feat`(기능) `fix`(수정) `docs`(문서) `test`(테스트) `chore`(설정) `refactor` `style`. 연습: 끝에 `--dry`.
+Windows에서는 [Git for Windows](https://git-scm.com)가 필요해요 (GitHub Desktop만으로는 `git` 명령이 없음).
+
 ## Firebase 배포 (처음 한 번)
 1. [Firebase 콘솔](https://console.firebase.google.com)에서 프로젝트 만들기 (무료 Spark 요금제)
 2. **AI Logic** → 시작하기 → **Gemini Developer API** 선택

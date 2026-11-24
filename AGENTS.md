@@ -33,7 +33,7 @@
 1. `npm run build` → `npm test` → `npm run dev` 로 로컬 확인 (Firebase 설정이 비어 있으면 데모 모드로 동작)
 2. 의미 있는 결정을 했다면 `docs/logs/DECISION_LOG.md`에 한 줄 추가
 3. 실패/성공 경험은 `docs/logs/SUCCESS_FAILURE_LOG.md`에 기록
-4. 커밋 메시지는 Conventional Commits: `feat:`, `fix:`, `docs:`, `test:`, `chore:`, `refactor:`
+4. 커밋은 `npm run save -- "종류: 내용"`으로 한다 (테스트 통과 시에만 커밋·push). 메시지는 Conventional Commits: `feat:`, `fix:`, `docs:`, `test:`, `chore:`, `refactor:`
 
 ## 5. 새 글 발행 방법 (운영)
 1. `posts/`에 `YYYY-MM-DD-slug.md` 생성, front-matter에 `title`, `date`, `tags`, `summary`, `feature`(home·breathing·game·typing·books) 작성

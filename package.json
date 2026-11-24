@@ -4,10 +4,13 @@
   "private": true,
   "description": "마음버블 블로그 + 블로그 글 근거 AI Q&A 챗봇 「클로버에게 물어보기」",
   "type": "module",
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "build": "node scripts/build.mjs",
     "dev": "node scripts/build.mjs && node scripts/dev.mjs",
-    "test": "node --test --test-concurrency=1 tests/*.test.js"
+    "test": "node --test --test-concurrency=1 tests/*.test.js",
+    "save": "node scripts/save.mjs"
   }
 }
