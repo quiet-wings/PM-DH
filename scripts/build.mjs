@@ -4,7 +4,7 @@ import { mkdirSync, writeFileSync, cpSync, rmSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadPosts, chunkPost } from '../lib/posts.js';
-import { renderIndex, renderPost, render404 } from '../lib/templates.js';
+import { renderIndex, renderPost, render404, renderPrivacy } from '../lib/templates.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const out = join(root, 'public');
@@ -21,6 +21,7 @@ export function build() {
     writeFileSync(join(out, 'posts', `${post.slug}.html`), renderPost(post, others));
   }
   writeFileSync(join(out, '404.html'), render404());
+  writeFileSync(join(out, 'privacy.html'), renderPrivacy());
 
   // 챗봇 검색 색인: 글을 문단 조각으로 나눠 JSON으로 저장
   const chunks = posts.flatMap((p) => chunkPost(p));

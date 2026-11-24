@@ -17,3 +17,4 @@
 | 11 | 11-24 | PRD·테스트 보고서를 A4로 출력해 분량 확인 | ❌→✅ | PRD 4쪽, 보고서 3쪽으로 "2쪽 이하" 조건 초과 | 글자 크기는 그대로 두고 문장·표를 압축(지표 표 가로 배치, 기능 P1 통합) | 분량 조건은 실제로 출력해서 확인 |
 | 12 | 11-24 | GitHub Actions로 Firebase 미리보기 채널 배포 | ❌→✅ | Secret에 서비스 계정 키(JSON) 대신 콘솔의 Admin SDK 예시 코드(`var admin = …`)가 들어가 인증 실패(3회) | 배포 로그의 `"var admin"… is not valid JSON` 문구로 원인 특정 → "새 비공개 키 생성"으로 받은 JSON을 `gh secret set`으로 재등록 → 배포 성공 | 실패 시 로그 원문을 먼저 읽는다. Secret은 값이 안 보이니 등록 시각으로 갱신 여부 확인 |
 | 13 | 11-24 | 배포 주소에서 챗봇 질문 | ❌ | Gemini 호출이 403 `PERMISSION_DENIED`(firebasevertexai) → 데모 답변으로 대체됨 | Firebase 콘솔에서 AI Logic(Gemini Developer API) 사용 설정 | 장애 대비 데모 모드 덕분에 사용자 화면은 깨지지 않았다. 외부 API 활성화도 배포 체크리스트에 넣어야 함 |
+| 14 | 11-24 | 보안 헤더(CSP) 추가 후 기능 충돌 점검 | ✅ | 강한 CSP는 외부 SDK·Worker·blob 이미지를 막아 기능이 멈출 수 있음 | 블로그: gstatic(Firebase SDK)·Gemini·Firestore만 허용, 마음버블: Google Fonts·blob Worker(폭죽)·blob 이미지(카드 저장)만 허용 → 로컬에서 헤더를 똑같이 붙여 360·390px로 전 페이지·챗봇·버블·게임 클릭 시험, 위반 0건 | 보안 설정은 "넣고 끝"이 아니라 기능별로 눌러 봐야 함 |

@@ -160,3 +160,9 @@ main { max-width: 760px; margin: 0 auto; padding: 24px 18px 80px; }
 .chat-form button { font: inherit; font-weight: 700; border: 0; border-radius: 14px; padding: 0 16px; color: #fff; background: var(--brand); cursor: pointer; }
 .chat-form button:disabled { opacity: .5; cursor: default; }
 .chat-note { font-size: .7rem; color: var(--muted); text-align: center; padding: 0 12px 10px; background: var(--card); }
+
+/* 개인정보 처리방침 링크·페이지 */
+.foot .privacy-link, .chat-note a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.post.privacy h2 { font-size: 1.05rem; margin-top: 1.4em; }
+.post.privacy ul { padding-left: 1.2em; }
+.post.privacy .lead { background: var(--mint-50, #ecfdf5); border-radius: 14px; padding: 12px 14px; }

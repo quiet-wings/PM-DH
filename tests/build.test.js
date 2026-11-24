@@ -31,6 +31,25 @@ test('모든 페이지에 챗봇 위젯과 위기 상담 번호가 있다', () =
   }
 });
 
+test('개인정보 처리방침 페이지가 있고 모든 페이지 하단에서 연결된다', () => {
+  const html = readFileSync(pub('privacy.html'), 'utf8');
+  assert.match(html, /개인정보 처리방침/);
+  assert.match(html, /전화번호·이메일·주민등록번호를 가린 뒤/);
+  for (const f of ['index.html', '404.html', ...readdirSync(pub('posts')).map((p) => `posts/${p}`)]) {
+    assert.match(readFileSync(pub(f), 'utf8'), /href="\/privacy"/, f);
+  }
+});
+
+test('firebase.json에 보안 헤더(CSP)가 있고 챗봇에 필요한 주소만 허용한다', () => {
+  const cfg = JSON.parse(readFileSync(join(root, 'firebase.json'), 'utf8'));
+  const all = cfg.hosting.headers.flatMap((h) => h.headers);
+  const csp = all.find((h) => h.key === 'Content-Security-Policy')?.value || '';
+  for (const need of ["default-src 'self'", 'https://www.gstatic.com', 'https://firebasevertexai.googleapis.com', 'https://firestore.googleapis.com', "frame-ancestors 'none'", "object-src 'none'"]) {
+    assert.ok(csp.includes(need), need);
+  }
+  assert.ok(!/script-src[^;]*'unsafe-inline'/.test(csp), '스크립트 인라인 허용 금지');
+});
+
 test('글 페이지에 마음버블 기능 버튼이 있다', () => {
   const html = readFileSync(pub('posts', 'breathing-4-4.html'), 'utf8');
   assert.match(html, /data-feature="breathing"/);

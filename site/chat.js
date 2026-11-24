@@ -79,7 +79,7 @@ function mount(root) {
       <input name="q" type="text" maxlength="300" autocomplete="off" placeholder="예: 잠이 안 올 때 뭐 해요?" aria-label="질문 입력">
       <button type="submit">보내기</button>
     </form>
-    <p class="chat-note">AI 답변은 틀릴 수 있어요 · 질문 원문은 저장하지 않아요 · 위급하면 109</p>
+    <p class="chat-note">AI 답변은 틀릴 수 있어요 · 질문 원문은 저장하지 않아요 · <a href="/privacy">개인정보 처리방침</a> · 위급하면 109</p>
   </section>`);
   root.append(fab, panel);
 
