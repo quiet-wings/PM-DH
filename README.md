@@ -1,61 +1,91 @@
-# PRD — 마음버블 블로그 「클로버에게 물어보기」
-## 1. 기본 정보
-문서 버전 v2.0 (양식 개편, 이력은 docs: PRD 커밋) · 작성일 2026-11-24 · 작성자 quiet-wings (기획·개발 1인) · 관련 문서 테스트 보고서 · 의사결정 로그 · 제출 체크리스트
+# 🍀 마음버블 블로그 「마음쉼터 서비스」 — 「포앤에게 물어봐」
 
-## 2. 개요
-걱정을 비눗방울에 적어 터뜨리는 웹서비스 마음버블의 블로그에 블로그 글만 근거로 답하는 AI 챗봇을 붙인다. 독자는 긴 글을 뒤지지 않고 답·출처 글·바로 해 볼 기능을 받고, 1인 운영자는 답하지 못한 질문을 다음 글 주제로 쓴다.
+걱정을 비눗방울에 담아 터뜨리는 스트레스 해소 서비스 **마음버블**의 블로그입니다.
+블로그 오른쪽 아래 **「포앤에게 물어봐」** 버튼에 질문하면, AI 챗봇 **포앤**(Fortune + Angel, 행운을 가져다주는 천사)이 **블로그 글만 근거로** 답하고 출처 글과 바로 해 볼 마음버블 기능을 알려 줍니다.
+부기능인 **마음버블 페이지**(걱정 버블·4-4-4 호흡·미니게임)와 **마음버블서점**(지금 마음에 맞는 책 추천)으로 이어집니다.
 
-## 3. 문제
-3.1 데스크리서치 (3C·SWOT)
+| 제출물 | 위치 |
+|---|---|
+| 배포된 블로그 | Firebase Hosting **비공개 미리보기 링크**(30일) — 링크는 제출란으로만 공유 ([D-011](docs/logs/DECISION_LOG.md)) |
+| PRD 기획서 (v0.1 → v3.1, A4 2쪽) | [`docs/PRD.md`](docs/PRD.md) · 버전별 HTML [`versions/`](versions) · 과정은 `docs: PRD vX` 커밋 |
+| 테스트 보고서 (v1.4, A4 2쪽) | [`docs/TEST_REPORT.md`](docs/TEST_REPORT.md) · 스크린샷 [`docs/screenshots/`](docs/screenshots) |
+| 에이전트용 지침 | [`AGENTS.md`](AGENTS.md) (`CLAUDE.md`는 import 한 줄) |
+| 의사결정 로그 | [`docs/logs/DECISION_LOG.md`](docs/logs/DECISION_LOG.md) (D-001~D-020) |
+| 성공·실패 로그 | [`docs/logs/SUCCESS_FAILURE_LOG.md`](docs/logs/SUCCESS_FAILURE_LOG.md) (#1~#22) |
+| 제출 체크리스트 | [`docs/SUBMISSION_CHECKLIST.md`](docs/SUBMISSION_CHECKLIST.md) |
+| 소스코드 | 블로그: `lib/`(챗봇·검색·안전 규칙), `site/`(화면), `scripts/`(빌드), `posts/`(글), `tests/` · 마음버블 앱·서점: [`maeumbubble-app/`](maeumbubble-app) |
+| 마음버블 페이지 | https://maeumbubble-test.pages.dev (Cloudflare Pages) |
+| 마음버블서점 | https://maeumbubble-test.pages.dev/bookstore/ — 감정 단어·한 문장으로 책 3권 추천, 「AI에게 물어보기」 ([D-020](docs/logs/DECISION_LOG.md)) |
 
-구분	현황 → 시사점
-고객	지친 20~30대, 잠들기 전 모바일로 짧게 읽음 → 질문하면 바로 답해야 함
-경쟁	블로그 검색은 문장 질문에 약함, 범용 AI는 출처 없음, 앱은 가입 장벽 → 내 글 근거 답변
-자사	글 7편·호흡·게임 보유, 블로그의 마음버블 링크는 모두 404·503(D-012) → 유입 끊김
-SWOT	S 가입 없는 웹 · W 1인 운영 · O 질문 데이터로 글 기획 · T 환각·위기 → 규칙 우선
-3.2 문제 발굴 · 3.3 문제 검증
+## 어떤 문제를 푸나요
+> **지친 독자는 블로그에 답이 있어도 어느 글에 있는지 몰라 이탈하고, 1인 운영자는 같은 질문에 반복해서 답한다.**
 
-#	대상	문제 (근거)	검증
-①	독자	답이 어느 글에 있는지 모름 (키워드 검색 한계)	답 있는 질문 10개 → 기대 글 2위 이내 ✅
-②	독자	읽고 이탈, 기능으로 안 이어짐 (링크 404·503)	기능 링크 클릭률(UTM)
-③	독자	위기 표현을 놓치면 안 됨 (정신건강 주제)	위기 표현 7개 감지 ✅
-④	운영자	같은 질문에 반복 응대 (1인 운영, 가설)	출처 붙은 답변 수
-⑤	운영자	독자가 뭘 궁금해하는지 데이터 없음	갭 질문 → 새 글 수
-설문은 미실시 — ②④⑤는 출시 후 갭 로그·UTM으로 검증(5장). 3.4 최종 정의 — MoSCoW: Must ①③ · Should ②⑤ · Could ④
+- **독자**: 지친 순간에 긴 글을 다 읽기 어렵고, 답이 어느 글에 있는지 모른다.
+- **운영자(1인)**: 같은 질문에 반복해서 답하고, 독자가 뭘 궁금해하는지 데이터가 없다.
+- **해결**: 블로그 글 근거 Q&A 챗봇 포앤 → 답 + 출처 + 마음버블 기능 링크. 답하지 못한 질문은 익명으로 모아 다음 글 주제로 쓴다.
 
-지친 독자는 답이 어느 글에 있는지 몰라 읽다 떠나고, 1인 운영자는 독자가 뭘 궁금해하는지 모른 채 같은 답을 반복한다. 정신건강 주제라 위기 신호는 하나도 놓치면 안 된다.
+## 동작 흐름
+```
+질문 → 입력 검증 → 위기·의료 질문 검사(규칙) → 블로그 문단 검색(BM25 + 핵심어 일치율)
+     → Cloudflare 중계 서버(/api/ask) → Claude API가 근거 문단만으로 답변 → 답변 + 출처 글 + 마음버블 기능
+     ↘ 근거 없음: "아직 블로그에 없는 내용" + Firestore content_gaps 기록
+     ↘ 위기 표현: AI 없이 109 · 1577-0199 · 119 안내
 
-## 4. 해결 방안
-4.1 솔루션 — 글을 문단으로 나눠 검색하고, 검색된 문단만 근거로 3~5문장 답 + 출처 글 + 마음버블 기능 링크를 준다. 근거가 없으면 지어내지 않고 질문을 갭 로그로 남긴다.
+마음버블서점: 감정 버튼 또는 한 문장 → (AI에게 물어보기) Cloudflare /api/bookstore/recommend → Claude가
+     서버에 고정된 책 36권 안에서만 3권과 추천 이유를 고름 → 책 카드(표지·이유·교보문고 연결)
+```
 
-4.2 AS-IS → TO-BE — 컨셉: 글 목록 → 질문하면 답하는 블로그 · 비즈니스: 유입 끊김 → 무료, 마음버블 유입(향후 기관용 보조 도구, D-008) · 기능: 링크 404 → 근거 답변·출처·기능 링크·위기 안내
+## 로컬에서 실행
+```bash
+npm test        # 블로그 단위테스트 69개
+npm run dev     # 빌드 후 http://localhost:5173 (Firebase 설정이 비어 있으면 데모 모드)
+```
+외부 npm 패키지가 없어 `npm install`이 필요 없습니다 (Node 22 이상).
+마음버블 앱은 `maeumbubble-app/`에서 `npx vitest run`(단위테스트 8개)으로 확인합니다.
 
-4.3 예상 성과 (OKR, 출시 후 4주) — O 독자가 블로그에서 바로 답을 찾고 마음버블로 이어진다 · KR1 출처 붙은 답변 주 50건 · KR2 답변 → 기능 링크 클릭률 15%↑ · KR3 갭 질문 → 새 글 월 2편
+## 보안·개인정보
+- **보안 헤더**(`firebase.json`): CSP로 이 사이트·Firebase SDK(gstatic)·Claude 중계 서버·Firestore 주소만 허용, 클릭재킹 차단(`frame-ancestors 'none'`), HSTS, COOP, Permissions-Policy. 테스트가 CSP 필수 항목과 인라인 스크립트 금지를 검사해요.
+- **AI 키**: Claude API 키는 Cloudflare 비밀값에만 있어요. 코드·GitHub·브라우저에는 없어요. 중계 서버는 허용된 주소에서 온 요청만 받고 호출 횟수를 제한해요(포앤 분당 30·하루 600회, 서점 분당 20·하루 300회).
+- **개인정보**: 회원가입·추적 쿠키 없음. 포앤 질문 원문은 저장하지 않고, 답하지 못한 질문만 전화번호·이메일·주민번호를 가려 기록(최대 90일). 서점에 물어본 문장은 저장하지 않고 별점·한마디만 이름 없이 30일 보관. 자세한 내용은 `/privacy`.
 
-## 5. 가설 및 지표
-5.1 핵심 지표 (기준값 → 목표): ①④ 근거 답변이면 답을 찾는다 → 출처 포함률 90%↑ · ② 기능 링크가 이탈을 줄인다 → 클릭률 0%(경로 없음) → 15%↑ · ③ 위기 안내 100% · 신뢰: 범위 밖 "아직 없는 내용" 100% · ⑤ 갭 기반 새 글 0 → 월 2편
+## 수정한 내용 저장하기 (커밋 + GitHub 올리기)
+```bash
+npm run save -- "fix: 마음버블 실제 주소로 변경"
+```
+메시지 형식 검사 → 최신 내용 받기 → 테스트 → 커밋 → push를 한 번에 합니다. 테스트가 실패하면 커밋하지 않아요.
+메시지 종류: `feat`(기능) `fix`(수정) `docs`(문서) `test`(테스트) `chore`(설정) `refactor` `style`. 연습: 끝에 `--dry`.
+Windows에서는 [Git for Windows](https://git-scm.com)가 필요해요 (GitHub Desktop만으로는 `git` 명령이 없음).
 
-5.2 고객 — 1순위 잠들기 전 모바일로 읽는 지친 20~30대 · 부 1인 운영자 · 향후 정신건강의학과 환자(치료 대체 금지·인허가 선행). 5.3 메시지 — "긴 글 대신, 클로버에게 물어보세요." 진단·처방 표현 금지.
+## 배포
+**블로그 (Firebase Hosting, 처음 한 번 설정)**
+1. [Firebase 콘솔](https://console.firebase.google.com)에서 프로젝트 만들기 (무료 Spark 요금제)
+2. 프로젝트 설정 → 내 앱 → 웹 앱 추가 → `firebaseConfig` 값을 확인. **저장소의 [`site/firebase-config.js`](site/firebase-config.js)에는 샘플 키(`YOUR_…`)만 둡니다.** 내 컴퓨터에서 AI까지 보려면 이 파일을 `site/firebase-config.local.js`로 복사해 실제 값을 넣으세요(커밋되지 않음)
+3. **Firestore Database** 만들기 → 규칙 탭에 [`firestore.rules`](firestore.rules) 내용 붙여 넣기
+4. 프로젝트 설정 → 서비스 계정 → 새 비공개 키 생성(JSON)
+5. GitHub 저장소 → Settings → Secrets and variables → Actions
+   - Secret `FIREBASE_SERVICE_ACCOUNT` = JSON 파일 내용 전체
+   - Secret `FIREBASE_WEB_CONFIG` = 웹 앱 설정 JSON (없으면 배포를 건너뜀)
+   - Variable `FIREBASE_PROJECT_ID` = 프로젝트 ID
+6. `main`에 push → Actions가 테스트·빌드 후 **미리보기 채널 `share`(30일)**에 배포. 공개 주소로 바꾸려면 `deploy.yml`의 `channelId`를 `live`로
 
-## 6. 기능적 요구사항
-순위	기능	설명	문제
-P0	근거 기반 답변	상위 4개 문단만 근거로 3~5문장, 근거 번호 = 출처 번호	①④
-P0	모르면 모른다고	근거 없으면 AI 미호출, "아직 블로그에 없는 내용"	신뢰
-P0	위기·의료 대응	위기 표현은 AI 없이 109·1577-0199·119, 진단·약 질문은 의료진 권유	③
-P1	기능 추천·갭 로그	글 주제별 기능 링크 / 답 못 한 질문 마스킹 기록 / AI 장애 시 데모	②⑤
-유즈케이스: "잠이 안 와요" → 답 + 출처 2개 + 호흡 쉼터 링크. 범위 밖: 로그인, 대화 저장, 글쓰기 자동화(P2).
+**AI 중계·마음버블 페이지·서점 (Cloudflare Pages)**
+- Claude API 키 등록: `npx wrangler pages secret put ANTHROPIC_API_KEY --project-name maeumbubble-test`
+- 중계 코드: [`ask.js`](maeumbubble-app/cloudflare/functions/api/ask.js)(포앤) · [`bookstore/recommend.js`](maeumbubble-app/cloudflare/functions/api/bookstore/recommend.js)(서점 추천) · [`bookstore/feedback.js`](maeumbubble-app/cloudflare/functions/api/bookstore/feedback.js)(서점 별점)
+- 앱을 정적 빌드한 뒤 배포 폴더에서 `배포하기.ps1`을 실행합니다. 서점은 `maeumbubble-app/public/bookstore/`에 있고, 예전 `/books` 주소는 `/bookstore/`로 넘어가요.
 
-## 7. 비기능적 요구사항
-15초 초과 시 데모 답변(실측 약 5초) · 300자, 브라우저 분당 10회, 중계 서버 분당 30·일 600회·허용 주소만 · 키는 서버 비밀값에만, CSP · 질문 원문 미저장, 갭 로그 마스킹, 처리방침 공개
+## 새 글 쓰기
+`posts/YYYY-MM-DD-slug.md`를 만들고 front-matter(`title`, `date`, `tags`, `summary`, `feature`)를 채워 push하면 끝. 포앤이 새 글을 바로 근거로 씁니다.
 
-## 8. 디자인 요구사항
-마음버블 톤·클로버 요정 아이콘 통일, 360·390px 우선, 헤더 버튼 7→4개(D-013) · 프로토타입: 비공개 미리보기 배포(링크는 제출란에만, D-011), 화면은 테스트 보고서 2장
+## 배포 주소에서 확인한 내용 (2026-11-25 기준)
 
-## 9. 출시 및 운영 전략
-출시 push → 테스트·빌드 → Firebase 미리보기, AI는 Cloudflare 중계 → Claude(D-017) · 테스트 단위 69개 + 11화면 + 배포 실측 · 운영 주 1회 갭 로그로 글 선정 · 리스크 환각 → 규칙 우선 / 장애 → 데모 답변
+| 영역 | 반영 내용 | 확인 |
+|---|---|---|
+| 포앤 AI | Cloudflare 중계(`/api/ask`) → Claude 실제 답변, 근거 번호와 출처 목록 번호 일치 | 답변 4.6~5.1초 |
+| 안전 | 범위 밖 질문 "아직 블로그에 없는 내용", 진단·약 질문 의료진 권유, 위기 표현 109·1577-0199·119 안내 (AI 미호출) | 테스트 통과 |
+| 남용 방지 | 허용된 주소에서 온 요청만 받음, 호출 횟수 제한, 키는 Cloudflare 비밀값에만 | 타 도메인 요청 403 |
+| 마음버블서점 | 감정 단어·한 문장 책 추천, AI 추천 이유 한 줄, 작가 쪽지·BGM·다크 모드·한국어/English | AI 추천 4.6~6.9초 |
+| 개인정보·보안 | `/privacy` 처리방침(모든 페이지 하단·챗봇 안내문 링크), 보안 헤더(CSP·HSTS·COOP 등) | CSP 위반 0건 |
+| 모바일 | 360·390px에서 홈·글·처리방침·404 가로 넘침·콘솔 오류 없음 | 실제 Chrome 점검 |
+| 마음버블 연결 | 글 하단·포앤 답변·헤더 버튼 → 마음버블 페이지·서점 (UTM `utm_source=maeum-blog`) | 링크 정상 |
 
-## 10. 일정 및 리소스 · 11. 승인 · 12. Q&A
-단계	일정	담당자	비고
-기획 → 개발·QA → 출시	11-24	quiet-wings + AI 에이전트	미리보기 배포
-승인 (PM·Tech·Biz 겸임)	—	quiet-wings	☐ 근거 제한·키 미노출
-Q&A: 설문 없이 확정?	—	quiet-wings	출시 후 지표로 검증
+**기술**: 정적 사이트 생성기·검색 엔진·마크다운 변환기를 **외부 라이브러리 없이** 직접 구현(Node 22) · Firebase Hosting · Firestore · GitHub Actions · Cloudflare Pages Functions(중계) + Claude API · 마음버블 앱 TanStack Start + React
