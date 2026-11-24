@@ -65,5 +65,16 @@ Windows에서는 [Git for Windows](https://git-scm.com)가 필요해요 (GitHub 
 ## 새 글 쓰기
 `posts/YYYY-MM-DD-slug.md`를 만들고 front-matter(`title`, `date`, `tags`, `summary`, `feature`)를 채워 push하면 끝. 챗봇이 새 글을 바로 근거로 씁니다.
 
-## 기술 스택
+## 블로그 주소에 개선된 기능 (2026-11-24 기준)
+영역	반영 내용	확인
+챗봇 AI	Cloudflare 중계(/api/ask) → Claude 실제 답변, 근거 번호와 출처 목록 번호 일치	배포 주소에서 답변 4.6~5.1초
+안전	범위 밖 질문 "아직 블로그에 없는 내용", 진단·약 질문 의료진 권유, 위기 표현 109·1577-0199·119 안내 (AI 미호출)	배포 주소 테스트 통과
+## 오류 개선
+남용 방지	블로그 주소에서 온 요청만 허용, 중계 서버 분당 30·일 600회 제한, 키는 Cloudflare 비밀값에만	타 도메인 요청 403
+## 디자인
+앱 아이콘	탭·홈 화면·설치 아이콘과 헤더 로고를 클로버 요정 그림으로 통일 (블로그·앱 모두)	아이콘·매니페스트 200
+## 기술 
+개인정보·보안	/privacy 처리방침(모든 페이지 하단·챗봇 안내문 링크), 보안 헤더(CSP·HSTS·COOP 등)	CSP 위반 0건
+모바일	360·390px에서 홈·글·처리방침·404 가로 넘침·콘솔 오류 없음	실제 Chrome 점검
+마음버블 연결	글 하단·챗봇·헤더 버튼 → maeumbubble-test.pages.dev (UTM utm_source=maeum-blog)	링크 정상
 정적 사이트 생성기·검색 엔진·마크다운 변환기를 **외부 라이브러리 없이** 직접 구현(Node 22) · Firebase Hosting · Cloudflare Pages Functions(중계) + Claude API · Firestore · App Check · GitHub Actions
