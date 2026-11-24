@@ -92,3 +92,12 @@ test('빈 질문은 친절한 오류 문구', async () => {
   const res = await askClover({ ...base, question: '   ' });
   assert.equal(res.type, 'invalid');
 });
+
+test('AI 답변의 근거 번호와 출처 목록 번호가 일치한다', async () => {
+  const { citedSources } = await import('../lib/clover.js');
+  const passages = [1, 2, 3, 4].map((i) => ({ title: `글${i}`, heading: `소제목${i}`, url: `/posts/p${i}`, slug: `p${i}` }));
+  const out = citedSources('첫 문장 [1]. 둘째 [4]. 다시 [1]. 없는 번호 [9].', passages);
+  assert.deepEqual(out.map((s) => s.n), [1, 4]);
+  assert.equal(out[1].title, '글4');
+  assert.equal(citedSources('번호 없음', passages)[0].n, 1);
+});

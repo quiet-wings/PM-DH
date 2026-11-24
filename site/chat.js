@@ -176,7 +176,7 @@ function mount(root) {
     }
     if (res.sources?.length) {
       html += `<div class="sources"><strong>📖 근거가 된 글</strong>${res.sources
-        .map((s, i) => `<a href="${escapeHtml(s.url)}">[${i + 1}] ${escapeHtml(s.title)} · ${escapeHtml(s.heading)}</a>`).join('')}</div>`;
+        .map((s, i) => `<a href="${escapeHtml(s.url)}">[${s.n ?? i + 1}] ${escapeHtml(s.title)} · ${escapeHtml(s.heading)}</a>`).join('')}</div>`;
     }
     if (res.feature) {
       html += `<a class="feature-link" href="${escapeHtml(res.feature.url)}" target="_blank" rel="noopener" data-feature="${res.feature.key}">${res.feature.emoji} ${escapeHtml(res.feature.label)}</a>`;
