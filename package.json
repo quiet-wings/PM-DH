@@ -8,6 +8,6 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "dev": "node scripts/build.mjs && node scripts/dev.mjs",
-    "test": "node --test tests/"
+    "test": "node --test --test-concurrency=1 tests/*.test.js"
   }
 }
