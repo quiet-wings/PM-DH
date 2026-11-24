@@ -1,0 +1,13 @@
+{
+  "name": "마음 버블",
+  "short_name": "마음버블",
+  "description": "걱정을 비눗방울에 담아 톡 터뜨리는 스트레스 해소 쉼터",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f3ff",
+  "theme_color": "#a7d8b8",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

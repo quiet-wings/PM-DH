@@ -62,3 +62,15 @@ test('서비스 계정 키·Gemini 키가 코드에 들어 있지 않다', () =>
     assert.ok(!/"private_key"|BEGIN PRIVATE KEY|GEMINI_API_KEY\s*=|sk-ant-[A-Za-z0-9_-]{10,}/.test(s), f);
   }
 });
+
+test('모든 페이지가 같은 앱 아이콘(클로버 요정)과 매니페스트를 쓴다', () => {
+  for (const f of ['icons/favicon.ico', 'icons/icon-32.png', 'icons/icon-180.png', 'icons/icon-192.png', 'icons/icon-512.png', 'manifest.webmanifest']) {
+    assert.ok(existsSync(pub('assets', f)), f);
+  }
+  for (const f of ['index.html', 'privacy.html', '404.html', ...readdirSync(pub('posts')).map((p) => `posts/${p}`)]) {
+    const html = readFileSync(pub(f), 'utf8');
+    assert.match(html, /rel="apple-touch-icon"[^>]*icon-180\.png/, f);
+    assert.match(html, /rel="manifest"/, f);
+    assert.ok(!html.includes('font-size=%2290%22>🍀'), `${f}: 예전 이모지 아이콘`);
+  }
+});

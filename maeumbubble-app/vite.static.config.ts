@@ -12,10 +12,14 @@ import { createHash } from 'node:crypto'
 import { existsSync, readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 
+// 비밀 파일(관리자 비밀번호·암호키) 폴더. 기본은 이 폴더의 상위.
+// PM-DH에서 빌드할 때는 MAEUM_SECRET_DIR 환경변수로 실제 위치를 알려 줘요. 비밀 파일은 저장소에 커밋하지 않아요.
+const SECRET_DIR = process.env.MAEUM_SECRET_DIR || resolve(__dirname, '..')
+
 function readStaticAdminPassword(): string {
   const fromEnv = process.env.STATIC_ADMIN_PASSWORD?.trim()
   if (fromEnv) return fromEnv
-  const file = resolve(__dirname, '..', '테스트관리자_비밀번호.txt')
+  const file = resolve(SECRET_DIR, '테스트관리자_비밀번호.txt')
   if (!existsSync(file)) return ''
   const first = readFileSync(file, 'utf8').replace(/^﻿/, '').split(/\r?\n/)[0]
   return first.trim()
@@ -26,7 +30,7 @@ const adminHash = adminPassword ? createHash('sha256').update(adminPassword).dig
 
 // 고민 암호화용 공개 열쇠 + 잠긴 개인 열쇠 (scripts/make-test-keys.mjs 로 한 번 만들어요)
 function readWorryKeyConfig(): string {
-  const file = resolve(__dirname, '..', '테스트관리자_암호키.json')
+  const file = resolve(SECRET_DIR, '테스트관리자_암호키.json')
   if (!existsSync(file)) return ''
   const parsed = JSON.parse(readFileSync(file, 'utf8').replace(/^﻿/, ''))
   return JSON.stringify(parsed.config)

@@ -1,0 +1,13 @@
+{
+  "name": "마음버블 블로그",
+  "short_name": "마음버블 블로그",
+  "description": "걱정을 비눗방울에 담아 날려 보내는 쉼터, 마음버블의 이야기",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f3ff",
+  "theme_color": "#a7d8b8",
+  "icons": [
+    { "src": "/assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

@@ -303,9 +303,7 @@ function StressReliefHome() {
         <div className="max-w-6xl mx-auto px-3 sm:px-4 py-3 flex items-center justify-between gap-2 sm:gap-3">
           {/* Brand */}
           <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
-            <span className="w-9 h-9 shrink-0 rounded-2xl bg-gradient-to-tr from-[#f6ecc9] to-[#fdf8e4] border border-[#ecdfb0] flex items-center justify-center shadow-xs text-lg select-none">
-              🍀
-            </span>
+            <img src="/icons/icon-192.png" alt="" aria-hidden="true" width="36" height="36" className="w-9 h-9 shrink-0 rounded-2xl object-cover border border-emerald-100 shadow-xs select-none" />
             <div className="max-[359px]:hidden">
               <h1 className="text-base md:text-lg font-bold text-stone-900 dark:text-stone-100 leading-tight flex items-center gap-1.5 whitespace-nowrap">
                 <span>{t.siteTitle}</span>

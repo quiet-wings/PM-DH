@@ -59,7 +59,7 @@ a { color: var(--brand); }
   border-bottom: 1px solid var(--line);
 }
 .brand { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--ink); font-weight: 700; font-size: 1.05rem; }
-.brand-icon { width: 34px; height: 34px; border-radius: 12px; display: grid; place-items: center; background: linear-gradient(135deg, #f6ecc9, #fdf8e4); border: 1px solid #ecdfb0; }
+.brand-icon { width: 34px; height: 34px; border-radius: 12px; object-fit: cover; border: 1px solid #d9f0e1; }
 .top nav { display: flex; gap: 6px; font-size: .9rem; }
 .brand, .top nav a { white-space: nowrap; }
 @media (max-width: 420px) { .top nav .nav-list { display: none; } }

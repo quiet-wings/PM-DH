@@ -10,6 +10,8 @@ import { SITE, featureLink, appLink } from '../site/config.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const out = process.argv[2] || join(root, 'preview', 'maeum-bubble-blog-preview.html');
+// 앱 아이콘(클로버 요정)을 한 파일 안에 넣어요
+const ICON = `data:image/png;base64,${readFileSync(join(root, 'site', 'icons', 'icon-180.png')).toString('base64')}`;
 build();
 
 const posts = loadPosts(join(root, 'posts'));
@@ -38,10 +40,10 @@ const pages = posts.map((p) => {
 <div class="content">${p.html}</div><aside class="try"><p>읽기만 하지 말고 지금 바로 해 볼까요?</p><a class="try-btn" href="${f.url}" target="_blank" rel="noopener">${f.emoji} ${escapeHtml(f.label)}</a></aside></article></section>`;
 }).join('\n');
 
-const html = `<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${SITE.name} (미리보기)</title>
+const html = `<!doctype html><html lang="ko"><head><link rel="icon" href="${ICON}"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${SITE.name} (미리보기)</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap"><style>${css}</style></head><body>
 <div class="deco" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
-<header class="top"><a class="brand" href="#home"><span class="brand-icon">🍀</span><span>${SITE.name}</span></a><nav><a class="nav-list" href="#home">글 목록</a><a class="go-app" href="${appLink('/', 'header')}" target="_blank" rel="noopener">마음버블 열기 ↗</a></nav></header>
+<header class="top"><a class="brand" href="#home"><img class="brand-icon" src="${ICON}" alt="" aria-hidden="true" width="34" height="34"><span>${SITE.name}</span></a><nav><a class="nav-list" href="#home">글 목록</a><a class="go-app" href="${appLink('/', 'header')}" target="_blank" rel="noopener">마음버블 열기 ↗</a></nav></header>
 <main>${home}${pages}</main>
 <footer class="foot"><p>이곳에 두고 간 걱정은 맑은 바람이 멀리 가져갔어요 🍃</p><p class="small">마음버블은 쉼터일 뿐 상담·치료를 대신하지 않아요. 많이 힘들 땐 자살예방 상담전화 <strong>109</strong>, 정신건강 위기상담 <strong>1577-0199</strong> (24시간)</p></footer>
 <div id="clover-chat"></div>

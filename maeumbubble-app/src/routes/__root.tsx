@@ -44,6 +44,15 @@ export const Route = createRootRoute({
         name: 'twitter:card',
         content: 'summary_large_image',
       },
+      { name: 'theme-color', content: '#a7d8b8' },
+    ],
+    // 앱 아이콘: 클로버 요정 그림으로 통일 (탭 아이콘·홈 화면 아이콘·설치 아이콘)
+    links: [
+      { rel: 'icon', href: '/favicon.ico', sizes: 'any' },
+      { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/icons/icon-32.png' },
+      { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/icons/icon-16.png' },
+      { rel: 'apple-touch-icon', sizes: '180x180', href: '/icons/icon-180.png' },
+      { rel: 'manifest', href: '/manifest.webmanifest' },
     ],
   }),
   shellComponent: RootDocument,
