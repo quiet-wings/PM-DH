@@ -2,7 +2,7 @@
 
 | 버전 | 작성일 | 작성자 | 관련 문서 |
 |---|---|---|---|
-| v1.5 (이력은 `docs: PRD v0.x~v1.x` 커밋, HTML은 `versions/PRD_new_v4.html`) | 2026-11-24 | quiet-wings (기획·개발 1인) | [테스트 보고서](./TEST_REPORT.md) · [의사결정 로그](./logs/DECISION_LOG.md) · [제출 체크리스트](./SUBMISSION_CHECKLIST.md) |
+| v1.6 (이력은 `docs: PRD v0.x~v1.x` 커밋, HTML은 `versions/PRD_new_v5.html`) | 2026-11-24 | quiet-wings (기획·개발 1인) | [테스트 보고서](./TEST_REPORT.md) · [의사결정 로그](./logs/DECISION_LOG.md) · [제출 체크리스트](./SUBMISSION_CHECKLIST.md) |
 
 ## 1. 개요
 
@@ -48,7 +48,7 @@
 
 ## 5. 출시·운영·마케팅과 리스크
 
-- **출시**: push → Actions(테스트·빌드) → Firebase Hosting. Cloud Functions는 유료라 AI Logic(Gemini, 무료)을 브라우저에서 호출 + App Check(D-007).
+- **출시**: push → Actions(테스트·빌드) → Firebase Hosting. AI는 Cloudflare 중계 서버가 Claude API를 호출(키는 서버 비밀값에만, 블로그 주소 요청만 허용·호출 제한, D-017). 처음 설계한 Firebase AI Logic(Gemini)은 403으로 보류.
 - **운영**: 주 1회 Firestore `content_gaps` 질문으로 글 주제 선정. 새 글은 push만 하면 챗봇이 바로 근거로 씀.
 - **마케팅(마음버블 유입)**: 블로그에서 서비스로 가는 경로가 없던 문제를 글마다 "마음버블에서 해 보기" 버튼, 답변의 기능 링크로 연결하고, 위로카드 공유에 블로그 주소를 넣어 되돌아오게 한다. 지표는 기능 링크 클릭률(UTM `utm_source=maeum-blog`).
 - **기관 서비스로의 활용**: 근거 문서로만 답하기·위기 규칙 우선·개인 기록 미수집은 병원·기관용 보조 도구의 필수 조건이다. 갭 로그·안전 테스트 방식을 기관 콘텐츠 검증 절차로 확장한다(D-008).

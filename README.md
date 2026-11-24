@@ -24,7 +24,7 @@
 ## 동작 흐름
 ```
 질문 → 입력 검증 → 위기·의료 질문 검사(규칙) → 블로그 문단 검색(BM25 + 핵심어 일치율)
-     → Firebase AI Logic(Gemini)이 근거 문단만으로 답변 → 답변 + 출처 글 + 마음버블 기능
+     → Cloudflare 중계 서버 → Claude API가 근거 문단만으로 답변 → 답변 + 출처 글 + 마음버블 기능
      ↘ 근거 없음: "아직 블로그에 없는 내용" + Firestore content_gaps 기록
      ↘ 위기 표현: AI 없이 109 · 1577-0199 · 119 안내
 ```
@@ -37,7 +37,7 @@ npm run dev     # 빌드 후 http://localhost:5173 (Firebase 설정이 비어 �
 외부 npm 패키지가 없어 `npm install`이 필요 없습니다 (Node 22 이상).
 
 ## 보안·개인정보
-- **보안 헤더**(`firebase.json`): CSP로 이 사이트·Firebase SDK(gstatic)·Gemini·Firestore 주소만 허용, 클릭재킹 차단(`frame-ancestors 'none'`), HSTS, COOP, Permissions-Policy. 테스트가 CSP 필수 항목과 인라인 스크립트 금지를 검사해요.
+- **보안 헤더**(`firebase.json`): CSP로 이 사이트·Firebase SDK(gstatic)·Claude 중계 서버·Firestore 주소만 허용, 클릭재킹 차단(`frame-ancestors 'none'`), HSTS, COOP, Permissions-Policy. 테스트가 CSP 필수 항목과 인라인 스크립트 금지를 검사해요.
 - **개인정보**: 회원가입·추적 쿠키 없음. 질문 원문 미저장, 답 못 한 질문만 전화번호·이메일·주민번호를 가려 기록(최대 90일). 자세한 내용은 `/privacy`.
 - 360·390px 모바일과 보안 헤더 적용 상태에서 전 페이지·챗봇을 점검했어요 ([테스트 보고서 4장](docs/TEST_REPORT.md)).
 
@@ -51,7 +51,7 @@ Windows에서는 [Git for Windows](https://git-scm.com)가 필요해요 (GitHub 
 
 ## Firebase 배포 (처음 한 번)
 1. [Firebase 콘솔](https://console.firebase.google.com)에서 프로젝트 만들기 (무료 Spark 요금제)
-2. **AI Logic** → 시작하기 → **Gemini Developer API** 선택
+2. **AI 연결**: Claude API 키를 Cloudflare 비밀값으로 등록 — `npx wrangler pages secret put ANTHROPIC_API_KEY --project-name maeumbubble-test` (중계 코드: [`maeumbubble-app/cloudflare/functions/api/ask.js`](maeumbubble-app/cloudflare/functions/api/ask.js)). 키는 코드·GitHub에 넣지 않아요
 3. 프로젝트 설정 → 내 앱 → 웹 앱 추가 → `firebaseConfig` 값을 확인. **저장소의 [`site/firebase-config.js`](site/firebase-config.js)에는 샘플 키(`YOUR_…`)만 둡니다.** 실제 값은 6번의 Secret으로 넣고, 내 컴퓨터에서 AI까지 보려면 이 파일을 `site/firebase-config.local.js`로 복사해 실제 값을 넣으세요(커밋되지 않음)
 4. **Firestore Database** 만들기 → 규칙 탭에 [`firestore.rules`](firestore.rules) 내용 붙여 넣기
 5. 프로젝트 설정 → 서비스 계정 → 새 비공개 키 생성(JSON)
@@ -66,4 +66,4 @@ Windows에서는 [Git for Windows](https://git-scm.com)가 필요해요 (GitHub 
 `posts/YYYY-MM-DD-slug.md`를 만들고 front-matter(`title`, `date`, `tags`, `summary`, `feature`)를 채워 push하면 끝. 챗봇이 새 글을 바로 근거로 씁니다.
 
 ## 기술 스택
-정적 사이트 생성기·검색 엔진·마크다운 변환기를 **외부 라이브러리 없이** 직접 구현(Node 22) · Firebase Hosting · Firebase AI Logic(Gemini) · Firestore · App Check · GitHub Actions
+정적 사이트 생성기·검색 엔진·마크다운 변환기를 **외부 라이브러리 없이** 직접 구현(Node 22) · Firebase Hosting · Cloudflare Pages Functions(중계) + Claude API · Firestore · App Check · GitHub Actions
