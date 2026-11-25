@@ -55,6 +55,7 @@ main{max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:22px;z
 /* 버전2: 오른쪽 위 도구줄(언어 + BGM) */
 .topbar{align-self:stretch;display:flex;gap:8px;align-items:center;margin-bottom:-8px}
 .topbar-gap{flex:1}
+.books .pending{margin-top:4px;font-size:.72rem;color:var(--muted);opacity:.85}
 .bgm.home{margin-left:0;text-decoration:none}
 /* 버전2: 왼쪽 위 밝은/다크 모드 버튼 (밝을 땐 달, 어두울 땐 해 아이콘) */
 .theme{display:inline-grid;place-items:center;width:36px;height:36px;border:1px solid var(--line);background:var(--surface);color:var(--hero-sub,#0a2e70);border-radius:50%;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:0}
@@ -383,7 +384,72 @@ dialog.note::backdrop{background:rgba(10,30,55,.38);backdrop-filter:blur(2px)}
     { id: "little-prince", title: "어린 왕자", author: "앙투안 드 생텍쥐페리", category: "thoughts", mood: "어른이 되면서 잊어버린 것이 그리울 때", note: "다시 읽을 때마다 다르게 다가오는 책. 정말 중요한 게 무엇인지 조용히 묻게 돼요.", keywords: ["그리움", "공허", "순수", "외로움", "허무"], emoji: "🌹" },
     { id: "ordinary-existence", title: "보통의 존재", author: "이석원", category: "thoughts", mood: "나만 특별히 못난 것 같은 밤", note: "평범한 사람의 솔직한 고백들. 누구나 이 정도는 흔들린다는 걸 알게 돼요.", keywords: ["자기혐오", "자존감", "우울", "공허", "쓸쓸함"], emoji: "🌃" },
     { id: "too-many-thoughts", title: "나는 생각이 너무 많아", author: "크리스텔 프티콜랭", category: "thoughts", mood: "사소한 일도 끝없이 곱씹느라 지칠 때", note: "생각이 많은 건 결함이 아니라 특성이라고 말해줘요. 예민한 나를 이해하는 데 도움이 돼요.", keywords: ["생각많음", "예민함", "곱씹음", "걱정", "불면", "과민"], emoji: "🧠" },
-    { id: "frame", title: "프레임", author: "최인철", category: "thoughts", mood: "같은 일도 늘 나쁜 쪽으로만 보일 때", note: '세상을 보는 "마음의 창"을 바꾸면 같은 하루도 달라진다는 심리학 이야기예요.', keywords: ["부정적", "비관", "걱정", "관점", "불만"], emoji: "🖼️" }
+    { id: "frame", title: "프레임", author: "최인철", category: "thoughts", mood: "같은 일도 늘 나쁜 쪽으로만 보일 때", note: '세상을 보는 "마음의 창"을 바꾸면 같은 하루도 달라진다는 심리학 이야기예요.', keywords: ["부정적", "비관", "걱정", "관점", "불만"], emoji: "🖼️" },
+    // ── 추가 도서 64권 (2026-11-25): 표지는 카카오 책 검색 API로 찾은 국내 출간본 표지 (출처: docs/bookstore-covers.md)
+    { id: "flow-hwang", title: "몰입", author: "황농문", category: "work", mood: "집중이 안 돼서 시간만 흘려보낼 때", note: "한 가지 문제에 깊이 빠져드는 법을 알려줘요. 흩어진 마음이 한곳에 모여요.", keywords: ["집중", "산만함", "미루기", "공부", "시험"], emoji: "🔥" },
+    { id: "tools-of-titans", title: "타이탄의 도구들", author: "티모시 페리스", category: "work", mood: "남들은 다 잘 해내는 것 같아 조급할 때", note: "성공한 사람들이 매일 쓰는 작은 습관 모음. 하나만 골라 따라 해도 충분해요.", keywords: ["조급함", "비교", "의욕", "습관", "압박"], emoji: "🧰" },
+    { id: "the-one-thing", title: "원씽", author: "게리 켈러 · 제이 파파산", category: "work", mood: "할 일이 너무 많아 무엇부터 할지 모를 때", note: "지금 가장 중요한 단 하나에 집중하라고 말해줘요. 할 일 목록이 가벼워져요.", keywords: ["과부하", "벅참", "정리", "부담", "마감"], emoji: "1️⃣" },
+    { id: "mindset", title: "마인드셋", author: "캐럴 드웩", category: "work", mood: "실패할까 봐 시작조차 두려울 때", note: "재능은 고정된 게 아니라 자란다는 이야기. 실수를 덜 무서워하게 돼요.", keywords: ["실패", "두려움", "자책", "시험", "성적"], emoji: "🌱" },
+    { id: "miracle-morning", title: "미라클 모닝", author: "할 엘로드", category: "work", mood: "하루가 늘 쫓기듯 시작될 때", note: "아침의 짧은 시간을 나를 위해 쓰는 방법. 하루의 주도권을 되찾게 해줘요.", keywords: ["쫓김", "무기력", "의욕", "습관", "아침"], emoji: "🌅" },
+    { id: "magic-of-memo", title: "메모의 마법", author: "마에다 유지", category: "work", mood: "머릿속이 할 일로 꽉 차서 답답할 때", note: "적는 순간 생각이 정리된다는 걸 보여줘요. 머릿속을 종이에 내려놓게 돼요.", keywords: ["답답함", "정리", "복잡함", "생각많음", "집중"], emoji: "📝" },
+    { id: "work-simply", title: "일 잘하는 사람은 단순하게 합니다", author: "박소연", category: "work", mood: "일이 꼬여서 야근이 끝나지 않을 때", note: "복잡한 일을 단순하게 정리하는 요령. 회사에서의 하루가 조금 덜 버거워져요.", keywords: ["야근", "회사", "직장", "과부하", "정리"], emoji: "🗂️" },
+    { id: "thinking-skill", title: "생각정리스킬", author: "복주환", category: "work", mood: "생각은 많은데 정리가 안 될 때", note: "흩어진 생각을 그림과 목록으로 정리하는 연습. 말과 글이 또렷해져요.", keywords: ["생각많음", "복잡함", "정리", "공부", "발표"], emoji: "🧠" },
+    { id: "originals", title: "오리지널스", author: "애덤 그랜트", category: "work", mood: "남들과 다른 내 생각이 틀린 것 같을 때", note: "다르게 생각하는 사람들이 세상을 바꾼 이야기. 내 아이디어를 믿어 보게 돼요.", keywords: ["자신감", "비교", "눈치", "불안", "진로"], emoji: "💡" },
+    { id: "give-and-take", title: "기브 앤 테이크", author: "애덤 그랜트", category: "work", mood: "남을 돕다가 나만 손해 보는 것 같을 때", note: "베푸는 사람이 결국 멀리 간다는 연구. 다만 나를 지키며 주는 법도 알려줘요.", keywords: ["억울함", "손해", "회사", "관계", "지침"], emoji: "🤝" },
+    { id: "study-reading", title: "공부머리 독서법", author: "최승필", category: "work", mood: "공부가 막막하고 머리에 안 들어올 때", note: "책 읽기로 공부하는 힘을 기르는 이야기. 공부를 다시 시작할 용기가 생겨요.", keywords: ["공부", "막막함", "시험", "성적", "집중"], emoji: "📚" },
+    { id: "how-to-win-friends", title: "데일 카네기 인간관계론", author: "데일 카네기", category: "people", mood: "사람을 대하는 게 늘 서툴게 느껴질 때", note: "오래 읽혀 온 관계의 기본기. 작은 칭찬과 경청이 관계를 바꿔요.", keywords: ["관계", "서툼", "친구", "회사", "눈치"], emoji: "🗣️" },
+    { id: "nonviolent-communication", title: "비폭력대화", author: "마셜 B. 로젠버그", category: "people", mood: "말다툼 끝에 마음이 더 다쳤을 때", note: "판단 대신 느낌과 바람을 말하는 법. 싸우지 않고 마음을 전하게 돼요.", keywords: ["갈등", "상처", "서운함", "가족", "화"], emoji: "🕊️" },
+    { id: "vessel-of-words", title: "말 그릇", author: "김윤나", category: "people", mood: "내 말이 자꾸 오해를 불러올 때", note: "말보다 먼저 마음의 그릇을 키우자는 이야기. 대화가 한결 부드러워져요.", keywords: ["말실수", "오해", "관계", "후회", "갈등"], emoji: "🫖" },
+    { id: "individualist-manifesto", title: "개인주의자 선언", author: "문유석", category: "people", mood: "남의 눈치를 보느라 내가 사라질 때", note: "나를 지키는 개인주의가 오히려 함께 사는 힘이라고 말해줘요.", keywords: ["눈치", "피로", "관계", "자존감", "집단"], emoji: "🧭" },
+    { id: "courage-to-be-happy", title: "미움받을 용기 2", author: "기시미 이치로 · 고가 후미타케", category: "people", mood: "인정받고 싶은 마음에 지칠 때", note: "인정 대신 공헌에서 행복을 찾는 법. 관계 속에서 숨 쉴 틈이 생겨요.", keywords: ["인정욕구", "관계", "지침", "비교", "미움"], emoji: "☀️" },
+    { id: "what-men-live-by", title: "사람은 무엇으로 사는가", author: "레프 톨스토이", category: "people", mood: "사람에게 실망해서 마음이 식을 때", note: "짧은 우화 속에 사랑과 이웃에 대한 질문이 담겨 있어요. 마음이 다시 따뜻해져요.", keywords: ["실망", "상처", "사랑", "가족", "허무"], emoji: "🕯️" },
+    { id: "alone-to-alone", title: "혼자가 혼자에게", author: "이병률", category: "people", mood: "혼자인 시간이 쓸쓸하게만 느껴질 때", note: "혼자의 시간을 다정하게 바라보는 산문. 외로움이 조금 포근해져요.", keywords: ["외로움", "혼자", "쓸쓸함", "소외", "그리움"], emoji: "🌙" },
+    { id: "how-should-i-say", title: "어떻게 말해줘야 할까", author: "오은영", category: "people", mood: "가족에게 하는 말이 자꾸 상처가 될 때", note: "아이와 어른 모두에게 통하는 따뜻한 말하기. 가까운 사이일수록 필요한 말을 알려줘요.", keywords: ["가족", "상처", "말실수", "갈등", "육아"], emoji: "💬" },
+    { id: "talking-to-strangers", title: "타인의 해석", author: "말콤 글래드웰", category: "people", mood: "상대를 오해했다가 관계가 틀어졌을 때", note: "우리가 타인을 얼마나 쉽게 잘못 읽는지 보여줘요. 섣부른 판단을 멈추게 돼요.", keywords: ["오해", "갈등", "관계", "불신", "서운함"], emoji: "🔍" },
+    { id: "wonder", title: "원더", author: "R. J. 팔라시오", category: "people", mood: "다르다는 이유로 소외감을 느낄 때", note: "얼굴이 남다른 소년과 친구들의 이야기. 친절을 고르는 용기를 보여줘요.", keywords: ["소외", "따돌림", "친구", "외로움", "상처"], emoji: "🌟" },
+    { id: "little-women", title: "작은 아씨들", author: "루이자 메이 올컷", category: "people", mood: "가족과 부딪혀 마음이 복잡할 때", note: "서로 다른 네 자매가 다투고 화해하며 자라는 이야기. 가족을 다시 보게 돼요.", keywords: ["가족", "갈등", "자매", "그리움", "성장"], emoji: "🏠" },
+    { id: "pride-and-prejudice", title: "오만과 편견", author: "제인 오스틴", category: "love", mood: "첫인상 때문에 마음을 닫아 버렸을 때", note: "편견을 넘어 서로를 알아 가는 사랑 이야기. 유쾌하게 읽히는 고전이에요.", keywords: ["오해", "자존심", "설렘", "연애", "편견"], emoji: "💌" },
+    { id: "norwegian-wood", title: "노르웨이의 숲", author: "무라카미 하루키", category: "love", mood: "지나간 사랑과 상실이 자꾸 떠오를 때", note: "젊은 날의 사랑과 상실을 조용히 그린 소설. 아픈 기억을 천천히 마주하게 돼요.", keywords: ["상실", "그리움", "이별", "미련", "우울"], emoji: "🌲" },
+    { id: "pancreas", title: "너의 췌장을 먹고 싶어", author: "스미노 요루", category: "love", mood: "소중한 사람과의 시간이 아깝게 느껴질 때", note: "하루하루를 소중히 여기게 하는 청춘 소설. 지금 곁의 사람을 다시 보게 돼요.", keywords: ["그리움", "이별", "소중함", "슬픔", "우정"], emoji: "🌸" },
+    { id: "calm-and-passion-rosso", title: "냉정과 열정 사이 Rosso", author: "에쿠니 가오리", category: "love", mood: "헤어진 사람을 아직 잊지 못했을 때", note: "오래된 사랑을 품고 사는 사람의 담담한 시간. 미련을 천천히 놓아 보게 돼요.", keywords: ["미련", "이별", "그리움", "헤어짐", "기다림"], emoji: "🍷" },
+    { id: "love-never-hurt", title: "사랑하라 한번도 상처받지 않은 것처럼", author: "류시화 엮음", category: "love", mood: "사랑이 다시 두려워졌을 때", note: "세계의 시인들이 쓴 사랑과 삶의 시 모음. 한 편씩 꺼내 읽기 좋아요.", keywords: ["상처", "두려움", "사랑", "위로", "그리움"], emoji: "📜" },
+    { id: "speed-of-light", title: "우리가 빛의 속도로 갈 수 없다면", author: "김초엽", category: "love", mood: "닿을 수 없는 사람을 그리워할 때", note: "멀리 떨어진 존재들의 그리움을 그린 SF 소설집. 아득한 마음을 다정하게 안아줘요.", keywords: ["그리움", "거리", "외로움", "이별", "기다림"], emoji: "🚀" },
+    { id: "great-gatsby", title: "위대한 개츠비", author: "F. 스콧 피츠제럴드", category: "love", mood: "되돌릴 수 없는 사랑에 매달릴 때", note: "과거의 사랑을 되찾으려는 한 남자의 이야기. 놓아줄 때를 생각하게 해요.", keywords: ["미련", "과거", "집착", "허무", "그리움"], emoji: "🥂" },
+    { id: "whereabouts-of-love", title: "연애의 행방", author: "히가시노 게이고", category: "love", mood: "연애가 너무 어렵고 복잡하게 느껴질 때", note: "스키장에서 얽히는 연인들의 유쾌한 소동극. 가볍게 웃으며 머리를 식혀요.", keywords: ["연애", "설렘", "질투", "복잡함", "웃음"], emoji: "🎿" },
+    { id: "kitchen", title: "키친", author: "요시모토 바나나", category: "love", mood: "소중한 사람을 잃고 혼자 남겨진 느낌일 때", note: "상실 뒤에 다시 밥을 짓고 살아가는 이야기. 슬픔 곁에 작은 온기가 생겨요.", keywords: ["상실", "슬픔", "외로움", "그리움", "위로"], emoji: "🍳" },
+    { id: "lovers-discourse", title: "사랑의 단상", author: "롤랑 바르트", category: "love", mood: "사랑에 빠진 내 마음을 나도 모를 때", note: "사랑하는 사람의 기다림, 질투, 설렘을 조각조각 기록한 책. 내 마음에 이름이 붙어요.", keywords: ["설렘", "질투", "기다림", "짝사랑", "불안"], emoji: "🖋️" },
+    { id: "how-to-live", title: "어떻게 살 것인가", author: "유시민", category: "future", mood: "앞으로 어떻게 살아야 할지 막막할 때", note: "일과 놀이, 사랑과 연대 속에서 삶의 방향을 묻는 책. 내 기준을 세우게 돼요.", keywords: ["막막함", "진로", "미래", "불안", "고민"], emoji: "🧭" },
+    { id: "demian", title: "데미안", author: "헤르만 헤세", category: "future", mood: "내가 누구인지 모르겠을 때", note: "알을 깨고 나오는 성장의 이야기. 흔들리는 시간도 자라는 과정이라고 말해줘요.", keywords: ["정체성", "혼란", "성장", "불안", "진로"], emoji: "🐣" },
+    { id: "alchemist", title: "연금술사", author: "파울로 코엘료", category: "future", mood: "꿈을 좇아도 되는지 망설여질 때", note: "보물을 찾아 떠난 양치기의 여행. 마음이 가리키는 길을 믿어 보게 돼요.", keywords: ["꿈", "망설임", "진로", "두려움", "용기"], emoji: "🏜️" },
+    { id: "it-hurts-youth", title: "아프니까 청춘이다", author: "김난도", category: "future", mood: "취업과 진로 앞에서 초조할 때", note: "청춘의 불안을 다독이는 편지 같은 에세이. 늦지 않았다는 말을 건네요.", keywords: ["취업", "진로", "초조함", "불안", "막막함"], emoji: "🍂" },
+    { id: "upward-spiral", title: "우울할 땐 뇌 과학", author: "앨릭스 코브", category: "future", mood: "우울이 끝없이 이어질 것 같을 때", note: "작은 행동이 뇌를 바꿔 기분을 끌어올린다는 이야기. 오늘 할 한 가지를 알려줘요.", keywords: ["우울", "무기력", "절망", "불안", "회복"], emoji: "🌀" },
+    { id: "power-of-now", title: "지금 이 순간을 살아라", author: "에크하르트 톨레", category: "future", mood: "미래 걱정에 오늘을 놓칠 때", note: "생각이 아닌 지금 이 순간에 머무는 연습. 걱정의 소리가 조금 작아져요.", keywords: ["걱정", "불안", "생각많음", "초조함", "현재"], emoji: "⏳" },
+    { id: "life-lessons", title: "인생 수업", author: "엘리자베스 퀴블러 로스 · 데이비드 케슬러", category: "future", mood: "삶에서 무엇이 중요한지 흐려질 때", note: "삶의 끝을 지켜본 이들이 전하는 사랑과 용서의 수업. 오늘을 다르게 보게 돼요.", keywords: ["후회", "의미", "상실", "용서", "두려움"], emoji: "🕊️" },
+    { id: "shop-selling-time", title: "시간을 파는 상점", author: "김선영", category: "future", mood: "시간에 쫓겨 나를 잃어버린 것 같을 때", note: "시간을 사고파는 고등학생의 이야기. 내 시간을 어떻게 쓸지 생각하게 해요.", keywords: ["시간", "쫓김", "고민", "진로", "성장"], emoji: "⏰" },
+    { id: "old-man-and-sea", title: "노인과 바다", author: "어니스트 헤밍웨이", category: "future", mood: "애써도 결과가 나오지 않아 지칠 때", note: "끝까지 버티는 한 노인의 이야기. 결과보다 견뎌 낸 나를 보게 해줘요.", keywords: ["좌절", "실패", "버팀", "절망", "용기"], emoji: "🎣" },
+    { id: "reason-for-hope", title: "희망의 이유", author: "제인 구달", category: "future", mood: "세상이 나아질 것 같지 않을 때", note: "평생 침팬지와 숲을 지켜 온 사람이 말하는 희망. 작은 행동의 힘을 믿게 돼요.", keywords: ["절망", "희망", "불안", "미래", "무력감"], emoji: "🌿" },
+    { id: "sweet-orange-tree", title: "나의 라임 오렌지나무", author: "J. M. 바스콘셀로스", category: "future", mood: "어린 시절의 상처가 문득 떠오를 때", note: "외로운 소년 제제와 나무, 어른 친구의 이야기. 울고 나면 마음이 맑아져요.", keywords: ["상처", "외로움", "슬픔", "그리움", "가족"], emoji: "🍊" },
+    { id: "i-quit-inagaki", title: "퇴사하겠습니다", author: "이나가키 에미코", category: "burnout", mood: "회사를 그만두고 싶은 마음이 커질 때", note: "회사 밖에서 덜 쓰고 더 자유롭게 사는 이야기. 퇴사 전에 마음을 정리하기 좋아요.", keywords: ["퇴사", "회사", "지침", "번아웃", "자유"], emoji: "🚪" },
+    { id: "why-tired-easily", title: "나는 왜 남들보다 쉽게 지칠까", author: "최재훈", category: "burnout", mood: "나만 유난히 금방 지치는 것 같을 때", note: "예민하고 쉽게 지치는 나를 이해하는 심리 이야기. 나를 탓하는 마음이 줄어요.", keywords: ["지침", "예민함", "피곤", "자책", "번아웃"], emoji: "🔋" },
+    { id: "1cm-diving", title: "1cm 다이빙", author: "태수 · 문정", category: "burnout", mood: "일상에서 잠깐 벗어나고 싶을 때", note: "현실에서 딱 1cm만 벗어나 보는 작은 행복 찾기. 쉬는 법을 가볍게 알려줘요.", keywords: ["휴식", "쉬고싶음", "답답함", "지침", "행복"], emoji: "🤿" },
+    { id: "momo", title: "모모", author: "미하엘 엔데", category: "burnout", mood: "시간에 쫓겨 쉴 틈이 없을 때", note: "시간 도둑에게 시간을 되찾는 소녀 모모의 이야기. 천천히 사는 법을 일깨워요.", keywords: ["시간", "쫓김", "바쁨", "지침", "여유"], emoji: "🐢" },
+    { id: "full-catastrophe-living", title: "마음챙김 명상과 자기치유", author: "존 카밧진", category: "burnout", mood: "몸과 마음이 동시에 지쳤을 때", note: "호흡과 명상으로 스트레스를 다루는 방법을 차근차근 알려줘요.", keywords: ["스트레스", "지침", "불안", "명상", "호흡"], emoji: "🧘" },
+    { id: "praise-of-idleness", title: "게으름에 대한 찬양", author: "버트런드 러셀", category: "burnout", mood: "쉬는 것조차 죄책감이 들 때", note: "일을 덜 하는 게 오히려 더 나은 삶이라고 말하는 에세이. 쉼에 대한 죄책감이 줄어요.", keywords: ["죄책감", "휴식", "지침", "번아웃", "여유"], emoji: "☕" },
+    { id: "little-forest", title: "리틀 포레스트", author: "이가라시 다이스케", category: "burnout", mood: "도시 생활에 지쳐 숨이 막힐 때", note: "작은 시골 마을에서 직접 키우고 요리하는 사계절 만화. 마음이 느긋해져요.", keywords: ["도시", "지침", "휴식", "자연", "여유"], emoji: "🌾" },
+    { id: "kamome-diner", title: "카모메 식당", author: "무레 요코", category: "burnout", mood: "모든 걸 내려놓고 떠나고 싶을 때", note: "핀란드의 작은 식당에 모인 사람들의 느긋한 이야기. 소박한 하루가 위로가 돼요.", keywords: ["떠나고싶음", "지침", "휴식", "여유", "소박함"], emoji: "🍙" },
+    { id: "tsubaki-stationery", title: "츠바키 문구점", author: "오가와 이토", category: "burnout", mood: "전하지 못한 마음이 쌓여 무거울 때", note: "편지를 대신 써 주는 대필가의 이야기. 손글씨처럼 느린 위로를 건네요.", keywords: ["그리움", "지침", "편지", "위로", "후회"], emoji: "✉️" },
+    { id: "restaurant-of-love", title: "달팽이 식당", author: "오가와 이토", category: "burnout", mood: "모든 걸 잃은 것 같아 기운이 없을 때", note: "말을 잃은 주인공이 음식으로 사람들을 위로하는 이야기. 따뜻한 밥 한 그릇 같아요.", keywords: ["상실", "무기력", "위로", "회복", "음식"], emoji: "🐌" },
+    { id: "calm-brightens", title: "고요할수록 밝아지는 것들", author: "혜민", category: "burnout", mood: "마음이 소란스러워 쉬지 못할 때", note: "고요함 속에서 나를 돌보는 짧은 글들. 지친 날 몇 줄씩 읽기 좋아요.", keywords: ["소란", "지침", "휴식", "불면", "위로"], emoji: "🕯️" },
+    { id: "subtle-art", title: "신경 끄기의 기술", author: "마크 맨슨", category: "thoughts", mood: "사소한 일까지 다 신경 쓰느라 지칠 때", note: "모든 것에 신경 쓰지 말고 정말 중요한 것만 고르라는 솔직한 조언이에요.", keywords: ["예민함", "신경쓰임", "곱씹음", "피로", "비교"], emoji: "🙅" },
+    { id: "psychology-overthinkers", title: "생각이 너무 많은 어른들을 위한 심리학", author: "김혜남", category: "thoughts", mood: "걱정과 생각이 꼬리를 물 때", note: "정신과 의사가 들려주는 생각을 내려놓는 법. 나를 덜 몰아붙이게 돼요.", keywords: ["생각많음", "걱정", "곱씹음", "불안", "자책"], emoji: "🫧" },
+    { id: "emotions-are-habits", title: "감정은 습관이다", author: "박용철", category: "thoughts", mood: "같은 감정에 자꾸 빠져들 때", note: "익숙한 감정이 습관처럼 반복된다는 이야기. 감정의 고리를 끊는 법을 알려줘요.", keywords: ["감정", "반복", "우울", "불안", "습관"], emoji: "🔁" },
+    { id: "when-breath-becomes-air", title: "숨결이 바람 될 때", author: "폴 칼라니티", category: "thoughts", mood: "삶의 의미가 흐릿하게 느껴질 때", note: "죽음을 앞둔 젊은 의사의 기록. 오늘 살아 있는 의미를 다시 묻게 돼요.", keywords: ["의미", "허무", "상실", "삶", "죽음"], emoji: "🌬️" },
+    { id: "outside-is-summer", title: "바깥은 여름", author: "김애란", category: "thoughts", mood: "나만 멈춰 있는 것 같을 때", note: "상실 이후의 시간을 섬세하게 그린 소설집. 멈춘 마음을 조용히 이해해줘요.", keywords: ["상실", "슬픔", "공허", "멈춤", "외로움"], emoji: "🌧️" },
+    { id: "origin-of-happiness", title: "행복의 기원", author: "서은국", category: "thoughts", mood: "행복이 너무 멀게 느껴질 때", note: "행복은 거창한 게 아니라 좋아하는 사람과의 시간이라는 심리학 이야기예요.", keywords: ["행복", "공허", "허무", "관계", "의미"], emoji: "🙂" },
+    { id: "see-you-like-flowers", title: "꽃을 보듯 너를 본다", author: "나태주", category: "thoughts", mood: "짧은 위로 한 줄이 필요할 때", note: "짧고 다정한 시들. 한 편 읽는 데 1분이면 충분해요.", keywords: ["위로", "자존감", "그리움", "사랑", "쉼"], emoji: "🌼" },
+    { id: "small-things", title: "이처럼 사소한 것들", author: "클레어 키건", category: "thoughts", mood: "모른 척해야 할지 고민될 때", note: "작은 양심의 목소리를 따르는 한 남자의 이야기. 짧지만 오래 남아요.", keywords: ["양심", "고민", "용기", "망설임", "선택"], emoji: "❄️" },
+    { id: "world-of-children", title: "어린이라는 세계", author: "김소영", category: "thoughts", mood: "어른으로 사는 게 버겁게 느껴질 때", note: "어린이를 존중하는 시선으로 쓴 따뜻한 에세이. 내 안의 어린이도 다독여져요.", keywords: ["순수", "다정함", "지침", "그리움", "위로"], emoji: "🧸" },
+    { id: "self-esteem-class", title: "자존감 수업", author: "윤홍균", category: "thoughts", mood: "내가 너무 작게 느껴질 때", note: "정신과 의사가 알려주는 자존감 키우는 연습. 나를 대하는 말투가 달라져요.", keywords: ["자존감", "자책", "비교", "열등감", "우울"], emoji: "🪞" },
   ];
   var EMOTION_TO_CATEGORY = {
     work: ["일", "공부", "시험", "회사", "직장", "야근", "마감", "성적", "취업", "압박", "스트레스", "미루기", "집중"],
@@ -441,6 +507,70 @@ dialog.note::backdrop{background:rgba(10,30,55,.38);backdrop-filter:blur(2px)}
     "ordinary-existence": ["An Ordinary Existence (Korean essay)", "Lee Seok-won", "Honest confessions of an ordinary person. You'll see that everyone wobbles this much."],
     "too-many-thoughts": ["I Think Too Much", "Christel Petitcollin", "Thinking a lot is a trait, not a flaw. It helps you understand your sensitive side."],
     "frame": ["Frame (Korean psychology)", "Choi In-cheol", "Psychology on how changing your window on the world can change the very same day."],
+    "flow-hwang": ["Immersion (Korean)", "Hwang Nong-moon", "Shows how to sink deeply into one problem. A scattered mind gathers in one place."],
+    "tools-of-titans": ["Tools of Titans", "Tim Ferriss", "Small daily habits from people at the top. Copying just one is enough."],
+    "the-one-thing": ["The ONE Thing", "Gary Keller & Jay Papasan", "Focus on the single most important thing right now. Your to-do list gets lighter."],
+    "mindset": ["Mindset", "Carol S. Dweck", "Ability isn't fixed; it grows. Mistakes start to feel less scary."],
+    "miracle-morning": ["The Miracle Morning", "Hal Elrod", "Use a few quiet morning minutes for yourself and take back control of your day."],
+    "magic-of-memo": ["The Magic of Notes", "Yuji Maeda", "The moment you write, your thoughts line up. Set your busy head down on paper."],
+    "work-simply": ["Good Workers Keep It Simple (Korean)", "Park So-yeon", "Tips for making tangled work simple. Office days feel a little less heavy."],
+    "thinking-skill": ["Thought-Organizing Skills (Korean)", "Bok Ju-hwan", "Practice sorting scattered thoughts into maps and lists. Your words get clearer."],
+    "originals": ["Originals", "Adam Grant", "How people who think differently change the world. You'll trust your own ideas a bit more."],
+    "give-and-take": ["Give and Take", "Adam Grant", "Givers often go furthest, and here's how to give without losing yourself."],
+    "study-reading": ["Reading for a Studying Mind (Korean)", "Choi Seung-pil", "Build study strength through reading. It gives you courage to start studying again."],
+    "how-to-win-friends": ["How to Win Friends and Influence People", "Dale Carnegie", "The timeless basics of getting along. Small praise and real listening change relationships."],
+    "nonviolent-communication": ["Nonviolent Communication", "Marshall B. Rosenberg", "Speak about feelings and needs instead of judgments, and say what you mean without a fight."],
+    "vessel-of-words": ["The Vessel of Words (Korean)", "Kim Yun-na", "Grow the vessel of your heart before your words. Conversations soften."],
+    "individualist-manifesto": ["The Individualist Manifesto (Korean)", "Moon Yoo-seok", "Respecting yourself as an individual is what helps us live well together."],
+    "courage-to-be-happy": ["The Courage to Be Happy", "Ichiro Kishimi & Fumitake Koga", "Find happiness in contributing, not in approval. You get room to breathe."],
+    "what-men-live-by": ["What Men Live By", "Leo Tolstoy", "Short fables about love and neighbors. Your heart warms up again."],
+    "alone-to-alone": ["From Alone to Alone (Korean essay)", "Lee Byung-ryul", "Gentle essays on time spent alone. Loneliness feels a little cozier."],
+    "how-should-i-say": ["How Should I Say It? (Korean)", "Oh Eun-young", "Warm ways of speaking for kids and adults alike, the words close relationships need most."],
+    "talking-to-strangers": ["Talking to Strangers", "Malcolm Gladwell", "Shows how easily we misread others. You'll pause before judging."],
+    "wonder": ["Wonder", "R. J. Palacio", "A boy who looks different and his friends. It shows the courage to choose kindness."],
+    "little-women": ["Little Women", "Louisa May Alcott", "Four very different sisters who argue, make up and grow. You'll see your family anew."],
+    "pride-and-prejudice": ["Pride and Prejudice", "Jane Austen", "A love story about seeing past first impressions. A classic that reads with a smile."],
+    "norwegian-wood": ["Norwegian Wood", "Haruki Murakami", "A quiet novel of young love and loss. It helps you face painful memories slowly."],
+    "pancreas": ["I Want to Eat Your Pancreas", "Yoru Sumino", "A youthful novel that makes every day feel precious. You'll look again at the people beside you."],
+    "calm-and-passion-rosso": ["Between Calm and Passion: Rosso", "Kaori Ekuni", "The calm days of someone still holding an old love. It helps you slowly let go."],
+    "love-never-hurt": ["Love As If You've Never Been Hurt (poems, Korean ed.)", "ed. Ryu Shi-hwa", "Poems on love and life from around the world. Read one at a time."],
+    "speed-of-light": ["If We Cannot Move at the Speed of Light", "Kim Cho-yeop", "Sci-fi stories of longing across great distances. They gently hold a faraway heart."],
+    "great-gatsby": ["The Great Gatsby", "F. Scott Fitzgerald", "A man trying to win back a lost love. It makes you think about when to let go."],
+    "whereabouts-of-love": ["Whereabouts of Love (Japanese novel)", "Keigo Higashino", "A playful comedy of couples tangled at a ski resort. Laugh and cool your head."],
+    "kitchen": ["Kitchen", "Banana Yoshimoto", "Cooking and living again after loss. A small warmth grows beside the sadness."],
+    "lovers-discourse": ["A Lover's Discourse", "Roland Barthes", "Fragments on waiting, jealousy and longing in love. Your feelings get names."],
+    "how-to-live": ["How Should I Live? (Korean)", "Yoo Si-min", "Asks how to live through work, play, love and solidarity. You'll set your own compass."],
+    "demian": ["Demian", "Hermann Hesse", "A story of breaking out of the shell. Shaky times are part of growing."],
+    "alchemist": ["The Alchemist", "Paulo Coelho", "A shepherd's journey to find treasure. You'll trust the way your heart points."],
+    "it-hurts-youth": ["It Hurts Because It's Youth (Korean)", "Kim Rando", "Letter-like essays that calm young worries. It tells you you're not too late."],
+    "upward-spiral": ["The Upward Spiral", "Alex Korb", "Small actions can rewire the brain and lift your mood. It gives you one thing to try today."],
+    "power-of-now": ["The Power of Now", "Eckhart Tolle", "Practice staying in this moment, not in your thoughts. Worry gets quieter."],
+    "life-lessons": ["Life Lessons", "Elisabeth Kübler-Ross & David Kessler", "Lessons on love and forgiveness from those who sat with life's end. Today looks different."],
+    "shop-selling-time": ["The Shop That Sells Time (Korean YA)", "Kim Sun-young", "A high schooler who trades in time. It makes you think about how to spend yours."],
+    "old-man-and-sea": ["The Old Man and the Sea", "Ernest Hemingway", "An old man who holds on to the end. It helps you see your endurance, not just results."],
+    "reason-for-hope": ["Reason for Hope", "Jane Goodall", "Hope from a life spent protecting chimps and forests. You'll believe in small actions."],
+    "sweet-orange-tree": ["My Sweet Orange Tree", "José Mauro de Vasconcelos", "Lonely Zezé, his tree and a grown-up friend. After a good cry, your heart clears."],
+    "i-quit-inagaki": ["I'm Quitting (Japanese essay)", "Emiko Inagaki", "Living freer with less, outside the company. Good for sorting your heart before quitting."],
+    "why-tired-easily": ["Why Do I Tire So Easily? (Korean)", "Choi Jae-hoon", "Psychology for sensitive people who wear out fast. You'll blame yourself less."],
+    "1cm-diving": ["1cm Diving (Korean)", "Taesu & Munjeong", "Step just 1cm out of daily life to find small joys. A light guide to resting."],
+    "momo": ["Momo", "Michael Ende", "Momo wins time back from the time thieves. A reminder to live slowly."],
+    "full-catastrophe-living": ["Full Catastrophe Living", "Jon Kabat-Zinn", "Step-by-step ways to handle stress with breathing and meditation."],
+    "praise-of-idleness": ["In Praise of Idleness", "Bertrand Russell", "Essays arguing that working less can mean living better. Less guilt about resting."],
+    "little-forest": ["Little Forest (manga)", "Daisuke Igarashi", "A four-season manga of growing and cooking in a small village. Your mind slows down."],
+    "kamome-diner": ["Kamome Diner (Japanese novel)", "Yoko Mure", "Easygoing people in a small diner in Finland. A simple day becomes a comfort."],
+    "tsubaki-stationery": ["The Tsubaki Stationery Store", "Ito Ogawa", "A woman who writes letters for others. Slow comfort, like handwriting."],
+    "restaurant-of-love": ["The Restaurant of Love Regained", "Ito Ogawa", "A woman who lost her voice comforts people with food. Like a warm bowl of rice."],
+    "calm-brightens": ["Things That Grow Brighter in Stillness (Korean)", "Haemin Sunim", "Short pieces on caring for yourself in stillness. Read a few lines on tired days."],
+    "subtle-art": ["The Subtle Art of Not Giving a F*ck", "Mark Manson", "Blunt advice to stop caring about everything and choose what truly matters."],
+    "psychology-overthinkers": ["Psychology for Adults Who Overthink (Korean)", "Kim Hye-nam", "A psychiatrist on how to set thoughts down. You'll push yourself less."],
+    "emotions-are-habits": ["Emotions Are Habits (Korean)", "Park Yong-cheol", "Familiar feelings repeat like habits. Learn how to break the loop."],
+    "when-breath-becomes-air": ["When Breath Becomes Air", "Paul Kalanithi", "A young doctor's record of facing death. It asks again what it means to be alive today."],
+    "outside-is-summer": ["Outside Is Summer (Korean stories)", "Kim Ae-ran", "Delicate stories of time after loss. They quietly understand a heart that has stopped."],
+    "origin-of-happiness": ["The Origin of Happiness (Korean)", "Seo Eun-kook", "Psychology showing happiness isn't grand; it's time with people you like."],
+    "see-you-like-flowers": ["I Look at You as I Look at Flowers (poems)", "Na Tae-ju", "Short, tender poems. One minute is enough for each."],
+    "small-things": ["Small Things Like These", "Claire Keegan", "A man who follows a small voice of conscience. Short, but it stays with you."],
+    "world-of-children": ["The World of Children (Korean essay)", "Kim So-young", "Warm essays that respect children. The child inside you gets comforted, too."],
+    "self-esteem-class": ["Self-Esteem Class (Korean)", "Yoon Hong-gyun", "A psychiatrist's practice for building self-esteem. The way you talk to yourself changes."],
   };
   var DEFAULT_BOOK_IDS = ["convenience-store", "stop-and-see", "little-prince"];
   function recommendByKeyword(input, count = 3) {
@@ -616,6 +746,7 @@ dialog.note::backdrop{background:rgba(10,30,55,.38);backdrop-filter:blur(2px)}
       fbThanks: "고마워요. 잘 받았어요.",
       fbFail: "보내지 못했어요. 잠시 뒤 다시 눌러 주세요.",
       fbEmpty: "별점이나 한마디를 남겨 주세요.",
+      coverPending: "추가된 책은 추후 저작권 확인 후 표지 이미지를 올리도록 하겠습니다.",
       privacy: "AI에게 물어본 문장은 추천을 만들기 위해 AI(Anthropic Claude)로 보내지만 저장하지 않아요. 별점과 한마디만 서비스를 다듬기 위해 이름 없이 30일 보관하니, 이름·연락처 같은 개인정보는 적지 말아 주세요."
     },
     en: {
@@ -678,6 +809,7 @@ dialog.note::backdrop{background:rgba(10,30,55,.38);backdrop-filter:blur(2px)}
       fbThanks: "Thank you. We got it.",
       fbFail: "Couldn't send. Please try again in a moment.",
       fbEmpty: "Leave a rating or a few words.",
+      coverPending: "Cover images for newly added books will be uploaded after a copyright check.",
       privacy: "Sentences you ask the AI are sent to an AI service (Anthropic Claude) to make the picks, but they aren't stored. Only ratings and comments are kept for 30 days, without your name, to improve the service, so please don't include your name or contact details."
     }
   };
@@ -750,9 +882,14 @@ dialog.note::backdrop{background:rgba(10,30,55,.38);backdrop-filter:blur(2px)}
       const en = lang === "en" ? BOOKS_EN[book.id] : null;
       const title = en ? en[0] : book.title, author = en ? en[1] : book.author;
       const text = en && why === book.note ? en[2] : why;
-      return `<li><img class="cover" src="${esc(book.cover_url || `covers/${book.id}.jpg`)}" alt="${esc(en ? `${title} cover` : `${title} 표지`)}" width="64" height="94" loading="lazy" data-em="${book.emoji}">
+      // 추가 도서(noCover)는 표지 대신 이모지 + "추후 저작권 확인 후 표지 등록" 안내
+      const cover = book.noCover
+        ? `<span class="em" aria-hidden="true">${esc(book.emoji)}</span>`
+        : `<img class="cover" src="${esc(book.cover_url || `covers/${book.id}.jpg`)}" alt="${esc(en ? `${title} cover` : `${title} 표지`)}" width="64" height="94" loading="lazy" data-em="${book.emoji}">`;
+      const pending = book.noCover ? `<div class="pending">${esc(t("coverPending"))}</div>` : "";
+      return `<li>${cover}
       <div class="bk"><div class="t">${en ? `<i>${esc(title)}</i>` : `『${esc(title)}』`}</div><div class="a">${esc(author)}</div>
-      <div class="w">${esc(text)}</div></div></li>`;
+      <div class="w">${esc(text)}</div>${pending}</div></li>`;
     }
   ).join("") + "</ol>";
   var chipsHTML = (items) => items.map((c) => `<button type="button" class="chip" data-q="${esc(c.q)}">${esc(c.label)}</button>`).join("");

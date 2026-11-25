@@ -1,0 +1,39 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PRD — 마음버블 블로그 v3.3</title><style>
+@page{size:A4;margin:14mm 14mm}
+body{font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR','Noto Sans CJK KR',sans-serif;color:#1f2a26;max-width:860px;margin:24px auto;padding:0 20px;line-height:1.6;font-size:11pt;word-break:keep-all}
+h1{font-size:18pt;border-bottom:3px solid #15803d;padding-bottom:6px;margin:0 0 10px}
+h2{font-size:13pt;color:#15803d;margin:16px 0 6px}
+h3{font-size:11.5pt;margin:10px 0 4px}
+table{border-collapse:collapse;width:100%;margin:6px 0;font-size:9.5pt}
+th,td{border:1px solid #cfe5d8;padding:4px 7px;vertical-align:top;text-align:left}
+th{background:#ecfdf5}
+blockquote{margin:6px 0;padding:6px 12px;background:#f0fdf4;border-left:4px solid #15803d}
+blockquote p{margin:4px 0}
+code{background:#eef6f1;padding:1px 4px;border-radius:4px;font-size:.92em}
+pre{background:#f4f8f6;padding:10px;border-radius:8px;overflow:auto;font-size:9pt}
+ul{padding-left:1.3em;margin:4px 0} li{margin:2px 0} p{margin:5px 0}
+img{max-width:100%}
+</style></head><body><h1>PRD — 마음버블 블로그 「마음쉼터 서비스」</h1>
+<h2>1. 기본 정보</h2>
+<table><thead><tr><th>문서 버전</th><th>작성일</th><th>작성자</th><th>관련 문서</th></tr></thead><tbody><tr><td>v3.3 (서점 100권 확장·상용화 표지 API 계획)</td><td>2026-11-25</td><td>quiet-wings (기획·결정) + AI 에이전트 Claude (구현·제안)</td><td><a href="./TEST_REPORT.md">테스트 보고서</a> · <a href="./logs/DECISION_LOG.md">의사결정 로그</a> · <a href="./logs/SUCCESS_FAILURE_LOG.md">성공·실패 로그</a></td></tr></tbody></table>
+<h2>2. 개요</h2>
+<p>스트레스 해소 웹서비스 <strong>마음버블</strong>의 블로그에 <strong>블로그 글만 근거로 답하는 AI 챗봇 「포앤에게 물어봐」</strong>를 넣어, 사용자는 긴 글을 다 읽지 않아도 질문 하나로 답과 출처 글을 받고 필요할 때 부기능인 <strong>마음버블 페이지</strong>(걱정 버블·4-4-4 호흡·미니게임)와 <strong>마음버블서점</strong>(마음에 맞는 책 추천)으로 이어진다. 1인 운영자는 반복 응대를 줄이고 포앤이 답하지 못한 질문을 다음 글 주제로 쓴다.</p>
+<h2>3. 문제</h2>
+<blockquote><p><strong>문제 정의: 지친 독자는 블로그에 답이 있어도 어느 글에 있는지 몰라 이탈하고, 1인 운영자는 같은 질문에 반복해서 답한다.</strong></p></blockquote>
+<p><strong>3.1 데스크리서치 (3C·SWOT)</strong> — <strong>고객</strong> 바쁜 직장인·학생, 퇴근길·잠들기 전 모바일로 짧게 읽고 지금 상황에 맞는 답을 선호 · <strong>경쟁</strong> 블로그 검색은 키워드 일치라 &quot;잠이 안 와요&quot; 같은 문장 질문에 약하고, 범용 AI는 이 블로그 글을 몰라 출처가 없고, 멘탈케어 앱은 가입 장벽 · <strong>자사</strong> 글과 기능은 있지만 블로그→서비스 경로와 질문 데이터가 없고 운영자 1명 · <strong>기회/위협</strong> 문장으로 묻는 AI 검색에 익숙한 20~30대, 추후 병원 치료 보조 도구 확장 / 지어낸 답변·위기 오답, API 장애, 의료기기 규제.</p>
+<p><strong>3.2 문제 목록과 검증</strong></p>
+<table><thead><tr><th>#</th><th>문제</th><th>타깃</th><th>해결 방향</th><th>검증</th></tr></thead><tbody><tr><td>①</td><td>답이 어느 글에 있는지 몰라 찾다 지친다</td><td>독자</td><td>문장으로 물으면 포앤이 근거 글로 답</td><td>확인: 조사 붙은 문장 질문은 키워드 검색 실패</td></tr><tr><td>②</td><td>읽다 이탈하고 해볼 행동으로 이어지지 않는다</td><td>독자</td><td>답변·글 하단에 마음버블 페이지·서점 링크</td><td>확인: 마음버블 링크 404·503 (D-012)</td></tr><tr><td>③</td><td>같은 질문에 반복해서 답한다</td><td>운영자</td><td>포앤이 블로그 글로 대신 답</td><td>출시 후 4주 질문 수</td></tr><tr><td>④</td><td>독자가 무엇을 궁금해하는지 모른다</td><td>운영자</td><td>답하지 못한 질문을 익명 기록</td><td>출시 후 갭 질문 집계</td></tr></tbody></table>
+<p>미확인인 이탈률·반복 문의는 출시 후 지인 10명 3문항 설문과 UTM으로 확인한다. <strong>우선순위(MoSCoW, 2일·1인)</strong>: Must ①③ · Should ②④, 마음버블서점 업그레이드 · Won&#39;t 관리자 글쓰기 자동화, 글 요약 · <strong>전제</strong> 위기 표현은 놓치지 않는다.</p>
+<h2>4. 해결 방안</h2>
+<p><strong>4.1 솔루션</strong>: 독자가 문장으로 물으면 포앤이 블로그 글만 근거로 3~5문장 답과 출처를 주고, 모르면 모른다고 하며, 위기에는 사람의 도움을 먼저 안내한다.</p>
+<p><strong>4.2 AS-IS → TO-BE</strong> — <strong>기능</strong> 글 목록·키워드 검색을 직접 뒤짐 → 문장 질문에 근거 답·출처·부기능 링크 · <strong>타겟</strong> 막연한 방문자 → 지친 20~30대(1순위)·운영자, 상용화 시 병원 보조 도구 · <strong>BM</strong> 경로 없음 → 블로그·포앤 무료, 블로그 = 유입 채널, 추후 서점 도서 제휴·기관 도구 · <strong>디자인</strong> 흩어진 버튼 → 포앤 버튼 하나·추천 질문 4개·캐릭터 아이콘</p>
+<p><strong>4.3 예상 성과 (OKR, 4주)</strong> — <strong>O</strong> 지친 독자가 블로그에서 바로 답을 찾고 마음버블로 이어진다 · <strong>KR1</strong> 출처 붙은 답변 주 50건 · <strong>KR2</strong> 마음버블 링크 클릭률(UTM) 15%↑ · <strong>KR3</strong> 갭 질문으로 새 글 월 2편</p>
+<h2>5. 가설 및 지표</h2>
+<p>①③ 글 근거로 바로 답하면 반복 문의가 준다 → 출처 포함률 90%↑ · ② 답과 함께 기능을 권하면 이동한다 → 클릭률 15%↑ · ④ 모르면 모른다고 하면 신뢰·데이터가 쌓인다 → 정직 응답 100% · 전제 → 위기 안내율 100%. <strong>페르소나</strong> 잠들기 전 &quot;잠이 안 와요&quot;를 찾지만 긴 글은 못 읽는 29세 직장인. <strong>카피</strong> &quot;긴 글 말고, 포앤에게 물어봐&quot; (포앤 = Fortune + Angel, 다정한 존댓말, 의료적 판단 표현 금지)</p>
+<h2>6. 기능적 요구사항</h2>
+<table><thead><tr><th>순위</th><th>기능</th><th>설명</th></tr></thead><tbody><tr><td>P0</td><td>포앤 근거 답변</td><td>가까운 문단 4개만 근거로 3~5문장, 근거 번호 = 출처 번호 (①③)</td></tr><tr><td>P0</td><td>모르면 모른다고·위기 대응</td><td>근거 없으면 &quot;아직 블로그에 없는 내용&quot; + 기록, 위기·진단 질문은 AI 없이 109·1577-0199·119 (④·전제)</td></tr><tr><td>P1</td><td>부기능 연결</td><td>글·답변에 주제별 마음버블 페이지·서점 링크, UTM 측정 (②)</td></tr><tr><td>P1</td><td>마음버블서점 업그레이드</td><td>감정 단어·한 문장 → 서점 100권 중 3권과 이유 추천(AI), 작가 쪽지·BGM·한/영. <code>/books</code>·블로그 → <code>/bookstore/</code> (②)</td></tr><tr><td>P1</td><td>데모 모드</td><td>AI 장애·15초 초과 시 문단 요약 답변</td></tr><tr><td>P2</td><td>관리자 글쓰기 자동화</td><td>다음 버전</td></tr></tbody></table>
+<p><strong>유즈케이스</strong> &quot;잠이 안 와요&quot; → 검증(300자, 개인정보 가림) → 위기 검사 → 문단 검색 → AI 답 → 출처 [1] 호흡법 글 + &quot;호흡 쉼터 열기&quot; · <strong>범위 밖</strong> 로그인, 대화 저장, 진단 대체</p>
+<h2>7. 비기능 · 디자인 요구사항</h2>
+<p><strong>성능</strong> 포앤 5초 내(실측 4.6~5.1초), 서점 실측 4.6~6.9초 · <strong>동시 접속</strong> 정적 CDN, AI 분당 30·일 600회(서점 20·300회) · <strong>보안</strong> 허용 주소만(타 도메인 403), CSP, 키는 서버 비밀값·GitHub Secret, 질문 원문 미저장(서점은 별점·한마디만 30일) · <strong>디자인</strong> 선택지 줄이기, 파스텔·구름 톤, 포앤 캐릭터, 서점은 두 탭과 &quot;← 마음버블&quot; 복귀 · 화면 <a href="./screenshots"><code>screenshots</code></a></p>
+<h2>8. 출시 및 운영 전략</h2>
+<p><strong>출시</strong> 블로그 <code>main</code> push → 테스트·빌드 → Firebase Hosting 비공개 미리보기 / 마음버블 페이지·서점 Cloudflare Pages(서점 AI는 Supabase → Cloudflare 함수, D-020) / AI는 Claude(테스트), 상용화 때 Gemini 검토 · <strong>테스트</strong> 단위 69개, 모바일 점검, 배포 주소 AI 확인 · <strong>상용화</strong> 서점 표지는 알라딘·카카오 책 검색·국립중앙도서관 API 표지 URL 사용 · <strong>운영</strong> 주 1회 갭 질문으로 글 주제 선정 · <strong>리스크</strong> 지어낸 답 → 근거만 / 위기 → 규칙 우선 / 장애 → 데모 답변 / 병원 규제 → 웰니스로 먼저 출시 · <strong>일정</strong> 11-24 기획·개발·QA → 11-25 출시 · <strong>협업</strong> 방향·요구사항 초안 quiet-wings → 구현 1차본·기술 제안 Claude → 수정·최종 결정 함께(결정자·과정은 의사결정 로그), 승인은 역할별 자체 점검</p></body></html>

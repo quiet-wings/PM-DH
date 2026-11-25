@@ -7,11 +7,11 @@
 | 제출물 | 위치 |
 |---|---|
 | 배포된 블로그 | Firebase Hosting **비공개 미리보기 링크**(30일) — 링크는 제출란으로만 공유 ([D-011](docs/logs/DECISION_LOG.md)) |
-| PRD 기획서 (v0.1 → v3.2, A4 2쪽) | [`docs/PRD.md`](docs/PRD.md) · 버전별 HTML [`versions/`](versions) · 과정은 `docs: PRD vX` 커밋 |
-| 테스트 보고서 (v1.4, A4 2쪽) | [`docs/TEST_REPORT.md`](docs/TEST_REPORT.md) · 스크린샷 [`docs/screenshots/`](docs/screenshots) |
+| PRD 기획서 (v0.1 → v3.3, A4 2쪽) | [`docs/PRD.md`](docs/PRD.md) · 버전별 HTML [`versions/`](versions) · 과정은 `docs: PRD vX` 커밋 |
+| 테스트 보고서 (v1.5, A4 2쪽) | [`docs/TEST_REPORT.md`](docs/TEST_REPORT.md) · 스크린샷 [`docs/screenshots/`](docs/screenshots) |
 | 에이전트용 지침 | [`AGENTS.md`](AGENTS.md) (`CLAUDE.md`는 import 한 줄) |
-| 의사결정 로그 | [`docs/logs/DECISION_LOG.md`](docs/logs/DECISION_LOG.md) (D-001~D-023, 결정자 표기 + 「결정 과정 메모」) |
-| 성공·실패 로그 | [`docs/logs/SUCCESS_FAILURE_LOG.md`](docs/logs/SUCCESS_FAILURE_LOG.md) (#1~#30) |
+| 의사결정 로그 | [`docs/logs/DECISION_LOG.md`](docs/logs/DECISION_LOG.md) (D-001~D-025, 결정자 표기 + 「결정 과정 메모」) |
+| 성공·실패 로그 | [`docs/logs/SUCCESS_FAILURE_LOG.md`](docs/logs/SUCCESS_FAILURE_LOG.md) (#1~#32) |
 | 제출 체크리스트 | [`docs/SUBMISSION_CHECKLIST.md`](docs/SUBMISSION_CHECKLIST.md) |
 | 소스코드 | 블로그: `lib/`(챗봇·검색·안전 규칙), `site/`(화면), `scripts/`(빌드), `posts/`(글), `tests/` · 마음버블 앱·서점: [`maeumbubble-app/`](maeumbubble-app) |
 | 마음버블 페이지 | https://maeumbubble-test.pages.dev (Cloudflare Pages) |
@@ -43,7 +43,7 @@
      ↘ 위기 표현: AI 없이 109 · 1577-0199 · 119 안내
 
 마음버블서점: 감정 버튼 또는 한 문장 → (AI에게 물어보기) Cloudflare /api/bookstore/recommend → Claude가
-     서버에 고정된 책 36권 안에서만 3권과 추천 이유를 고름 → 책 카드(표지·이유·교보문고 연결)
+     서버에 고정된 책 100권 안에서만 3권과 추천 이유를 고름 → 책 카드(표지·이유·교보문고 연결)
 ```
 
 ## 로컬에서 실행
