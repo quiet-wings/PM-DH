@@ -1,7 +1,7 @@
 # 의사결정 로그 (Decision Log)
 
 중요한 결정을 날짜순으로 기록합니다. 형식: **결정 / 결정자 / 선택지 / 이유 / 트레이드오프**  
-결정자가 `quiet-wings`인 항목(D-003 마음버블 연결, D-007 Firebase 선택, D-008 병원 타깃, D-009 기능 범위 단순화)은 기획자가 직접 내린 결정이다. `Claude(AI 에이전트) + quiet-wings 공동`인 항목(D-001·004·006)은 quiet-wings가 처음 초안(방향·요구사항)을 주고, 중간 수정과 최종 결정은 quiet-wings와 AI 에이전트 Claude가 함께 한 결정이고, `Claude(AI 에이전트)`인 항목(D-002·005)은 에이전트가 기술적으로 판단해 정한 결정이다.
+결정자가 `quiet-wings`인 항목(D-003 마음버블 연결, D-008 병원 타깃, D-009 기능 범위 단순화)은 기획자가 직접 내린 결정이다. `Claude(AI 에이전트) + quiet-wings 공동`인 항목(D-001·004·006·007)은 quiet-wings가 처음 초안(방향·요구사항)을 주고, 중간 수정과 최종 결정은 quiet-wings와 AI 에이전트 Claude가 함께 한 결정이고, `Claude(AI 에이전트)`인 항목(D-002·005)은 에이전트가 기술적으로 판단해 정한 결정이다.
 
 | ID | 날짜 | 결정자 | 결정 | 검토한 선택지 | 이유 | 트레이드오프 |
 |---|---|---|---|---|---|---|
@@ -11,7 +11,7 @@
 | D-004 | 11-24 | Claude(AI 에이전트) + quiet-wings 공동 | 배포를 Vercel → **Netlify**로 변경 | ① Vercel ② Netlify | 마음버블 본체가 이미 Netlify를 쓴다. 계정·도메인·로그 확인 위치를 하나로 모을 수 있다 | Netlify Functions 형식으로 서버 코드 작성 |
 | D-005 | 11-24 | Claude(AI 에이전트) | 검색은 **키워드(한글 2글자 조각) 점수 방식**, 임베딩 미사용 | ① 임베딩 벡터 검색 ② 키워드 점수 | 글 수십 편 규모에서는 충분하고, API 호출 1회를 줄여 무료 한도·속도에 유리 | 동의어("잠"↔"수면") 약함 → 글에 동의어를 함께 쓰는 작성 규칙으로 보완 |
 | D-006 | 11-24 | Claude(AI 에이전트) + quiet-wings 공동 | **위기 표현은 AI보다 먼저 규칙으로 처리** | ① AI에게 판단 위임 ② 키워드 규칙 우선 | 스트레스 서비스 특성상 놓치면 안 되는 상황. AI 응답은 매번 달라 100% 보장이 어렵다 | 오탐 시 안전 안내가 과하게 나올 수 있음(허용) |
-| D-007 | 11-24 | quiet-wings | 배포를 Netlify → **Firebase Hosting + Firebase AI Logic**으로 변경 (D-004 대체) | ① Netlify Functions ② Firebase Cloud Functions ③ Firebase Hosting + AI Logic(클라이언트에서 Gemini 호출) | 사용자 결정으로 Firebase 사용. Cloud Functions는 유료(Blaze) 요금제가 필요하지만 AI Logic의 Gemini Developer API는 무료(Spark) 요금제에서 쓸 수 있고 API 키를 코드에 넣지 않아도 됨 | 서버가 없어 호출 제한은 브라우저 + App Check로 처리, 콘텐츠 갭 로그는 Firestore에 저장 |
+| D-007 | 11-24 | Claude(AI 에이전트) + quiet-wings 공동 — Firebase 사용은 quiet-wings 결정, Claude가 "Cloud Functions는 유료(Blaze)"라고 의견 제시 → quiet-wings가 다른 방법을 묻자 Claude가 AI Logic의 Gemini Developer API(무료) 안내 → quiet-wings가 채택 | 배포를 Netlify → **Firebase Hosting + Firebase AI Logic**으로 변경 (D-004 대체) | ① Netlify Functions ② Firebase Cloud Functions ③ Firebase Hosting + AI Logic(클라이언트에서 Gemini 호출) | 사용자 결정으로 Firebase 사용. Cloud Functions는 유료(Blaze) 요금제가 필요하지만 AI Logic의 Gemini Developer API는 무료(Spark) 요금제에서 쓸 수 있고 API 키를 코드에 넣지 않아도 됨 | 서버가 없어 호출 제한은 브라우저 + App Check로 처리, 콘텐츠 갭 로그는 Firestore에 저장 |
 | D-008 | 11-24 | quiet-wings | 상용화 단계 주 사용자에 **정신건강의학과 환자** 추가 | ① 일반 사용자만 ② 병원 치료 보조 도구까지 확장 | 기관(병원) 대상 서비스로 확장하려는 사업 방향. 단 의료 규제 대상이 될 수 있어 MVP는 진단·처방성 답변 금지, 개인 기록 미수집으로 설계 | 상용화 전 인허가·임상 근거·민감정보 보호 체계가 추가로 필요 |
 | D-009 | 11-24 | quiet-wings | 추후 개선 방향을 **기능 추가가 아닌 단순화**로 설정 | ① 로드맵 기능(목록집 공유 등) 확장 ② 과한 기능을 덜어내고 깔끔한 화면 | 사용자 결정. 지친 사용자는 선택지가 많을수록 부담을 느끼고, 핵심 흐름(적기→터뜨리기→위로)이 묻힌다 | 일부 기능은 숨김·제거되어 기존 사용자가 찾기 어려울 수 있음 → 사용률 데이터로 결정 |
 | D-010 | 11-24 | quiet-wings (에이전트 제안 승인) | 에이전트 지침을 **AGENTS.md 하나로 관리**하고 CLAUDE.md는 `@AGENTS.md` import만 둠 | ① README에 지침 포함 ② CLAUDE.md·AGENTS.md 따로 작성 ③ AGENTS.md 단일 원본 + CLAUDE.md import | 강사 피드백: 에이전트 런타임은 README가 아닌 AGENTS.md/CLAUDE.md를 세션 시작 시 자동 주입한다. Codex는 AGENTS.md, Claude Code는 CLAUDE.md를 읽으므로 import로 두 도구가 같은 지침을 쓰게 함. AGENTS.md 명세 권장대로 명령어를 문서 맨 앞에 배치 | 지침 수정은 AGENTS.md에서만 해야 함 (CLAUDE.md에 직접 쓰면 Codex와 어긋남) |
