@@ -8,7 +8,7 @@
 |---|---|
 | 배포된 블로그 | Firebase Hosting **비공개 미리보기 링크**(30일) — 링크는 제출란으로만 공유 ([D-011](docs/logs/DECISION_LOG.md)) |
 | PRD 기획서 (v0.1 → v3.3, A4 2쪽) | [`docs/PRD.md`](docs/PRD.md) · 버전별 HTML [`versions/`](versions) · 과정은 `docs: PRD vX` 커밋 |
-| 테스트 보고서 (v1.5, A4 2쪽) | [`docs/TEST_REPORT.md`](docs/TEST_REPORT.md) · 스크린샷 [`docs/screenshots/`](docs/screenshots) |
+| 테스트 보고서 (v1.6, A4 2쪽) | [`docs/TEST_REPORT.md`](docs/TEST_REPORT.md) · 스크린샷 [`docs/screenshots/`](docs/screenshots) |
 | 에이전트용 지침 | [`AGENTS.md`](AGENTS.md) (`CLAUDE.md`는 import 한 줄) |
 | 의사결정 로그 | [`docs/logs/DECISION_LOG.md`](docs/logs/DECISION_LOG.md) (D-001~D-025, 결정자 표기 + 「결정 과정 메모」) |
 | 성공·실패 로그 | [`docs/logs/SUCCESS_FAILURE_LOG.md`](docs/logs/SUCCESS_FAILURE_LOG.md) (#1~#32) |
@@ -52,7 +52,7 @@ npm test        # 블로그 단위테스트 69개
 npm run dev     # 빌드 후 http://localhost:5173 (Firebase 설정이 비어 있으면 데모 모드)
 ```
 외부 npm 패키지가 없어 `npm install`이 필요 없습니다 (Node 22 이상).
-마음버블 앱은 `maeumbubble-app/`에서 `npx vitest run`(단위테스트 10개)으로 확인합니다.
+마음버블 앱은 `maeumbubble-app/`에서 `npx vitest run`(단위테스트 10개, 테스트 보고서 v1.6과 동일)으로 확인합니다.
 
 ## 보안·개인정보
 - **보안 헤더**(`firebase.json`): CSP로 이 사이트·Firebase SDK(gstatic)·Claude 중계 서버·Firestore 주소만 허용, 클릭재킹 차단(`frame-ancestors 'none'`), HSTS, COOP, Permissions-Policy. 테스트가 CSP 필수 항목과 인라인 스크립트 금지를 검사해요.
@@ -88,7 +88,7 @@ Windows에서는 [Git for Windows](https://git-scm.com)가 필요해요 (GitHub 
 ## 새 글 쓰기
 `posts/YYYY-MM-DD-slug.md`를 만들고 front-matter(`title`, `date`, `tags`, `summary`, `feature`)를 채워 push하면 끝. 포앤이 새 글을 바로 근거로 씁니다.
 
-## 배포 주소에서 확인한 내용 (2026-11-25 기준)
+## 배포 주소에서 확인한 내용 (2026-11-25 기준 · 테스트 보고서 v1.6)
 
 | 영역 | 반영 내용 | 확인 |
 |---|---|---|
@@ -98,6 +98,7 @@ Windows에서는 [Git for Windows](https://git-scm.com)가 필요해요 (GitHub 
 | 마음버블서점 | 감정 단어·한 문장 책 추천, AI 추천 이유 한 줄, 작가 쪽지·BGM·다크 모드·한국어/English | AI 추천 4.6~6.9초 |
 | 개인정보·보안 | `/privacy` 처리방침(모든 페이지 하단·챗봇 안내문 링크), 보안 헤더(CSP·HSTS·COOP 등) | CSP 위반 0건 |
 | 모바일 | 360·390px에서 홈·글·처리방침·404 가로 넘침·콘솔 오류 없음 | 실제 Chrome 점검 |
+| 단위테스트 | 블로그 `npm test` 69개 · 마음버블 앱 `npx vitest run` 10개 | 69/69 · 10/10 통과 |
 | 마음버블 연결 | 글 하단·포앤 답변·헤더 버튼 → 마음버블 페이지·서점 (UTM `utm_source=maeum-blog`) | 링크 정상 |
 
 **기술**: 정적 사이트 생성기·검색 엔진·마크다운 변환기를 **외부 라이브러리 없이** 직접 구현(Node 22) · Firebase Hosting · Firestore · GitHub Actions · Cloudflare Pages Functions(중계) + Claude API · 마음버블 앱 TanStack Start + React
