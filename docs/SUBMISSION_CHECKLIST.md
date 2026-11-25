@@ -15,7 +15,7 @@
 | 필수 | PRD 기획서 | `.md`, 같은 저장소, **2쪽 이하**, 어떤 문제를 푸는지 명확히 정의, 버전별 관리 또는 커밋 메시지로 업데이트 과정 기록 | [`docs/PRD.md`](PRD.md) · 커밋 `docs: PRD v0.1`~`v3.2`(블로그 중심 재구성·마음버블서점 업그레이드·결정자·협업 방식) · [`versions/PRD_new_v9.html`](../versions/PRD_new_v9.html) | ✅ (11-25 v3.2 A4 2쪽 확인) |
 | 필수 | 테스트 보고서 | `.md`, 같은 저장소, **2쪽 이하**, 전체 유저플로우 화면 스크린샷 + 기능별 단위테스트 포함 | [`docs/TEST_REPORT.md`](TEST_REPORT.md) · [`docs/screenshots/`](screenshots) | ✅ (11-25 v1.4: 마음버블서점 화면 ⑨~⑪·앱 테스트 8개 추가, v1.3→v1.4 커밋 기록, A4 2쪽 확인) |
 | 필수 | 로그 ① 에이전트용 지침 | AI 에이전트용 지침 파일 | [`AGENTS.md`](../AGENTS.md) · [`CLAUDE.md`](../CLAUDE.md) (11-25 포앤·마음버블서점 반영) | ✅ |
-| 필수 | 로그 ② 성공·실패 로그 | 시행착오 기록 (형식: 상황 → 결과 → 원인 → 조치 → 배운 점) | [`docs/logs/SUCCESS_FAILURE_LOG.md`](logs/SUCCESS_FAILURE_LOG.md) (#1~#24) | ✅ |
+| 필수 | 로그 ② 성공·실패 로그 | 시행착오 기록 (형식: 상황 → 결과 → 원인 → 조치 → 배운 점) | [`docs/logs/SUCCESS_FAILURE_LOG.md`](logs/SUCCESS_FAILURE_LOG.md) (#1~#25) | ✅ |
 | 필수 | 로그 ③ 의사결정 로그 | 무엇을·누가·왜 결정했는지 한 줄씩 | [`docs/logs/DECISION_LOG.md`](logs/DECISION_LOG.md) | ✅ (결정자: D-001·004·006·007 Claude + quiet-wings 공동, D-002·005 Claude) |
 | 참고 | 마음버블 앱·서점 배포 | 블로그가 연결하는 서비스 (제출 URL은 **블로그** 주소) | https://maeumbubble-test.pages.dev · 서점 https://maeumbubble-test.pages.dev/bookstore/ (11-25 AI 추천 확인) | ✅ |
 | 필수 | 소스코드 | 같은 저장소 | `lib/` `site/` `scripts/` `posts/` `tests/` · 마음버블 앱 `maeumbubble-app/` | ✅ |

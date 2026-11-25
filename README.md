@@ -2,7 +2,7 @@
 
 걱정을 비눗방울에 담아 터뜨리는 스트레스 해소 서비스 **마음버블**의 블로그입니다.
 블로그 오른쪽 아래 **「포앤에게 물어봐」** 버튼에 질문하면, AI 챗봇 **포앤**(Fortune + Angel, 행운을 가져다주는 천사)이 **블로그 글만 근거로** 답하고 출처 글과 바로 해 볼 마음버블 기능을 알려 줍니다.
-부기능인 **마음버블 페이지**(걱정 버블·4-4-4 호흡·미니게임)와 **마음버블서점**(지금 마음에 맞는 책 추천)으로 이어집니다.
+부기능인 **마음버블 페이지**(걱정 버블·4-4-4 호흡·미니게임·가상 사직서 「퇴사할게요」)와 **마음버블서점**(지금 마음에 맞는 책 추천)으로 이어집니다.
 
 | 제출물 | 위치 |
 |---|---|
@@ -10,8 +10,8 @@
 | PRD 기획서 (v0.1 → v3.2, A4 2쪽) | [`docs/PRD.md`](docs/PRD.md) · 버전별 HTML [`versions/`](versions) · 과정은 `docs: PRD vX` 커밋 |
 | 테스트 보고서 (v1.4, A4 2쪽) | [`docs/TEST_REPORT.md`](docs/TEST_REPORT.md) · 스크린샷 [`docs/screenshots/`](docs/screenshots) |
 | 에이전트용 지침 | [`AGENTS.md`](AGENTS.md) (`CLAUDE.md`는 import 한 줄) |
-| 의사결정 로그 | [`docs/logs/DECISION_LOG.md`](docs/logs/DECISION_LOG.md) (D-001~D-021, 결정자 표기 + 「결정 과정 메모」) |
-| 성공·실패 로그 | [`docs/logs/SUCCESS_FAILURE_LOG.md`](docs/logs/SUCCESS_FAILURE_LOG.md) (#1~#24) |
+| 의사결정 로그 | [`docs/logs/DECISION_LOG.md`](docs/logs/DECISION_LOG.md) (D-001~D-022, 결정자 표기 + 「결정 과정 메모」) |
+| 성공·실패 로그 | [`docs/logs/SUCCESS_FAILURE_LOG.md`](docs/logs/SUCCESS_FAILURE_LOG.md) (#1~#25) |
 | 제출 체크리스트 | [`docs/SUBMISSION_CHECKLIST.md`](docs/SUBMISSION_CHECKLIST.md) |
 | 소스코드 | 블로그: `lib/`(챗봇·검색·안전 규칙), `site/`(화면), `scripts/`(빌드), `posts/`(글), `tests/` · 마음버블 앱·서점: [`maeumbubble-app/`](maeumbubble-app) |
 | 마음버블 페이지 | https://maeumbubble-test.pages.dev (Cloudflare Pages) |
@@ -52,7 +52,7 @@ npm test        # 블로그 단위테스트 69개
 npm run dev     # 빌드 후 http://localhost:5173 (Firebase 설정이 비어 있으면 데모 모드)
 ```
 외부 npm 패키지가 없어 `npm install`이 필요 없습니다 (Node 22 이상).
-마음버블 앱은 `maeumbubble-app/`에서 `npx vitest run`(단위테스트 8개)으로 확인합니다.
+마음버블 앱은 `maeumbubble-app/`에서 `npx vitest run`(단위테스트 10개)으로 확인합니다.
 
 ## 보안·개인정보
 - **보안 헤더**(`firebase.json`): CSP로 이 사이트·Firebase SDK(gstatic)·Claude 중계 서버·Firestore 주소만 허용, 클릭재킹 차단(`frame-ancestors 'none'`), HSTS, COOP, Permissions-Policy. 테스트가 CSP 필수 항목과 인라인 스크립트 금지를 검사해요.

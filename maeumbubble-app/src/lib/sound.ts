@@ -101,6 +101,51 @@ class SoundManager {
     }
   }
 
+  // 「퇴사할게요」 도장 "쾅": 묵직하게 떨어지는 저음 + 종이에 찍히는 짧은 타격음
+  // delay(초) 뒤에 울려서 도장이 종이에 닿는 순간과 맞춰요.
+  public playStampSound(delay = 0) {
+    if (this.isMuted) return
+    try {
+      this.initContext()
+      if (!this.ctx) return
+      const t = this.ctx.currentTime + delay
+
+      // 1) 쿵 — 낮게 떨어지는 사인파
+      const body = this.ctx.createOscillator()
+      const bodyGain = this.ctx.createGain()
+      body.type = 'sine'
+      body.frequency.setValueAtTime(150, t)
+      body.frequency.exponentialRampToValueAtTime(45, t + 0.25)
+      bodyGain.gain.setValueAtTime(0.0001, t)
+      bodyGain.gain.exponentialRampToValueAtTime(0.6, t + 0.008)
+      bodyGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.4)
+      body.connect(bodyGain)
+      bodyGain.connect(this.ctx.destination)
+      body.start(t)
+      body.stop(t + 0.42)
+
+      // 2) 탁 — 아주 짧은 잡음(도장이 종이를 치는 소리)
+      const len = Math.floor(this.ctx.sampleRate * 0.12)
+      const buffer = this.ctx.createBuffer(1, len, this.ctx.sampleRate)
+      const data = buffer.getChannelData(0)
+      for (let i = 0; i < len; i++) data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3)
+      const hit = this.ctx.createBufferSource()
+      hit.buffer = buffer
+      const filter = this.ctx.createBiquadFilter()
+      filter.type = 'lowpass'
+      filter.frequency.setValueAtTime(1800, t)
+      const hitGain = this.ctx.createGain()
+      hitGain.gain.setValueAtTime(0.45, t)
+      hit.connect(filter)
+      filter.connect(hitGain)
+      hitGain.connect(this.ctx.destination)
+      hit.start(t)
+      hit.stop(t + 0.13)
+    } catch {
+      // 소리를 낼 수 없는 환경이면 조용히 넘어가요
+    }
+  }
+
   // Play gentle wind sweep when releasing all bubbles together
   public playBreezeSound() {
     if (this.isMuted) return

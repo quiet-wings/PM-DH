@@ -7,6 +7,7 @@ import { BottomNav } from '../components/BottomNav'
 import { soundManager } from '../lib/sound'
 import { triggerBubblePopConfetti, triggerBreezeCelebration } from '../lib/confetti'
 import { downloadAffirmationCard } from '../lib/cardImage'
+import { ResignGame } from '../components/ResignGame'
 
 export const Route = createFileRoute('/game')({
   head: () => ({
@@ -15,7 +16,7 @@ export const Route = createFileRoute('/game')({
       {
         name: 'description',
         content:
-          '행운의 네잎클로버와 황금빛 세잎클로버(행복) 찾기, 뽁뽁이 터뜨리기, 걱정 버블 팡팡으로 마음을 가볍게 쉬어 보세요.',
+          '행운의 네잎클로버와 황금빛 세잎클로버(행복) 찾기, 뽁뽁이 터뜨리기, 걱정 버블 팡팡, 가상 사직서 「퇴사할게요」로 마음을 가볍게 쉬어 보세요.',
       },
       { property: 'og:title', content: '스트레스 해소 미니게임 | 마음 버블' },
     ],
@@ -23,7 +24,7 @@ export const Route = createFileRoute('/game')({
   component: GamePage,
 })
 
-type Mode = 'clover' | 'wrap' | 'pop'
+type Mode = 'clover' | 'wrap' | 'pop' | 'resign'
 
 function GamePage() {
   const [mode, setMode] = useState<Mode>('clover')
@@ -57,6 +58,9 @@ function GamePage() {
             <ModeTab active={mode === 'pop'} onClick={() => setMode('pop')}>
               🎈 걱정 버블 팡팡
             </ModeTab>
+            <ModeTab active={mode === 'resign'} onClick={() => setMode('resign')}>
+              📝 퇴사할게요
+            </ModeTab>
           </div>
         </div>
 
@@ -64,8 +68,10 @@ function GamePage() {
           <LuckyCloverGame />
         ) : mode === 'wrap' ? (
           <BubbleWrapGame />
-        ) : (
+        ) : mode === 'pop' ? (
           <WorryPopGame />
+        ) : (
+          <ResignGame />
         )}
       </main>
       <BottomNav />
