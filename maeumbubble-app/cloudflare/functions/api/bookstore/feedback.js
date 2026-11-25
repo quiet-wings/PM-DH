@@ -1,5 +1,6 @@
 // POST /api/bookstore/feedback — 마음버블서점 별점·한마디 (Cloudflare Pages Functions)
 // 이름·IP 없이 별점(1~5)과 메시지(1000자 이내)만 WORRIES KV에 30일 보관해요. 키 접두어: bookfb:
+import { clientOverLimit } from '../../_lib/client-limit.js'
 const ALLOWED_ORIGINS = [
   /^https:\/\/([a-z0-9-]+\.)?maeumbubble-test\.pages\.dev$/,
   /^http:\/\/(localhost|127\.0\.0\.1):(3000|4173|5173|8788)$/,
@@ -17,6 +18,7 @@ export async function onRequestPost({ request, env }) {
   const origin = request.headers.get('Origin')
   if (!origin || !ALLOWED_ORIGINS.some((re) => re.test(origin))) return json({ error: 'forbidden_origin' }, 403)
   if (!env.WORRIES) return json({ error: 'not_configured' }, 503)
+  if (await clientOverLimit(env.WORRIES, request, 'bookfb', 3)) return json({ error: 'busy' }, 429)
 
   let body
   try {

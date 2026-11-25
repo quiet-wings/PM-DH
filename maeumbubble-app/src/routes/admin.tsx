@@ -42,17 +42,9 @@ export const Route = createFileRoute('/admin')({
 const PW_KEY = 'mind_bubble_admin_pw'
 
 // 정적 테스트 버전(npm run build:static)에서는 서버가 없어서,
-// 빌드할 때 넣어 둔 비밀번호 해시와 브라우저에서 비교해요.
-declare const __STATIC_ADMIN_HASH__: string | undefined
+// 비밀번호가 맞는지는 "잠긴 관리자 열쇠가 그 비밀번호로 풀리는지"로 확인해요.
+// (예전처럼 비밀번호 해시를 화면 코드에 넣으면 누구나 내려받아 빠르게 대입해 볼 수 있어서 뺐어요 — 보안 점검 2026-11-25)
 const IS_STATIC = import.meta.env.VITE_STATIC_BUILD === '1'
-const STATIC_HASH = typeof __STATIC_ADMIN_HASH__ !== 'undefined' ? __STATIC_ADMIN_HASH__ : ''
-
-async function sha256Hex(text: string): Promise<string> {
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text))
-  return Array.from(new Uint8Array(buf))
-    .map((b) => b.toString(16).padStart(2, '0'))
-    .join('')
-}
 
 interface StatsResponse {
   ok: boolean
@@ -83,14 +75,15 @@ function AdminPage() {
     setErrorText('')
 
     if (IS_STATIC) {
-      if (!STATIC_HASH) {
+      if (!WORRY_KEY_CONFIG) {
         setState('error')
-        setErrorText('테스트 버전에 관리자 비밀번호가 설정되지 않았어요.')
+        setErrorText('테스트 버전에 관리자 열쇠가 설정되지 않았어요.')
         return
       }
       let match = false
       try {
-        match = (await sha256Hex(pw)) === STATIC_HASH
+        await unlockPrivateKey(pw, WORRY_KEY_CONFIG) // 비밀번호가 틀리면 여기서 오류가 나요
+        match = true
       } catch {
         match = false
       }
@@ -98,18 +91,12 @@ function AdminPage() {
         setState('error')
         setErrorText('비밀번호가 맞지 않아요.')
         setPassword('')
-        try {
-          sessionStorage.removeItem(PW_KEY)
-        } catch {}
         return
       }
       setStats({ ok: true, static: true, db: false })
       setPassword(pw)
       setLoadedAt(new Date())
       setState('ready')
-      try {
-        sessionStorage.setItem(PW_KEY, pw)
-      } catch {}
       return
     }
 
@@ -122,9 +109,6 @@ function AdminPage() {
         setState('error')
         setErrorText('비밀번호가 맞지 않아요.')
         setPassword('')
-        try {
-          sessionStorage.removeItem(PW_KEY)
-        } catch {}
         return
       }
       if (res.status === 503) {
@@ -146,22 +130,18 @@ function AdminPage() {
       setPassword(pw)
       setLoadedAt(new Date())
       setState('ready')
-      try {
-        sessionStorage.setItem(PW_KEY, pw)
-      } catch {}
     } catch {
       setState('error')
       setErrorText('서버에 연결할 수 없어요. 인터넷 연결이나 서버 상태를 확인해 주세요.')
     }
   }, [])
 
-  // 같은 탭에서 새로고침하면 다시 로그인하지 않아도 되게
+  // 예전에 저장해 둔 비밀번호가 남아 있으면 지워요 (이제 비밀번호를 브라우저에 저장하지 않아요)
   useEffect(() => {
     try {
-      const saved = sessionStorage.getItem(PW_KEY)
-      if (saved) load(saved)
+      sessionStorage.removeItem(PW_KEY)
     } catch {}
-  }, [load])
+  }, [])
 
   const logout = () => {
     try {

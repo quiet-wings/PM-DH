@@ -5,6 +5,7 @@
 // - 문장 300자 제한, 사이트 전체 분당·하루 호출 제한.
 // - 책 목록은 서버에 고정해서, AI는 이 목록 안에서만 고를 수 있어요.
 import Anthropic from '@anthropic-ai/sdk'
+import { clientOverLimit } from '../../_lib/client-limit.js'
 
 const MODEL = 'claude-opus-5-5'
 const MAX_TEXT = 300
@@ -594,6 +595,7 @@ export async function onRequestPost({ request, env }) {
   const lang = body?.lang === 'en' ? 'en' : 'ko'
   if (!text) return fail('bad_request', 400)
 
+  if (await clientOverLimit(env.WORRIES, request, 'book', 6)) return fail('rate_limited', 429)
   const limited = await overLimit(env.WORRIES)
   if (limited) return fail(limited, 429)
 

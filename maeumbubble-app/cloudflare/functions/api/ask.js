@@ -4,6 +4,7 @@
 // - 블로그 주소에서 온 요청만 받고, 질문 길이·호출 횟수를 제한해요.
 // - 지시문(근거 제한 규칙)은 서버에 고정해서 브라우저가 바꿀 수 없어요. (블로그 lib/prompt.js 와 같은 내용)
 import Anthropic from '@anthropic-ai/sdk'
+import { clientOverLimit } from '../_lib/client-limit.js'
 
 const MODEL = 'claude-opus-5-5'
 const MAX_PROMPT_CHARS = 8000
@@ -70,6 +71,8 @@ export async function onRequestPost({ request, env }) {
   const origin = request.headers.get('Origin')
   if (!allowed(origin)) return json({ ok: false, error: 'forbidden_origin' }, 403)
   if (!env.ANTHROPIC_API_KEY) return json({ ok: false, error: 'not_configured' }, 503, origin)
+
+  if (await clientOverLimit(env.WORRIES, request, 'ask', 6)) return json({ ok: false, error: 'busy' }, 429, origin)
 
   let body
   try {

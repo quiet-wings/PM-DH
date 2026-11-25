@@ -313,7 +313,7 @@ dialog.note::backdrop{background:rgba(10,30,55,.38);backdrop-filter:blur(2px)}
     <textarea id="fb-msg" maxlength="1000" data-i18n-ph="fbPh" placeholder="하고 싶은 말을 남겨 주세요 (선택)"></textarea>
     <div class="row"><p class="msg" id="fb-out" aria-live="polite"></p><button type="submit" data-i18n="fbSend">보내기</button></div>
   </form>
-  <p class="privacy" id="privacy" data-i18n="privacy" hidden>AI에게 물어본 문장은 추천에만 쓰고 저장하지 않아요. 별점과 한마디만 서비스를 다듬기 위해 이름 없이 30일 보관해요.</p>
+  <p class="privacy" id="privacy" data-i18n="privacy" hidden>AI에게 물어본 문장은 추천을 만들기 위해 AI(Anthropic Claude)로 보내지만 저장하지 않아요. 별점과 한마디만 서비스를 다듬기 위해 이름 없이 30일 보관하니, 이름·연락처 같은 개인정보는 적지 말아 주세요.</p>
 </main>
 
 <div class="lang-label" data-i18n="langLabel">한국어 (ko)</div>
@@ -403,6 +403,45 @@ dialog.note::backdrop{background:rgba(10,30,55,.38);backdrop-filter:blur(2px)}
     if (a.length < 1 || b.length < 1) return false;
     return a.includes(b) || b.includes(a);
   }
+  // 영어 모드에서 보여 줄 책 정보 [제목, 저자, 소개]. 영어판이 있으면 그 제목, 없으면 뜻을 옮긴 제목 + (Korean ...)
+  var BOOKS_EN = {
+    "atomic-habits": ["Atomic Habits", "James Clear", "Skip the grand resolutions and start with 1% changes. It shows you how to break a heavy load into small pieces."],
+    "deep-work": ["Deep Work", "Cal Newport", "Helps you step away from alerts and distractions and win back time for what really matters."],
+    "hamatomyeon": ["I Almost Worked Too Hard (Korean essay)", "Ha Wan", "A cheerful essay that makes you ask, \"Do I really have to go that far?\" and take a breath."],
+    "joy-and-sorrow-of-work": ["The Joy and Sorrow of Work", "Jang Ryu-jin", "Short stories that capture an office worker's day with calm wit. You'll smile and think, \"So it's not just me.\""],
+    "essentialism": ["Essentialism", "Greg McKeown", "Practice choosing the few things that truly matter instead of doing everything. Your load gets lighter."],
+    "grit": ["Grit", "Angela Duckworth", "Steady effort goes further than talent. A boost on days when studying or exams wear you out."],
+    "courage-to-be-disliked": ["The Courage to Be Disliked", "Ichiro Kishimi & Fumitake Koga", "Learn to separate other people's tasks from your own, and relationships feel lighter."],
+    "i-decided-to-live-as-me": ["I Decided to Live as Me", "Kim Suhyun", "A gentle reminder that it's okay to live by your own standards, not someone else's."],
+    "you-are-right": ["You Are Right (Korean essay)", "Jung Hye-shin", "Empathy, not advice, is what keeps people going. It changes how you treat yourself and others."],
+    "almond": ["Almond", "Sohn Won-pyung", "A warm novel about a boy who can barely feel emotions and slowly changes through other people."],
+    "reading-relationships": ["Time to Read Relationships (Korean)", "Moon Yo-han", "Calmly explains how to set healthy boundaries and keep the right distance between you and others."],
+    "need-to-be-lonely": ["Sometimes You Need to Be Fiercely Lonely (Korean)", "Kim Jung-woon", "A playful suggestion to turn loneliness from something to avoid into time to meet yourself."],
+    "essays-in-love": ["Essays in Love", "Alain de Botton", "Soothes the heart that falls in love and gets hurt, in the most delicate and thoughtful words."],
+    "art-of-loving": ["The Art of Loving", "Erich Fromm", "Love isn't just a feeling. It begins with the steady strength of caring for yourself first."],
+    "moments-of-love": ["Every Moment Was You (Korean essay)", "Ha Tae-wan", "An essay that gently pats both the shining moments and the painful ones."],
+    "course-of-love": ["The Course of Love", "Alain de Botton", "An honest look at love after the butterflies fade. Arguments are part of love, too."],
+    "life-of-love": ["The Life of Love (Korean novel)", "Lee Seung-u", "A deep novel about how love enters a person, stays, and leaves. It helps untangle a complicated heart."],
+    "unbearable-lightness": ["The Unbearable Lightness of Being", "Milan Kundera", "A novel about love, choice, heaviness and lightness. It lets you look at heartache from a little distance."],
+    "tteokbokki": ["I Want to Die but I Want to Eat Tteokbokki", "Baek Se-hee", "Honest therapy notes on mild depression and anxiety. You'll feel, \"I'm not the only one.\""],
+    "namiya": ["The Miracles of the Namiya General Store", "Keigo Higashino", "A general store that answers letters of worry. It feels like your worries might get a reply, too."],
+    "fish-dont-exist": ["Why Fish Don't Exist", "Lulu Miller", "Finding meaning in the middle of chaos. It makes uncertainty a little less scary."],
+    "midnight-library": ["The Midnight Library", "Matt Haig", "A library of the lives you never lived. You come back holding your own life a little more kindly."],
+    "status-anxiety": ["Status Anxiety", "Alain de Botton", "Why do status and success make us anxious? Knowing the roots makes the anxiety a bit smaller."],
+    "mans-search-for-meaning": ["Man's Search for Meaning", "Viktor E. Frankl", "A record of finding meaning even in the darkest place. It shows where the strength to endure comes from."],
+    "stop-and-see": ["The Things You Can See Only When You Slow Down", "Haemin Sunim", "Short pieces you can read one page at a time on tired days. Like permission to rest."],
+    "dallergut": ["The Dallergut Dream Department Store", "Lee Mi-ye", "A cozy fantasy about a shop that sells dreams. Perfect to read before falling asleep."],
+    "convenience-store": ["The Second Chance Convenience Store", "Kim Ho-yeon", "People who gather at a neighborhood convenience store slowly heal one another. It warms your heart."],
+    "hyunam-dong-bookshop": ["Welcome to the Hyunam-dong Bookshop", "Hwang Bo-reum", "A woman opens a small bookshop after burnout. It tells you it's okay to live slowly."],
+    "forest-capitalist": ["The Capitalist in the Forest (Korean essay)", "Park Hye-yoon", "A family that works as little as possible in the countryside. It brings back the sense that doing less is okay."],
+    "walden": ["Walden", "Henry David Thoreau", "A record of simple life in a cabin by a pond. Read it slowly, a page at a time, and your breathing evens out."],
+    "temperature-of-language": ["The Temperature of Language", "Lee Ki-ju", "Essays on the warmth carried in words. You'll look again at the words you say and hear."],
+    "reasons-for-travel": ["The Reasons for Travel (Korean essay)", "Kim Young-ha", "Essays on looking back at yourself through travel. Like opening a window in a crowded mind."],
+    "little-prince": ["The Little Prince", "Antoine de Saint-Exupéry", "A book that feels different every time. It quietly asks what really matters."],
+    "ordinary-existence": ["An Ordinary Existence (Korean essay)", "Lee Seok-won", "Honest confessions of an ordinary person. You'll see that everyone wobbles this much."],
+    "too-many-thoughts": ["I Think Too Much", "Christel Petitcollin", "Thinking a lot is a trait, not a flaw. It helps you understand your sensitive side."],
+    "frame": ["Frame (Korean psychology)", "Choi In-cheol", "Psychology on how changing your window on the world can change the very same day."],
+  };
   var DEFAULT_BOOK_IDS = ["convenience-store", "stop-and-see", "little-prince"];
   function recommendByKeyword(input, count = 3) {
     const words = tokenize(input).map(stem).filter((w) => w.length > 0);
@@ -577,7 +616,7 @@ dialog.note::backdrop{background:rgba(10,30,55,.38);backdrop-filter:blur(2px)}
       fbThanks: "고마워요. 잘 받았어요.",
       fbFail: "보내지 못했어요. 잠시 뒤 다시 눌러 주세요.",
       fbEmpty: "별점이나 한마디를 남겨 주세요.",
-      privacy: "AI에게 물어본 문장은 추천에만 쓰고 저장하지 않아요. 별점과 한마디만 서비스를 다듬기 위해 이름 없이 30일 보관해요."
+      privacy: "AI에게 물어본 문장은 추천을 만들기 위해 AI(Anthropic Claude)로 보내지만 저장하지 않아요. 별점과 한마디만 서비스를 다듬기 위해 이름 없이 30일 보관하니, 이름·연락처 같은 개인정보는 적지 말아 주세요."
     },
     en: {
       title: "Maeum Bubble Books",
@@ -639,7 +678,7 @@ dialog.note::backdrop{background:rgba(10,30,55,.38);backdrop-filter:blur(2px)}
       fbThanks: "Thank you. We got it.",
       fbFail: "Couldn't send. Please try again in a moment.",
       fbEmpty: "Leave a rating or a few words.",
-      privacy: "Sentences you ask the AI are used only for the picks and aren't stored. Only ratings and comments are kept for 30 days, without your name, to improve the service."
+      privacy: "Sentences you ask the AI are sent to an AI service (Anthropic Claude) to make the picks, but they aren't stored. Only ratings and comments are kept for 30 days, without your name, to improve the service, so please don't include your name or contact details."
     }
   };
   var EMO_EN = {
@@ -706,9 +745,15 @@ dialog.note::backdrop{background:rgba(10,30,55,.38);backdrop-filter:blur(2px)}
     img.replaceWith(span);
   }, true);
   var cardsHTML = (items) => '<ol class="books">' + items.map(
-    ({ book, why }) => `<li><img class="cover" src="${esc(book.cover_url || `covers/${book.id}.jpg`)}" alt="${esc(book.title)} 표지" width="64" height="94" loading="lazy" data-em="${book.emoji}">
-      <div class="bk"><div class="t">『${esc(book.title)}』</div><div class="a">${esc(book.author)}</div>
-      <div class="w">${esc(why)}</div></div></li>`
+    ({ book, why }) => {
+      // 영어 모드: 영어 제목·저자, 기본 소개(note)는 영어 소개로 (AI가 쓴 이유는 이미 영어)
+      const en = lang === "en" ? BOOKS_EN[book.id] : null;
+      const title = en ? en[0] : book.title, author = en ? en[1] : book.author;
+      const text = en && why === book.note ? en[2] : why;
+      return `<li><img class="cover" src="${esc(book.cover_url || `covers/${book.id}.jpg`)}" alt="${esc(en ? `${title} cover` : `${title} 표지`)}" width="64" height="94" loading="lazy" data-em="${book.emoji}">
+      <div class="bk"><div class="t">${en ? `<i>${esc(title)}</i>` : `『${esc(title)}』`}</div><div class="a">${esc(author)}</div>
+      <div class="w">${esc(text)}</div></div></li>`;
+    }
   ).join("") + "</ol>";
   var chipsHTML = (items) => items.map((c) => `<button type="button" class="chip" data-q="${esc(c.q)}">${esc(c.label)}</button>`).join("");
   var moodHTML = (names) => `<p class="mood">${esc(t("moodPre"))}<b>${names}</b>${esc(t("moodPost"))}</p>`;
