@@ -332,7 +332,8 @@ dialog.note::backdrop{background:rgba(10,30,55,.38);backdrop-filter:blur(2px)}
   <div class="note-body" id="note-body"></div>
 </dialog>
 <!-- 직접 합성한 저작권 없는 BGM (32초 반복) -->
-<audio id="bgm-audio" src="calm-bgm.wav" loop preload="auto"></audio>
+<!-- 배경음: 「Rain Mind」(Light_Music, Pixabay Content License) 앞 8분, 마음버블 홈과 같은 음원 -->
+<audio id="bgm-audio" src="/audio/rain-mind.mp3" loop preload="none"></audio>
 
 <script src="mb-cloud.js"></script>
 <script src="quotes.js"></script>
@@ -1172,7 +1173,15 @@ JSON 하나만 답한다:
 
   var bgm = $("#bgm-audio");
   var bgmBtn = $("#bgm-toggle");
-  bgm.volume = 0.15;
+  // 반복되는 순간 끊김이 들리지 않게 시작·끝 3초는 소리를 서서히 키우고 줄여요 (홈과 같은 크기 0.2)
+  // 서버가 파일 길이를 알려 주지 않으면 음원 길이 480초(8분)로 계산
+  var BGM_VOL = 0.2, BGM_FADE = 3;
+  function bgmVolume() {
+    const t = bgm.currentTime, d = isFinite(bgm.duration) && bgm.duration > 0 ? bgm.duration : 480;
+    bgm.volume = BGM_VOL * Math.max(0, Math.min(1, t / BGM_FADE, (d - t) / BGM_FADE));
+  }
+  bgm.volume = 0;
+  bgm.addEventListener("timeupdate", bgmVolume);
   var bgmWanted = true;
   try {
     if (localStorage.getItem("mb-bgm") === "off") bgmWanted = false;

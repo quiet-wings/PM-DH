@@ -1,12 +1,10 @@
 // Web Audio API Synthesizer for healing sound effects & calming soundscapes
-// Zero external asset dependencies - runs 100% reliably in browser
+// 효과음은 Web Audio로 합성하고, 배경음만 음원 파일(/audio/rain-mind.mp3)을 재생해요
 
 class SoundManager {
   private ctx: AudioContext | null = null
   private isMuted: boolean = false
-  private ambientGain: GainNode | null = null
-  private ambientOscillators: OscillatorNode[] = []
-  private ambientNoiseNode: AudioNode | null = null
+  private ambientAudio: HTMLAudioElement | null = null
   private isAmbientPlaying: boolean = false
 
   private initContext() {
@@ -23,9 +21,7 @@ class SoundManager {
 
   public setMuted(muted: boolean) {
     this.isMuted = muted
-    if (this.ambientGain && this.ctx) {
-      this.ambientGain.gain.setValueAtTime(muted ? 0 : 0.05, this.ctx.currentTime)
-    }
+    this.applyAmbientVolume()
   }
 
   public getMuted() {
@@ -165,71 +161,62 @@ class SoundManager {
     } catch {}
   }
 
-  // Toggle soothing ambient drone / singing bowl
+  // 배경음: 빗소리 + 잔잔한 피아노 「Rain Mind」(Light_Music, Pixabay Content License) 앞 8분을 반복 재생해요.
+  // 반복되는 순간 끊김이 들리지 않게 시작·끝 3초는 소리를 서서히 키우고 줄여요.
+  private ambientVolume(): number {
+    const a = this.ambientAudio
+    if (!a || this.isMuted) return 0
+    const t = a.currentTime
+    const d = Number.isFinite(a.duration) && a.duration > 0 ? a.duration : AMBIENT_LENGTH_SEC
+    return AMBIENT_VOLUME * Math.max(0, Math.min(1, t / AMBIENT_FADE_SEC, (d - t) / AMBIENT_FADE_SEC))
+  }
+
+  private applyAmbientVolume() {
+    if (this.ambientAudio) this.ambientAudio.volume = this.ambientVolume()
+  }
+
+  private getAmbientAudio(): HTMLAudioElement | null {
+    if (typeof window === 'undefined' || typeof Audio === 'undefined') return null
+    if (!this.ambientAudio) {
+      const a = new Audio(AMBIENT_SRC)
+      a.loop = true
+      a.preload = 'none'
+      a.volume = 0
+      a.addEventListener('timeupdate', () => this.applyAmbientVolume())
+      this.ambientAudio = a
+    }
+    return this.ambientAudio
+  }
+
+  // 배경음 켜고 끄기 (true를 돌려주면 켜진 상태)
   public toggleAmbientSound(enable?: boolean): boolean {
-    try {
-      this.initContext()
-      if (!this.ctx) return false
-
-      const target = enable !== undefined ? enable : !this.isAmbientPlaying
-
-      if (!target) {
-        // Stop ambient
-        this.ambientOscillators.forEach((osc) => {
-          try {
-            osc.stop()
-            osc.disconnect()
-          } catch {}
-        })
-        this.ambientOscillators = []
-        if (this.ambientNoiseNode) {
-          try {
-            this.ambientNoiseNode.disconnect()
-          } catch {}
-          this.ambientNoiseNode = null
-        }
-        this.isAmbientPlaying = false
-        return false
-      }
-
-      // Start ambient: warm drone + subtle harmonic singing bowls
-      const now = this.ctx.currentTime
-      this.ambientGain = this.ctx.createGain()
-      this.ambientGain.gain.setValueAtTime(this.isMuted ? 0 : 0.04, now)
-      this.ambientGain.connect(this.ctx.destination)
-
-      const freqs = [174.61, 261.63, 392.0, 523.25] // Solfeggio 174Hz (relieves stress/tension) + harmonics
-      freqs.forEach((freq) => {
-        if (!this.ctx || !this.ambientGain) return
-        const osc = this.ctx.createOscillator()
-        const lfo = this.ctx.createOscillator()
-        const lfoGain = this.ctx.createGain()
-        const oscGain = this.ctx.createGain()
-
-        osc.type = 'sine'
-        osc.frequency.setValueAtTime(freq, now)
-
-        // Slow subtle wave modulation
-        lfo.type = 'sine'
-        lfo.frequency.setValueAtTime(0.1 + Math.random() * 0.1, now)
-        lfoGain.gain.setValueAtTime(freq * 0.015, now)
-        lfo.connect(lfoGain)
-        lfoGain.connect(osc.frequency)
-
-        oscGain.gain.setValueAtTime(0.25, now)
-        osc.connect(oscGain)
-        oscGain.connect(this.ambientGain)
-
-        osc.start(now)
-        lfo.start(now)
-        this.ambientOscillators.push(osc, lfo)
-      })
-
-      this.isAmbientPlaying = true
-      return true
-    } catch {
+    const a = this.getAmbientAudio()
+    if (!a) return false
+    const target = enable !== undefined ? enable : !this.isAmbientPlaying
+    if (!target) {
+      a.pause()
+      this.isAmbientPlaying = false
       return false
     }
+    this.isAmbientPlaying = true
+    this.applyAmbientVolume()
+    a.play().catch(() => this.playOnFirstTouch())
+    return true
+  }
+
+  // 브라우저는 소리 자동재생을 막기 때문에, 막혔으면 첫 터치·클릭·키 입력 순간에 다시 재생해요.
+  private unlockArmed = false
+  private playOnFirstTouch() {
+    if (this.unlockArmed || typeof window === 'undefined') return
+    this.unlockArmed = true
+    const events = ['pointerdown', 'touchstart', 'keydown'] as const
+    const unlock = () => {
+      events.forEach((e) => window.removeEventListener(e, unlock, true))
+      this.unlockArmed = false
+      const au = this.ambientAudio
+      if (this.isAmbientPlaying && au && au.paused) au.play().catch(() => this.playOnFirstTouch())
+    }
+    events.forEach((e) => window.addEventListener(e, unlock, { capture: true, passive: true }))
   }
 
   public isAmbientActive(): boolean {
@@ -241,14 +228,6 @@ class SoundManager {
   public autoStartAmbient(): boolean {
     if (typeof window === 'undefined') return false
     if (!this.isAmbientPlaying && !this.toggleAmbientSound(true)) return false
-    if (this.ctx && this.ctx.state !== 'running') {
-      const events = ['pointerdown', 'touchstart', 'keydown'] as const
-      const unlock = () => {
-        this.ctx?.resume().catch(() => {})
-        events.forEach((e) => window.removeEventListener(e, unlock, true))
-      }
-      events.forEach((e) => window.addEventListener(e, unlock, { capture: true, passive: true }))
-    }
     return true
   }
 
@@ -269,5 +248,10 @@ class SoundManager {
 }
 
 export const AMBIENT_PREF_KEY = 'maeum-ambient'
+const AMBIENT_SRC = '/audio/rain-mind.mp3'
+const AMBIENT_VOLUME = 0.2
+const AMBIENT_FADE_SEC = 3
+// 서버가 파일 길이를 알려 주지 않을 때(스트리밍) 쓰는 음원 길이: 8분
+const AMBIENT_LENGTH_SEC = 480
 
 export const soundManager = new SoundManager()

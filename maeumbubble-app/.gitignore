@@ -10,3 +10,6 @@ dist-static
 # 로컬 전용 (Netlify는 pnpm-lock.yaml 사용)
 package-lock.json
 .claude/launch.json
+
+# Pixabay 음원(Rain Mind) — 라이선스상 원본을 그대로 재배포하지 않도록 저장소에는 올리지 않음 (배포 폴더에만)
+public/audio/*.mp3
