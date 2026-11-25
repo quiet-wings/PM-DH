@@ -6,7 +6,7 @@ import { BottomNav } from '../components/BottomNav'
 // 개인정보 처리방침 — 실제 코드가 저장·전송하는 항목만 적어요.
 // 문의 이메일이 정해지면 아래 값만 채우면 화면에 나타나요.
 const PRIVACY_CONTACT = ''
-const EFFECTIVE_DATE = '2026-11-24'
+const EFFECTIVE_DATE = '2026-11-25'
 
 export const Route = createFileRoute('/privacy')({
   head: () => ({
@@ -47,7 +47,7 @@ function PrivacyPage() {
           <ul className="list-disc pl-5 space-y-0.5">
             <li>언어·화면 테마·배경음 켜짐 여부</li>
             <li>미니게임 최고 기록, 뽁뽁이·네잎클로버 누적 수</li>
-            <li>서점에서 누른 책갈피(좋아요)</li>
+            <li>마음버블서점의 언어·화면 테마·글자 크기·배경음 설정</li>
           </ul>
         </Section>
 
@@ -65,11 +65,25 @@ function PrivacyPage() {
           <p>체크하지 않아도 모든 기능을 똑같이 쓸 수 있어요. 나를 알아볼 수 있는 내용은 적지 말아 주세요.</p>
         </Section>
 
-        <Section title="3. 함께 날려 보낸 걱정 수">
+        <Section title="3. 마음버블서점 AI 추천과 별점">
+          <ul className="list-disc pl-5 space-y-0.5">
+            <li>
+              <strong>'AI에게 물어보기'</strong>에 적은 문장은 중계 서버(Cloudflare)를 거쳐 <strong>Anthropic(Claude)</strong>으로 보내
+              서점 책 목록 안에서 책 3권과 추천 이유를 고르는 데만 써요. 문장은 <strong>저장하지 않아요.</strong>
+            </li>
+            <li>
+              추천 뒤 남기는 <strong>별점과 한마디</strong>는 이름·이메일·IP 주소 없이 <strong>30일</strong> 보관 후 자동 삭제돼요 (목적: 추천 품질 개선).
+            </li>
+            <li>감정 버튼으로 찾기는 AI를 쓰지 않고 화면 안에서만 책을 골라요.</li>
+          </ul>
+          <p>나를 알아볼 수 있는 내용은 적지 말아 주세요.</p>
+        </Section>
+
+        <Section title="4. 함께 날려 보낸 걱정 수">
           <p>버블을 날려 보내면 전체 숫자만 1 올라가요. 누가, 어떤 걱정을 날렸는지는 기록하지 않아요.</p>
         </Section>
 
-        <Section title="4. 외부 서비스">
+        <Section title="5. 외부 서비스">
           <ul className="list-disc pl-5 space-y-0.5">
             <li>
               <strong>Cloudflare</strong>: 사이트를 전달하는 호스팅 업체로, 보안·장애 대응을 위해 접속 기록을 짧게 처리할 수 있어요.
@@ -78,13 +92,16 @@ function PrivacyPage() {
               <strong>Google Fonts</strong>: 글꼴을 불러올 때 접속 주소가 Google에 전달될 수 있어요. 차단되어도 기본 글꼴로 정상 동작해요.
             </li>
             <li>
+              <strong>Anthropic(Claude API)</strong>: 서점 AI 추천을 만드는 AI 서비스예요. 위 3번처럼 적은 문장만 전달되고, 운영자는 저장하지 않아요.
+            </li>
+            <li>
               <strong>교보문고 링크</strong>: 서점에서 책을 누르면 교보문고 사이트로 이동하며, 그 뒤로는 교보문고의 방침을 따라요.
             </li>
           </ul>
           <p>광고·분석 도구나 추적 쿠키는 쓰지 않아요.</p>
         </Section>
 
-        <Section title="5. 안전을 위한 안내">
+        <Section title="6. 안전을 위한 안내">
           <p>마음 버블은 진단·치료를 대신하지 않아요. 위급하거나 마음이 많이 힘들 때는 아래로 연락해 주세요.</p>
           <ul className="list-disc pl-5 space-y-0.5">
             <li>
@@ -99,7 +116,7 @@ function PrivacyPage() {
           </ul>
         </Section>
 
-        <Section title="6. 문의·변경">
+        <Section title="7. 문의·변경">
           {PRIVACY_CONTACT ? (
             <p>
               개인정보 관련 문의: <a className="underline" href={`mailto:${PRIVACY_CONTACT}`}>{PRIVACY_CONTACT}</a>
