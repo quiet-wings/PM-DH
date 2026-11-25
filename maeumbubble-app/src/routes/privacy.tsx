@@ -2,6 +2,7 @@ import { createFileRoute, Link } from '@tanstack/react-router'
 import { ShieldCheck } from 'lucide-react'
 import { SubPageHeader } from '../components/SubPageHeader'
 import { BottomNav } from '../components/BottomNav'
+import { useLang } from '../lib/useLang'
 
 // 개인정보 처리방침 — 실제 코드가 저장·전송하는 항목만 적어요.
 // 문의 이메일이 정해지면 아래 값만 채우면 화면에 나타나요.
@@ -30,6 +31,11 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 }
 
 function PrivacyPage() {
+  const lang = useLang()
+  return lang === 'en' ? <PrivacyEn /> : <PrivacyKo />
+}
+
+function PrivacyKo() {
   return (
     <div className="relative min-h-screen flex flex-col pb-20 md:pb-8">
       <SubPageHeader emoji="🔒" title="개인정보 처리방침" />
@@ -86,7 +92,7 @@ function PrivacyPage() {
         <Section title="5. 외부 서비스">
           <ul className="list-disc pl-5 space-y-0.5">
             <li>
-              <strong>Cloudflare</strong>: 사이트를 전달하는 호스팅 업체로, 보안·장애 대응을 위해 접속 기록을 짧게 처리할 수 있어요.
+              <strong>Cloudflare</strong>: 사이트를 전달하는 호스팅 업체로, 보안·장애 대응을 위해 접속 기록을 짧게 처리할 수 있어요. 마음버블도 짧은 시간에 너무 많이 부르는 걸 막으려고 접속 주소를 날짜와 섞어 알아볼 수 없는 값으로 바꾼 뒤 2분 동안 횟수 세기에만 써요(주소 자체는 저장하지 않아요).
             </li>
             <li>
               <strong>Google Fonts</strong>: 글꼴을 불러올 때 접속 주소가 Google에 전달될 수 있어요. 차단되어도 기본 글꼴로 정상 동작해요.
@@ -134,6 +140,122 @@ function PrivacyPage() {
         </p>
       </main>
       <BottomNav lang="ko" />
+    </div>
+  )
+}
+
+function PrivacyEn() {
+  return (
+    <div className="relative min-h-screen flex flex-col pb-20 md:pb-8">
+      <SubPageHeader emoji="🔒" title="Privacy Policy" />
+      <main className="flex-1 w-full max-w-2xl mx-auto px-4 py-6 space-y-4">
+        <div className="flex items-start gap-3 rounded-3xl bg-emerald-50/90 dark:bg-emerald-950/40 border border-emerald-200/70 dark:border-emerald-900 p-5">
+          <ShieldCheck className="w-6 h-6 shrink-0 text-emerald-600 dark:text-emerald-400" />
+          <p className="text-sm text-emerald-900 dark:text-emerald-100 leading-relaxed">
+            Mind Bubble works <strong>without sign-up</strong>. We don't ask for your name, email or phone number, and the
+            worries you write are <strong>not saved anywhere by default.</strong>
+          </p>
+        </div>
+
+        <Section title="1. Kept only on this device (browser)">
+          <p>These stay in your browser's storage and are never sent to a server. Clearing site data in your browser removes them.</p>
+          <ul className="list-disc pl-5 space-y-0.5">
+            <li>Language, color theme, and whether background music is on</li>
+            <li>Mini-game best scores, bubble-wrap and four-leaf clover counts</li>
+            <li>Bookstore language, theme, text size and music settings</li>
+          </ul>
+        </Section>
+
+        <Section title="2. Sent only if you agree (optional)">
+          <p>
+            Only when you tick <strong>"(Optional) send anonymously to the operator"</strong> while writing a worry do we send
+            the items below. It is off by default.
+          </p>
+          <ul className="list-disc pl-5 space-y-0.5">
+            <li>What is sent: the worry text, its category, and your language</li>
+            <li>It is <strong>encrypted in your browser</strong> before sending, so only the operator's password can open it</li>
+            <li>We don't store your name, email, or IP address</li>
+            <li>Kept for: <strong>deleted automatically after 30 days</strong> (the operator may delete it sooner)</li>
+            <li>Purpose: improving the service and choosing comforting messages and blog topics</li>
+          </ul>
+          <p>Everything works the same if you don't tick it. Please don't write anything that could identify you.</p>
+        </Section>
+
+        <Section title="3. Bookstore AI picks and ratings">
+          <ul className="list-disc pl-5 space-y-0.5">
+            <li>
+              Sentences you type into <strong>"Ask the AI"</strong> go through our relay server (Cloudflare) to{' '}
+              <strong>Anthropic (Claude)</strong>, only to choose 3 books and reasons from the bookstore's list. They are{' '}
+              <strong>not saved.</strong>
+            </li>
+            <li>
+              The <strong>rating and short comment</strong> you may leave afterwards are kept for <strong>30 days</strong>{' '}
+              without your name, email or IP address, then deleted automatically (purpose: better picks).
+            </li>
+            <li>Finding books with the feeling buttons doesn't use AI; books are chosen right on the page.</li>
+          </ul>
+          <p>Please don't write anything that could identify you.</p>
+        </Section>
+
+        <Section title="4. Worries released together">
+          <p>When you release a bubble, only the overall count goes up by 1. We don't record who released what.</p>
+        </Section>
+
+        <Section title="5. Outside services">
+          <ul className="list-disc pl-5 space-y-0.5">
+            <li>
+              <strong>Cloudflare</strong>: the host that delivers the site. It may briefly process access logs for security and
+              outages. To stop too many requests in a short time, we also turn your IP address into an unreadable value mixed
+              with the date and use it only for counting, for 2 minutes (the address itself is not stored).
+            </li>
+            <li>
+              <strong>Google Fonts</strong>: loading fonts may share your IP address with Google. If blocked, the site still works
+              with default fonts.
+            </li>
+            <li>
+              <strong>Anthropic (Claude API)</strong>: the AI that makes the bookstore picks. Only the sentence described in 3 is
+              sent, and the operator doesn't store it.
+            </li>
+            <li>
+              <strong>Kyobo Book links</strong>: tapping a book opens the Kyobo Book Centre site, which follows its own policy.
+            </li>
+          </ul>
+          <p>We use no ads, analytics tools, or tracking cookies.</p>
+        </Section>
+
+        <Section title="6. For your safety">
+          <p>Mind Bubble is not a substitute for diagnosis or treatment. If you are in crisis or struggling, please reach out (Korea):</p>
+          <ul className="list-disc pl-5 space-y-0.5">
+            <li>
+              Suicide prevention line <a className="underline font-semibold" href="tel:109">109</a> (24 hours)
+            </li>
+            <li>
+              Mental health crisis line <a className="underline font-semibold" href="tel:15770199">1577-0199</a>
+            </li>
+            <li>
+              Emergency <a className="underline font-semibold" href="tel:119">119</a>
+            </li>
+          </ul>
+        </Section>
+
+        <Section title="7. Contact and changes">
+          {PRIVACY_CONTACT ? (
+            <p>
+              Privacy questions: <a className="underline" href={`mailto:${PRIVACY_CONTACT}`}>{PRIVACY_CONTACT}</a>
+            </p>
+          ) : (
+            <p>This is a test version. We'll share a contact here at the official launch.</p>
+          )}
+          <p>If this policy changes, we'll post it here first. Effective date: {EFFECTIVE_DATE}</p>
+        </Section>
+
+        <p className="text-center">
+          <Link to="/" className="text-sm font-semibold text-emerald-700 dark:text-emerald-400 underline underline-offset-2">
+            Back to home
+          </Link>
+        </p>
+      </main>
+      <BottomNav lang="en" />
     </div>
   )
 }

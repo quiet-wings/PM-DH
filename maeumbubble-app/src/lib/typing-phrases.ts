@@ -28,6 +28,34 @@ export const TYPING_PHRASES: string[] = [
   '나를 믿는 마음이 가장 큰 힘이다.',
 ]
 
+// 영어 모드에서 따라 쓰는 문장 (위 한국어 문장과 같은 마음을 담은 짧은 영어 문장)
+export const TYPING_PHRASES_EN: string[] = [
+  'I am enough just as I am right now.',
+  'Today I grew a little more than yesterday.',
+  'Even if I go slowly, I will get there.',
+  'I am the first one to hug my own heart.',
+  'Mistakes are proof that I am trying.',
+  'I am allowed to rest.',
+  'Good things are closer than I think.',
+  'I walk at my own pace.',
+  'I praise myself for getting through today.',
+  'I set my worries down and take a deep breath.',
+  'I deserve to be loved.',
+  'I like that I notice small joys.',
+  'I let the past flow by and stay in the now.',
+  'I am much stronger than I think.',
+  'Tomorrow I will thank myself for today.',
+  'I shine even when I am not perfect.',
+  'It is okay to ask for help when things are hard.',
+  'I have decided to be on my own side.',
+  'Today I will find one thing to smile about.',
+  'Every feeling passes, and I remain.',
+  'There is a reason for the path I have walked.',
+  'I am getting a little better every day.',
+  'After the rain, the sky is even clearer.',
+  'Believing in myself is my greatest strength.',
+]
+
 /** 한글 한 글자를 치는 데 필요한 타수(초성·중성·종성)를 세요 */
 export function countKeystrokes(text: string): number {
   let total = 0

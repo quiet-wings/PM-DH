@@ -8,6 +8,8 @@ import { soundManager } from '../lib/sound'
 import { triggerBubblePopConfetti, triggerBreezeCelebration } from '../lib/confetti'
 import { downloadAffirmationCard } from '../lib/cardImage'
 import { ResignGame } from '../components/ResignGame'
+import { useLang, tr } from '../lib/useLang'
+import type { Language } from '../lib/i18n'
 
 export const Route = createFileRoute('/game')({
   head: () => ({
@@ -28,21 +30,26 @@ type Mode = 'clover' | 'wrap' | 'pop' | 'resign'
 
 function GamePage() {
   const [mode, setMode] = useState<Mode>('clover')
+  const lang = useLang()
 
   return (
     <div className="relative min-h-screen flex flex-col overflow-x-hidden pb-16 md:pb-0">
       <div className="fixed top-24 -left-10 w-72 h-72 rounded-full bg-emerald-200/25 dark:bg-emerald-900/10 blur-3xl pointer-events-none -z-10" />
       <div className="fixed bottom-10 right-0 w-96 h-96 rounded-full bg-amber-200/25 dark:bg-amber-900/15 blur-3xl pointer-events-none -z-10" />
 
-      <SubPageHeader emoji="🎮" title="미니게임" />
+      <SubPageHeader emoji="🎮" title={tr(lang, '미니게임', 'Mini Games')} />
 
       <main className="max-w-3xl mx-auto px-4 py-8 md:py-12 w-full flex-1">
         <section className="text-center mb-6">
           <h2 className="text-2xl md:text-3xl font-extrabold text-stone-800 dark:text-stone-100 tracking-tight">
-            생각은 잠시 끄고, 손끝으로 톡톡
+            {tr(lang, '생각은 잠시 끄고, 손끝으로 톡톡', 'Switch off your thoughts, just tap tap')}
           </h2>
           <p className="mt-2 text-stone-600 dark:text-stone-300 text-sm md:text-base">
-            이기고 지는 건 없어요. 하나씩 터뜨리며 행운과 행복을 만나 보세요.
+            {tr(
+              lang,
+              '이기고 지는 건 없어요. 하나씩 터뜨리며 행운과 행복을 만나 보세요.',
+              'No winning or losing here. Pop them one by one and find a little luck and happiness.',
+            )}
           </p>
         </section>
 
@@ -50,16 +57,16 @@ function GamePage() {
         <div className="flex justify-center mb-6">
           <div className="flex flex-wrap items-center justify-center gap-1 bg-stone-100/80 dark:bg-zinc-800/80 p-1.5 rounded-2xl backdrop-blur-xs">
             <ModeTab active={mode === 'clover'} onClick={() => setMode('clover')}>
-              🍀 행운 네잎클로버 찾기
+              {tr(lang, '🍀 행운 네잎클로버 찾기', '🍀 Find the Lucky Clover')}
             </ModeTab>
             <ModeTab active={mode === 'wrap'} onClick={() => setMode('wrap')}>
-              🫧 뽁뽁이 터뜨리기
+              {tr(lang, '🫧 뽁뽁이 터뜨리기', '🫧 Pop the Bubble Wrap')}
             </ModeTab>
             <ModeTab active={mode === 'pop'} onClick={() => setMode('pop')}>
-              🎈 걱정 버블 팡팡
+              {tr(lang, '🎈 걱정 버블 팡팡', '🎈 Worry Bubble Pop')}
             </ModeTab>
             <ModeTab active={mode === 'resign'} onClick={() => setMode('resign')}>
-              📝 퇴사할게요
+              {tr(lang, '📝 퇴사할게요', '📝 I Quit!')}
             </ModeTab>
           </div>
         </div>
@@ -74,7 +81,7 @@ function GamePage() {
           <ResignGame />
         )}
       </main>
-      <BottomNav />
+      <BottomNav lang={lang} />
     </div>
   )
 }
@@ -109,31 +116,46 @@ type CloverDifficulty = 'easy' | 'normal' | 'hard'
 
 const DIFFICULTY_CONFIG: Record<
   CloverDifficulty,
-  { label: string; count: number; gridClass: string; desc: string }
+  {
+    label: string
+    labelEn: string
+    count: number
+    gridClass: string
+    desc: string
+    descEn: string
+  }
 > = {
   easy: {
     label: '🌱 쉬움 (12개)',
+    labelEn: '🌱 Easy (12)',
     count: 12,
     gridClass: 'grid-cols-4 sm:grid-cols-4',
     desc: '가볍게 12개의 거품 방울 속에서 행운과 행복을 찾아보세요.',
+    descEn: 'Take it easy and look for luck and happiness among 12 bubbles.',
   },
   normal: {
     label: '🌿 중간 (24개)',
+    labelEn: '🌿 Medium (24)',
     count: 24,
     gridClass: 'grid-cols-4 sm:grid-cols-6',
     desc: '24개의 거품 방울을 하나씩 터뜨리며 설레는 마음으로 찾아보세요.',
+    descEn: 'Pop 24 bubbles one by one and enjoy the little thrill of the search.',
   },
   hard: {
     label: '🌳 어려움 (36개)',
+    labelEn: '🌳 Hard (36)',
     count: 36,
     gridClass: 'grid-cols-6 sm:grid-cols-6',
     desc: '36개의 풍성한 거품 방울! 클릭할 때마다 행운이 점점 가까워져요.',
+    descEn: 'A full field of 36 bubbles! Every tap brings luck a little closer.',
   },
 }
 
 interface CloverComfortQuote {
   title: string
   subtext: string
+  titleEn: string
+  subtextEn: string
 }
 
 const GOLDEN_THREE_LEAF_CARDS: CloverComfortQuote[] = [
@@ -141,16 +163,25 @@ const GOLDEN_THREE_LEAF_CARDS: CloverComfortQuote[] = [
     title: "세잎클로버의 꽃말은 '행복'이에요.",
     subtext:
       '우리는 가끔 특별한 행운(네잎클로버)을 찾느라 발밑에 가득 피어난 행복(세잎클로버)을 지나치곤 해요. 오늘 당신의 곁에는 이미 금빛처럼 따뜻한 행복이 머물고 있어요.',
+    titleEn: 'The three-leaf clover stands for "happiness."',
+    subtextEn:
+      'Sometimes we look so hard for special luck (the four-leaf clover) that we walk past the happiness (the three-leaf clover) growing all around us. Today, warm, golden happiness is already right beside you.',
   },
   {
     title: "황금빛 세잎클로버가 건네는 말, '지금 이 순간의 행복'",
     subtext:
       '거창한 행운이 당장 오지 않아도 괜찮아요. 오늘 무사히 숨 쉬고, 작은 거품을 톡 터뜨리며 미소 지을 수 있는 지금이 가장 반짝이는 행복입니다.',
+    titleEn: 'A word from the golden three-leaf clover: "happiness, right now"',
+    subtextEn:
+      "It's okay if big luck doesn't come today. Breathing easy, popping a tiny bubble, and smiling a little — this very moment is the brightest kind of happiness.",
   },
   {
     title: "세잎클로버는 '행복', 네잎클로버는 '행운'을 상징해요.",
     subtext:
       '행운을 찾아가는 길목에서 마주친 이 금빛 세잎클로버처럼, 당신의 평범한 일상 곳곳에 다정하고 포근한 행복이 늘 함께하기를 바랍니다.',
+    titleEn: 'The three-leaf clover means "happiness," and the four-leaf clover means "luck."',
+    subtextEn:
+      'Just like this golden three-leaf clover you found on the way to luck, may gentle, cozy happiness fill every corner of your everyday life.',
   },
 ]
 
@@ -159,13 +190,27 @@ const FOUR_LEAF_CARDS: CloverComfortQuote[] = [
     title: "행운의 네잎클로버를 찾았어요! 꽃말은 '행운'이에요.",
     subtext:
       '포기하지 않고 하나씩 거품을 두드린 당신의 손끝에 마침내 네잎클로버가 피어났어요. 조만간 당신의 마음에도 기분 좋은 행운이 다정하게 찾아올 거예요.',
+    titleEn: 'You found the lucky four-leaf clover! It stands for "luck."',
+    subtextEn:
+      "You kept tapping, one bubble at a time, and a four-leaf clover bloomed at your fingertips. Some lovely luck will find its way to your heart soon.",
   },
   {
     title: '당신에게 찾아온 초록빛 기적, 네잎클로버!',
     subtext:
       '클릭할 때마다 조금씩 가까워지던 행운이 드디어 당신의 품에 안겼어요. 오늘 하루, 생각지도 못한 따뜻한 일들이 당신을 기다리고 있을 거예요.',
+    titleEn: 'A little green miracle just for you: the four-leaf clover!',
+    subtextEn:
+      'With every tap, luck came a little closer — and now it’s finally yours. Warm, unexpected moments may be waiting for you today.',
   },
 ]
+
+function quoteTitle(quote: CloverComfortQuote, lang: Language): string {
+  return tr(lang, quote.title, quote.titleEn)
+}
+
+function quoteSubtext(quote: CloverComfortQuote, lang: Language): string {
+  return tr(lang, quote.subtext, quote.subtextEn)
+}
 
 const CLOVER_FOUND_TOTAL_KEY = 'mind_bubble_clover_found_total'
 
@@ -180,6 +225,7 @@ function pickRandomIndex(max: number, exclude?: number): number {
 
 function LuckyCloverGame() {
   const [difficulty, setDifficulty] = useState<CloverDifficulty>('easy')
+  const lang = useLang()
   // 바스락 소리를 미리 불러 둬요
   useEffect(() => {
     soundManager.preloadCloverRustle()
@@ -276,13 +322,19 @@ function LuckyCloverGame() {
         } catch {}
         return next
       })
-      toast.success('🍀 행운의 네잎클로버를 찾았어요!')
+      toast.success(tr(lang, '🍀 행운의 네잎클로버를 찾았어요!', '🍀 You found the lucky four-leaf clover!'))
     } else if (index === goldenThreeLeafIdx) {
       setFoundGoldenThreeLeaf(true)
       soundManager.playCloverRustle(1.15)
       soundManager.playPopSound(1.2)
       triggerBubblePopConfetti(cx, cy)
-      toast.success("✨ 황금빛 세잎클로버('행복')를 발견했어요! 아래 위로카드를 확인해 보세요.")
+      toast.success(
+        tr(
+          lang,
+          "✨ 황금빛 세잎클로버('행복')를 발견했어요! 아래 위로카드를 확인해 보세요.",
+          '✨ You found the golden three-leaf clover ("happiness")! Check out your comfort card below.',
+        ),
+      )
     } else {
       soundManager.playCloverRustle()
     }
@@ -290,17 +342,23 @@ function LuckyCloverGame() {
 
   const handleCopyCard = (quote: CloverComfortQuote) => {
     navigator.clipboard
-      .writeText(`"${quote.title}"\n${quote.subtext}\n— 마음 버블`)
-      .then(() => toast.success('마음 문장이 복사되었어요 💌'))
+      .writeText(
+        `"${quoteTitle(quote, lang)}"\n${quoteSubtext(quote, lang)}\n${tr(lang, '— 마음 버블', '— Mind Bubble')}`,
+      )
+      .then(() => toast.success(tr(lang, '마음 문장이 복사되었어요 💌', 'Your message has been copied 💌')))
       .catch(() => {})
   }
 
   const handleDownloadCard = async (quote: CloverComfortQuote, footerLabel: string) => {
-    const ok = await downloadAffirmationCard(quote.title, quote.subtext, footerLabel)
+    const ok = await downloadAffirmationCard(
+      quoteTitle(quote, lang),
+      quoteSubtext(quote, lang),
+      footerLabel,
+    )
     if (ok) {
-      toast.success('위로카드를 이미지로 저장했어요 🖼️')
+      toast.success(tr(lang, '위로카드를 이미지로 저장했어요 🖼️', 'Your comfort card was saved as an image 🖼️'))
     } else {
-      toast.error('이미지를 만들지 못했어요. 다시 시도해 주세요.')
+      toast.error(tr(lang, '이미지를 만들지 못했어요. 다시 시도해 주세요.', "We couldn't make the image. Please try again."))
     }
   }
 
@@ -311,10 +369,10 @@ function LuckyCloverGame() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-stone-100 dark:border-zinc-800">
           <div>
             <span className="text-xs font-bold text-emerald-700 dark:text-emerald-400">
-              난이도 선택 (버블 개수)
+              {tr(lang, '난이도 선택 (버블 개수)', 'Choose a level (number of bubbles)')}
             </span>
             <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">
-              {DIFFICULTY_CONFIG[difficulty].desc}
+              {tr(lang, DIFFICULTY_CONFIG[difficulty].desc, DIFFICULTY_CONFIG[difficulty].descEn)}
             </p>
           </div>
           <div className="flex items-center gap-1.5 bg-stone-100/90 dark:bg-zinc-800 p-1 rounded-2xl shrink-0">
@@ -329,7 +387,7 @@ function LuckyCloverGame() {
                     : 'text-stone-600 dark:text-stone-300 hover:bg-white/60 dark:hover:bg-zinc-700'
                 }`}
               >
-                {DIFFICULTY_CONFIG[lv].label}
+                {tr(lang, DIFFICULTY_CONFIG[lv].label, DIFFICULTY_CONFIG[lv].labelEn)}
               </button>
             ))}
           </div>
@@ -346,7 +404,8 @@ function LuckyCloverGame() {
                     : 'bg-white/90 dark:bg-zinc-900 text-stone-700 dark:text-stone-200 border-emerald-200 dark:border-zinc-700'
                 }`}
               >
-                🍀 행운 네잎클로버: {foundFourLeaf ? '발견 완료!' : '숨어있음 (1개)'}
+                {tr(lang, '🍀 행운 네잎클로버: ', '🍀 Lucky four-leaf clover: ')}
+                {foundFourLeaf ? tr(lang, '발견 완료!', 'Found!') : tr(lang, '숨어있음 (1개)', 'Hiding (1)')}
               </span>
               <span
                 className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full border ${
@@ -355,14 +414,21 @@ function LuckyCloverGame() {
                     : 'bg-white/90 dark:bg-zinc-900 text-stone-700 dark:text-stone-200 border-amber-200 dark:border-zinc-700'
                 }`}
               >
-                ✨ 금빛 세잎클로버(행복): {foundGoldenThreeLeaf ? '발견 완료!' : '숨어있음 (1개)'}
+                {tr(lang, '✨ 금빛 세잎클로버(행복): ', '✨ Golden three-leaf clover (happiness): ')}
+                {foundGoldenThreeLeaf
+                  ? tr(lang, '발견 완료!', 'Found!')
+                  : tr(lang, '숨어있음 (1개)', 'Hiding (1)')}
               </span>
             </div>
 
             <span className="text-emerald-800 dark:text-emerald-300">
               {foundFourLeaf && foundGoldenThreeLeaf
-                ? '🎉 두 클로버를 모두 찾았어요!'
-                : `다음 클릭에 찾을 확률: ${nextClickChance}% (네잎 ${nextFourLeafChance}%)`}
+                ? tr(lang, '🎉 두 클로버를 모두 찾았어요!', '🎉 You found both clovers!')
+                : tr(
+                    lang,
+                    `다음 클릭에 찾을 확률: ${nextClickChance}% (네잎 ${nextFourLeafChance}%)`,
+                    `Chance on your next tap: ${nextClickChance}% (four-leaf ${nextFourLeafChance}%)`,
+                  )}
             </span>
           </div>
 
@@ -375,10 +441,14 @@ function LuckyCloverGame() {
           </div>
           <p className="mt-1.5 text-[11px] text-stone-500 dark:text-stone-400 flex items-center justify-between">
             <span>
-              못 찾는 판은 없어요! 버블을 하나씩 터뜨릴 때마다 확률이 올라가며 반드시 찾게 됩니다.
+              {tr(
+                lang,
+                '못 찾는 판은 없어요! 버블을 하나씩 터뜨릴 때마다 확률이 올라가며 반드시 찾게 됩니다.',
+                "Every round has a happy ending! Each bubble you pop raises the chance, so you'll always find them.",
+              )}
             </span>
             <span className="font-semibold text-emerald-700 dark:text-emerald-400 shrink-0 ml-2">
-              누적 행운 {totalFoundCount}회
+              {tr(lang, `누적 행운 ${totalFoundCount}회`, `Lucky finds: ${totalFoundCount}`)}
             </span>
           </p>
         </div>
@@ -398,12 +468,12 @@ function LuckyCloverGame() {
                 onClick={(e) => handleCellClick(i, e)}
                 aria-label={
                   !isPopped
-                    ? `${i + 1}번 거품 버블 터뜨리기`
+                    ? tr(lang, `${i + 1}번 거품 버블 터뜨리기`, `Pop bubble ${i + 1}`)
                     : isFourLeaf
-                      ? '행운의 네잎클로버 발견!'
+                      ? tr(lang, '행운의 네잎클로버 발견!', 'Lucky four-leaf clover found!')
                       : isGoldenThree
-                        ? '황금빛 세잎클로버(행복) 발견!'
-                        : '초록 세잎클로버'
+                        ? tr(lang, '황금빛 세잎클로버(행복) 발견!', 'Golden three-leaf clover (happiness) found!')
+                        : tr(lang, '초록 세잎클로버', 'Green three-leaf clover')
                 }
                 className={`group relative aspect-square rounded-2xl flex flex-col items-center justify-center transition-all duration-200 ${
                   !isPopped
@@ -424,14 +494,14 @@ function LuckyCloverGame() {
                       className="w-4/5 h-4/5 object-contain opacity-85 group-hover:scale-110 transition-transform pointer-events-none select-none"
                     />
                     <span className="absolute bottom-1.5 text-[10px] font-bold text-stone-400 dark:text-stone-500 group-hover:text-emerald-600">
-                      톡!
+                      {tr(lang, '톡!', 'Tap!')}
                     </span>
                   </>
                 ) : isFourLeaf ? (
                   <div className="flex flex-col items-center animate-in zoom-in-75 duration-300">
                     <span className="text-2xl sm:text-3xl drop-shadow-xs">🍀</span>
                     <span className="mt-0.5 text-[10px] font-extrabold text-emerald-800 dark:text-emerald-200">
-                      행운!
+                      {tr(lang, '행운!', 'Luck!')}
                     </span>
                   </div>
                 ) : isGoldenThree ? (
@@ -449,13 +519,15 @@ function LuckyCloverGame() {
                       <Sparkles className="w-3.5 h-3.5 text-amber-500 absolute -top-1 -right-2 animate-pulse" />
                     </div>
                     <span className="mt-0.5 text-[10px] font-extrabold text-amber-800 dark:text-amber-200">
-                      금빛 행복!
+                      {tr(lang, '금빛 행복!', 'Golden joy!')}
                     </span>
                   </div>
                 ) : (
                   <div className="flex flex-col items-center animate-in fade-in duration-200">
                     <span className="text-lg sm:text-xl opacity-75">☘️</span>
-                    <span className="text-[9px] text-stone-400 dark:text-stone-500">세잎</span>
+                    <span className="text-[9px] text-stone-400 dark:text-stone-500">
+                      {tr(lang, '세잎', '3-leaf')}
+                    </span>
                   </div>
                 )}
               </button>
@@ -466,16 +538,27 @@ function LuckyCloverGame() {
         {/* 하단 컨트롤 */}
         <div className="mt-5 flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-stone-100 dark:border-zinc-800">
           <p className="text-xs text-stone-500 dark:text-stone-400">
-            남은 거품 버블 <strong className="text-stone-700 dark:text-stone-200">{remainingCount}개</strong> ·
-            한 게임에 <strong className="text-emerald-700 dark:text-emerald-400">🍀 네잎클로버 1개</strong>와{' '}
-            <strong className="text-amber-600 dark:text-amber-400">✨ 금빛 세잎클로버 1개</strong>가 숨어 있어요.
+            {lang === 'en' ? (
+              <>
+                Bubbles left <strong className="text-stone-700 dark:text-stone-200">{remainingCount}</strong> ·
+                Each round hides <strong className="text-emerald-700 dark:text-emerald-400">🍀 1 four-leaf clover</strong> and{' '}
+                <strong className="text-amber-600 dark:text-amber-400">✨ 1 golden three-leaf clover</strong>.
+              </>
+            ) : (
+              <>
+                남은 거품 버블 <strong className="text-stone-700 dark:text-stone-200">{remainingCount}개</strong> ·
+                한 게임에 <strong className="text-emerald-700 dark:text-emerald-400">🍀 네잎클로버 1개</strong>와{' '}
+                <strong className="text-amber-600 dark:text-amber-400">✨ 금빛 세잎클로버 1개</strong>가 숨어 있어요.
+              </>
+            )}
           </p>
           <button
             type="button"
             onClick={() => startNewRound(difficulty)}
             className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800/60 text-emerald-800 dark:text-emerald-300 text-xs font-bold hover:bg-emerald-100 dark:hover:bg-emerald-900/60 transition-colors cursor-pointer"
           >
-            <RotateCcw className="w-3.5 h-3.5" />새 클로버 숨기기
+            <RotateCcw className="w-3.5 h-3.5" />
+            {tr(lang, '새 클로버 숨기기', 'Hide new clovers')}
           </button>
         </div>
       </section>
@@ -498,13 +581,17 @@ function LuckyCloverGame() {
                 </div>
                 <div>
                   <span className="inline-flex items-center gap-1 px-3 py-0.5 rounded-full bg-amber-200/80 dark:bg-amber-900/80 text-amber-900 dark:text-amber-200 text-xs font-extrabold">
-                    ✨ 황금빛 세잎클로버 위로카드 · 꽃말: 행복
+                    {tr(
+                      lang,
+                      '✨ 황금빛 세잎클로버 위로카드 · 꽃말: 행복',
+                      '✨ Golden three-leaf clover card · Meaning: happiness',
+                    )}
                   </span>
                   <h3 className="mt-2 text-lg md:text-xl font-extrabold text-stone-900 dark:text-stone-100 leading-snug break-keep">
-                    "{goldenCard.title}"
+                    "{quoteTitle(goldenCard, lang)}"
                   </h3>
                   <p className="mt-2 text-sm text-stone-700 dark:text-stone-300 leading-relaxed break-keep">
-                    {goldenCard.subtext}
+                    {quoteSubtext(goldenCard, lang)}
                   </p>
                 </div>
               </div>
@@ -512,7 +599,11 @@ function LuckyCloverGame() {
 
             <div className="mt-5 pt-4 border-t border-amber-200/60 dark:border-amber-800/40 flex flex-wrap items-center justify-between gap-2">
               <span className="text-xs font-semibold text-amber-800/80 dark:text-amber-300/80">
-                💛 세잎클로버가 상징하는 ‘행복’을 당신의 마음에 담아보세요
+                {tr(
+                  lang,
+                  '💛 세잎클로버가 상징하는 ‘행복’을 당신의 마음에 담아보세요',
+                  '💛 Keep the "happiness" of the three-leaf clover close to your heart',
+                )}
               </span>
               <div className="flex items-center gap-2">
                 <button
@@ -521,15 +612,20 @@ function LuckyCloverGame() {
                   className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-white/90 dark:bg-zinc-800 border border-amber-200 dark:border-zinc-700 text-stone-700 dark:text-stone-200 text-xs font-bold hover:bg-amber-50 transition-colors cursor-pointer"
                 >
                   <Copy className="w-3.5 h-3.5 text-amber-600" />
-                  문장 복사
+                  {tr(lang, '문장 복사', 'Copy text')}
                 </button>
                 <button
                   type="button"
-                  onClick={() => handleDownloadCard(goldenCard, '마음 버블 · 세잎클로버의 행복')}
+                  onClick={() =>
+                    handleDownloadCard(
+                      goldenCard,
+                      tr(lang, '마음 버블 · 세잎클로버의 행복', 'Mind Bubble · Happiness of the three-leaf clover'),
+                    )
+                  }
                   className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold shadow-xs transition-colors cursor-pointer"
                 >
                   <Download className="w-3.5 h-3.5" />
-                  위로카드 이미지 저장
+                  {tr(lang, '위로카드 이미지 저장', 'Save card as image')}
                 </button>
               </div>
             </div>
@@ -548,13 +644,17 @@ function LuckyCloverGame() {
                 </div>
                 <div>
                   <span className="inline-flex items-center gap-1 px-3 py-0.5 rounded-full bg-emerald-200/80 dark:bg-emerald-900/80 text-emerald-900 dark:text-emerald-200 text-xs font-extrabold">
-                    🍀 행운의 네잎클로버 위로카드 · 꽃말: 행운
+                    {tr(
+                      lang,
+                      '🍀 행운의 네잎클로버 위로카드 · 꽃말: 행운',
+                      '🍀 Lucky four-leaf clover card · Meaning: luck',
+                    )}
                   </span>
                   <h3 className="mt-2 text-lg md:text-xl font-extrabold text-stone-900 dark:text-stone-100 leading-snug break-keep">
-                    "{fourLeafCard.title}"
+                    "{quoteTitle(fourLeafCard, lang)}"
                   </h3>
                   <p className="mt-2 text-sm text-stone-700 dark:text-stone-300 leading-relaxed break-keep">
-                    {fourLeafCard.subtext}
+                    {quoteSubtext(fourLeafCard, lang)}
                   </p>
                 </div>
               </div>
@@ -563,8 +663,16 @@ function LuckyCloverGame() {
             <div className="mt-5 pt-4 border-t border-emerald-200/60 dark:border-emerald-800/40 flex flex-wrap items-center justify-between gap-2">
               <span className="text-xs font-semibold text-emerald-800/80 dark:text-emerald-300/80">
                 {!foundGoldenThreeLeaf
-                  ? '💡 아직 숨어 있는 금빛 세잎클로버(행복)도 마저 찾아보세요!'
-                  : '🌈 오늘 행운(네잎)과 행복(금빛 세잎)을 모두 찾으셨어요!'}
+                  ? tr(
+                      lang,
+                      '💡 아직 숨어 있는 금빛 세잎클로버(행복)도 마저 찾아보세요!',
+                      '💡 The golden three-leaf clover (happiness) is still hiding. Try finding it too!',
+                    )
+                  : tr(
+                      lang,
+                      '🌈 오늘 행운(네잎)과 행복(금빛 세잎)을 모두 찾으셨어요!',
+                      '🌈 You found both luck (four-leaf) and happiness (golden three-leaf) today!',
+                    )}
               </span>
               <div className="flex items-center gap-2">
                 <button
@@ -573,15 +681,20 @@ function LuckyCloverGame() {
                   className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-white/90 dark:bg-zinc-800 border border-emerald-200 dark:border-zinc-700 text-stone-700 dark:text-stone-200 text-xs font-bold hover:bg-emerald-50 transition-colors cursor-pointer"
                 >
                   <Copy className="w-3.5 h-3.5 text-emerald-600" />
-                  문장 복사
+                  {tr(lang, '문장 복사', 'Copy text')}
                 </button>
                 <button
                   type="button"
-                  onClick={() => handleDownloadCard(fourLeafCard, '마음 버블 · 네잎클로버의 행운')}
+                  onClick={() =>
+                    handleDownloadCard(
+                      fourLeafCard,
+                      tr(lang, '마음 버블 · 네잎클로버의 행운', 'Mind Bubble · Luck of the four-leaf clover'),
+                    )
+                  }
                   className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs transition-colors cursor-pointer"
                 >
                   <Download className="w-3.5 h-3.5" />
-                  위로카드 이미지 저장
+                  {tr(lang, '위로카드 이미지 저장', 'Save card as image')}
                 </button>
               </div>
             </div>
@@ -601,6 +714,7 @@ function BubbleWrapGame() {
   const [popped, setPopped] = useState<boolean[]>(() => Array(WRAP_CELLS).fill(false))
   const [total, setTotal] = useState(0)
   const [sheets, setSheets] = useState(0)
+  const lang = useLang()
 
   useEffect(() => {
     try {
@@ -649,13 +763,14 @@ function BubbleWrapGame() {
     <section className="bg-white/80 dark:bg-zinc-900/80 border border-emerald-100 dark:border-zinc-800 rounded-3xl p-5 md:p-6 shadow-xl backdrop-blur-md">
       <div className="flex items-center justify-between gap-3 mb-4 text-xs font-semibold text-stone-600 dark:text-stone-300">
         <span>
-          지금까지 터뜨린 뽁뽁이{' '}
+          {tr(lang, '지금까지 터뜨린 뽁뽁이', 'Bubbles popped so far')}{' '}
           <span className="text-emerald-600 dark:text-emerald-400 text-sm font-bold">
-            {total.toLocaleString()}개
+            {tr(lang, `${total.toLocaleString()}개`, total.toLocaleString())}
           </span>
         </span>
         <span>
-          {sheets > 0 && `${sheets}장 완료 · `}남은 뽁뽁이 {remaining}개
+          {sheets > 0 && tr(lang, `${sheets}장 완료 · `, `${sheets} sheet${sheets === 1 ? '' : 's'} done · `)}
+          {tr(lang, `남은 뽁뽁이 ${remaining}개`, `${remaining} left`)}
         </span>
       </div>
 
@@ -665,7 +780,11 @@ function BubbleWrapGame() {
             key={i}
             type="button"
             onPointerDown={() => pop(i)}
-            aria-label={isPopped ? '터진 뽁뽁이' : '뽁뽁이 터뜨리기'}
+            aria-label={
+              isPopped
+                ? tr(lang, '터진 뽁뽁이', 'Popped bubble')
+                : tr(lang, '뽁뽁이 터뜨리기', 'Pop this bubble')
+            }
             aria-pressed={isPopped}
             className={`relative aspect-square rounded-full transition-all duration-150 ${
               isPopped
@@ -680,14 +799,19 @@ function BubbleWrapGame() {
 
       <div className="mt-5 flex items-center justify-between gap-3">
         <p className="text-xs text-stone-500 dark:text-stone-400">
-          다 터뜨리면 새 뽁뽁이가 자동으로 깔려요.
+          {tr(
+            lang,
+            '다 터뜨리면 새 뽁뽁이가 자동으로 깔려요.',
+            'Pop them all and a fresh sheet rolls out on its own.',
+          )}
         </p>
         <button
           type="button"
           onClick={() => setPopped(Array(WRAP_CELLS).fill(false))}
           className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800/60 text-emerald-800 dark:text-emerald-300 text-xs font-semibold hover:bg-emerald-100 dark:hover:bg-emerald-900/60 transition-colors"
         >
-          <RotateCcw className="w-3.5 h-3.5" />새 뽁뽁이
+          <RotateCcw className="w-3.5 h-3.5" />
+          {tr(lang, '새 뽁뽁이', 'New sheet')}
         </button>
       </div>
     </section>
@@ -720,6 +844,28 @@ const WORRY_WORDS = [
   '잡생각',
 ]
 
+// WORRY_WORDS와 같은 순서·같은 개수의 영어 단어
+const WORRY_WORDS_EN = [
+  'deadline',
+  'overtime',
+  'worry',
+  'anxious',
+  'tired',
+  'nagging',
+  'comparing',
+  'regret',
+  'awkward',
+  'Monday',
+  'exam',
+  'sigh',
+  'grumpy',
+  'putting off',
+  'rushing',
+  'homework',
+  'replies',
+  'overthinking',
+]
+
 const BUBBLE_TINTS = [
   'from-amber-200/70 to-orange-200/60',
   'from-rose-200/70 to-pink-200/60',
@@ -739,11 +885,30 @@ interface RisingBubble {
 
 type Phase = 'idle' | 'playing' | 'done'
 
-function scoreMessage(score: number): string {
-  if (score >= 40) return '걱정이 남아나질 않겠어요! 마음이 뻥 뚫렸죠? 🌈'
-  if (score >= 25) return '시원하게 날려 보냈어요. 어깨가 한결 가벼워졌을 거예요 🍃'
-  if (score >= 10) return '하나하나 잘 터뜨렸어요. 그만큼 마음이 비워졌어요 🫧'
-  return '천천히 해도 괜찮아요. 터뜨린 만큼은 확실히 가벼워졌어요 🍀'
+function scoreMessage(score: number, lang: Language = 'ko'): string {
+  if (score >= 40)
+    return tr(
+      lang,
+      '걱정이 남아나질 않겠어요! 마음이 뻥 뚫렸죠? 🌈',
+      'Hardly a worry left! Feels wide open in there, right? 🌈',
+    )
+  if (score >= 25)
+    return tr(
+      lang,
+      '시원하게 날려 보냈어요. 어깨가 한결 가벼워졌을 거예요 🍃',
+      'You blew them all away. Your shoulders should feel lighter now 🍃',
+    )
+  if (score >= 10)
+    return tr(
+      lang,
+      '하나하나 잘 터뜨렸어요. 그만큼 마음이 비워졌어요 🫧',
+      'You popped them one by one. Your mind feels that much lighter 🫧',
+    )
+  return tr(
+    lang,
+    '천천히 해도 괜찮아요. 터뜨린 만큼은 확실히 가벼워졌어요 🍀',
+    "It's okay to go slow. Every bubble you popped made things a little lighter 🍀",
+  )
 }
 
 function WorryPopGame() {
@@ -754,6 +919,10 @@ function WorryPopGame() {
   const [isNewBest, setIsNewBest] = useState(false)
   const [bubbles, setBubbles] = useState<RisingBubble[]>([])
   const nextId = useRef(1)
+  const lang = useLang()
+  // 버블을 띄우는 타이머 안에서도 지금 언어를 읽을 수 있게 ref로 들고 있어요
+  const langRef = useRef<Language>(lang)
+  langRef.current = lang
 
   useEffect(() => {
     try {
@@ -768,11 +937,12 @@ function WorryPopGame() {
     const clock = setInterval(() => setTimeLeft((t) => Math.max(0, t - 1)), 1000)
     const spawner = setInterval(() => {
       const size = 64 + Math.round(Math.random() * 36)
+      const words = tr(langRef.current, WORRY_WORDS, WORRY_WORDS_EN)
       setBubbles((prev) => [
         ...prev,
         {
           id: nextId.current++,
-          word: WORRY_WORDS[Math.floor(Math.random() * WORRY_WORDS.length)],
+          word: words[Math.floor(Math.random() * words.length)],
           left: 4 + Math.random() * 78,
           size,
           duration: 3.2 + Math.random() * 2.4,
@@ -827,7 +997,7 @@ function WorryPopGame() {
       <div className="flex items-center justify-between gap-3 mb-4 text-xs font-semibold text-stone-600 dark:text-stone-300">
         <span className="flex items-center gap-1.5">
           <Timer className="w-4 h-4 text-emerald-600" />
-          남은 시간{' '}
+          {tr(lang, '남은 시간', 'Time left')}{' '}
           <span
             className={`text-sm font-bold ${
               timeLeft <= 5 && phase === 'playing'
@@ -835,16 +1005,18 @@ function WorryPopGame() {
                 : 'text-emerald-600 dark:text-emerald-400'
             }`}
           >
-            {timeLeft}초
+            {tr(lang, `${timeLeft}초`, `${timeLeft}s`)}
           </span>
         </span>
         <span>
-          터뜨린 걱정{' '}
-          <span className="text-emerald-600 dark:text-emerald-400 text-sm font-bold">{score}개</span>
+          {tr(lang, '터뜨린 걱정', 'Worries popped')}{' '}
+          <span className="text-emerald-600 dark:text-emerald-400 text-sm font-bold">
+            {tr(lang, `${score}개`, String(score))}
+          </span>
         </span>
         <span className="flex items-center gap-1">
           <Trophy className="w-4 h-4 text-amber-500" />
-          최고 {best}개
+          {tr(lang, `최고 ${best}개`, `Best ${best}`)}
         </span>
       </div>
 
@@ -856,7 +1028,7 @@ function WorryPopGame() {
             type="button"
             onPointerDown={(e) => popBubble(b.id, e)}
             onAnimationEnd={() => removeBubble(b.id)}
-            aria-label={`${b.word} 걱정 버블 터뜨리기`}
+            aria-label={tr(lang, `${b.word} 걱정 버블 터뜨리기`, `Pop the "${b.word}" worry bubble`)}
             className={`animate-game-rise absolute rounded-full bg-gradient-to-br ${b.tint} border border-white/80 shadow-md flex items-center justify-center text-xs font-bold text-stone-700 cursor-pointer active:scale-90`}
             style={{
               left: `${b.left}%`,
@@ -874,11 +1046,17 @@ function WorryPopGame() {
         {phase === 'idle' && (
           <Overlay>
             <p className="text-4xl mb-2">🎈</p>
-            <h3 className="text-lg font-bold text-stone-800 dark:text-stone-100">걱정 버블 팡팡</h3>
+            <h3 className="text-lg font-bold text-stone-800 dark:text-stone-100">
+              {tr(lang, '걱정 버블 팡팡', 'Worry Bubble Pop')}
+            </h3>
             <p className="mt-1 text-sm text-stone-600 dark:text-stone-300 max-w-xs">
-              {GAME_SECONDS}초 동안 떠오르는 걱정 버블을 눌러서 터뜨려 보세요.
+              {tr(
+                lang,
+                `${GAME_SECONDS}초 동안 떠오르는 걱정 버블을 눌러서 터뜨려 보세요.`,
+                `For ${GAME_SECONDS} seconds, tap the worry bubbles as they float up and pop them.`,
+              )}
             </p>
-            <StartButton onClick={start} label="시작하기" />
+            <StartButton onClick={start} label={tr(lang, '시작하기', 'Start')} />
           </Overlay>
         )}
 
@@ -886,17 +1064,21 @@ function WorryPopGame() {
           <Overlay>
             <p className="text-4xl mb-2">{isNewBest ? '🏆' : '🌤️'}</p>
             <h3 className="text-lg font-bold text-stone-800 dark:text-stone-100">
-              걱정 {score}개를 날려 보냈어요
+              {tr(
+                lang,
+                `걱정 ${score}개를 날려 보냈어요`,
+                `You sent ${score} ${score === 1 ? 'worry' : 'worries'} floating away`,
+              )}
             </h3>
             {isNewBest && (
               <p className="mt-1 text-xs font-bold text-amber-600 dark:text-amber-400">
-                새 최고 기록이에요!
+                {tr(lang, '새 최고 기록이에요!', "That's a new best!")}
               </p>
             )}
             <p className="mt-2 text-sm text-stone-600 dark:text-stone-300 max-w-xs">
-              {scoreMessage(score)}
+              {scoreMessage(score, lang)}
             </p>
-            <StartButton onClick={start} label="한 번 더" />
+            <StartButton onClick={start} label={tr(lang, '한 번 더', 'Play again')} />
           </Overlay>
         )}
       </div>
