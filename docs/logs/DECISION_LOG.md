@@ -5,13 +5,13 @@
 
 | ID | 날짜 | 결정자 | 결정 | 검토한 선택지 | 이유 | 트레이드오프 |
 |---|---|---|---|---|---|---|
-| D-001 | 11-24 | Claude(AI 에이전트) + quiet-wings 공동 | AI 기능은 **독자용 Q&A 챗봇** 하나에 집중 | ① 관리자 글쓰기 자동화 ② 독자 Q&A 챗봇 ③ 글 3줄 요약 | 결정 과정: 방향·요구사항 초안은 quiet-wings, ①관리자 글쓰기 자동화·②독자 Q&A 챗봇 구현 1차본은 Claude, ①수정·③글 3줄 요약은 quiet-wings, 최종 결정은 함께. 마감이 하루라 한 기능을 끝까지 완성하는 게 낫다. 반복 문의 응대라는 운영 문제를 직접 줄인다 | 관리자 자동화는 차기 버전으로 미룸 |
+| D-001 | 11-24 | Claude(AI 에이전트) + quiet-wings 공동 | AI 기능은 **독자용 Q&A 챗봇** 하나에 집중 | ① 관리자 글쓰기 자동화 ② 독자 Q&A 챗봇 ③ 글 3줄 요약 | 반복 문의 응대라는 운영 문제를 직접 줄인다 | 관리자 자동화는 차기 버전으로 미룸 |
 | D-002 | 11-24 | Claude(AI 에이전트) | **외부 npm 의존성 없이** Node 22 내장 기능만으로 구현 | ① Next.js/Astro ② 무의존성 Node | 빌드가 단순해지고 설치 실패·공급망 위험이 없다. 블로그 규모(글 수십 편)에는 프레임워크가 과하다 | 마크다운 변환기를 직접 구현·테스트해야 함 |
 | D-003 | 11-24 | quiet-wings | 블로그 주제를 **마음버블 서비스 블로그**로 전환 | ① 일반 PM 공부 블로그 ② 진행 중인 마음버블 프로젝트와 연결 | 실제 운영 중인 서비스의 유입·운영 문제를 풀어야 출시·운영·마케팅까지 한 흐름으로 설명된다 | 처음 쓴 PM 공부 글 6편 폐기 |
 | D-004 | 11-24 | Claude(AI 에이전트) + quiet-wings 공동 | 배포를 Vercel → **Netlify**로 변경 | ① Vercel ② Netlify | 마음버블 본체가 이미 Netlify를 쓴다. 계정·도메인·로그 확인 위치를 하나로 모을 수 있다 | Netlify Functions 형식으로 서버 코드 작성 |
 | D-005 | 11-24 | Claude(AI 에이전트) | 검색은 **키워드(한글 2글자 조각) 점수 방식**, 임베딩 미사용 | ① 임베딩 벡터 검색 ② 키워드 점수 | 글 수십 편 규모에서는 충분하고, API 호출 1회를 줄여 무료 한도·속도에 유리 | 동의어("잠"↔"수면") 약함 → 글에 동의어를 함께 쓰는 작성 규칙으로 보완 |
 | D-006 | 11-24 | Claude(AI 에이전트) + quiet-wings 공동 | **위기 표현은 AI보다 먼저 규칙으로 처리** | ① AI에게 판단 위임 ② 키워드 규칙 우선 | 스트레스 서비스 특성상 놓치면 안 되는 상황. AI 응답은 매번 달라 100% 보장이 어렵다 | 오탐 시 안전 안내가 과하게 나올 수 있음(허용) |
-| D-007 | 11-24 | Claude(AI 에이전트) + quiet-wings 공동 | 배포를 Netlify → **Firebase Hosting + Firebase AI Logic**으로 변경 (D-004 대체) | ① Netlify Functions ② Firebase Cloud Functions ③ Firebase Hosting + AI Logic(클라이언트에서 Gemini 호출) | 결정 과정: Firebase 사용은 quiet-wings 결정, Claude가 "Cloud Functions는 유료(Blaze)"라고 의견 제시 → quiet-wings가 다른 방법을 묻자 Claude가 AI Logic의 Gemini Developer API(무료) 안내 → quiet-wings가 채택. Cloud Functions는 유료(Blaze) 요금제가 필요하지만 AI Logic의 Gemini Developer API는 무료(Spark) 요금제에서 쓸 수 있고 API 키를 코드에 넣지 않아도 됨 | 서버가 없어 호출 제한은 브라우저 + App Check로 처리, 콘텐츠 갭 로그는 Firestore에 저장 |
+| D-007 | 11-24 | Claude(AI 에이전트) + quiet-wings 공동 | 배포를 Netlify → **Firebase Hosting + Firebase AI Logic**으로 변경 (D-004 대체) | ① Netlify Functions ② Firebase Cloud Functions ③ Firebase Hosting + AI Logic(클라이언트에서 Gemini 호출) | Cloud Functions는 유료(Blaze) 요금제가 필요하지만 AI Logic의 Gemini Developer API는 무료(Spark) 요금제에서 쓸 수 있고 API 키를 코드에 넣지 않아도 됨 | 서버가 없어 호출 제한은 브라우저 + App Check로 처리, 콘텐츠 갭 로그는 Firestore에 저장 |
 | D-008 | 11-24 | quiet-wings | 상용화 단계 주 사용자에 **정신건강의학과 환자** 추가 | ① 일반 사용자만 ② 병원 치료 보조 도구까지 확장 | 기관(병원) 대상 서비스로 확장하려는 사업 방향. 단 의료 규제 대상이 될 수 있어 MVP는 진단·처방성 답변 금지, 개인 기록 미수집으로 설계 | 상용화 전 인허가·임상 근거·민감정보 보호 체계가 추가로 필요 |
 | D-009 | 11-24 | quiet-wings | 추후 개선 방향을 **기능 추가가 아닌 단순화**로 설정 | ① 로드맵 기능(목록집 공유 등) 확장 ② 과한 기능을 덜어내고 깔끔한 화면 | 사용자 결정. 지친 사용자는 선택지가 많을수록 부담을 느끼고, 핵심 흐름(적기→터뜨리기→위로)이 묻힌다 | 일부 기능은 숨김·제거되어 기존 사용자가 찾기 어려울 수 있음 → 사용률 데이터로 결정 |
 | D-010 | 11-24 | quiet-wings (에이전트 제안 승인) | 에이전트 지침을 **AGENTS.md 하나로 관리**하고 CLAUDE.md는 `@AGENTS.md` import만 둠 | ① README에 지침 포함 ② CLAUDE.md·AGENTS.md 따로 작성 ③ AGENTS.md 단일 원본 + CLAUDE.md import | 강사 피드백: 에이전트 런타임은 README가 아닌 AGENTS.md/CLAUDE.md를 세션 시작 시 자동 주입한다. Codex는 AGENTS.md, Claude Code는 CLAUDE.md를 읽으므로 import로 두 도구가 같은 지침을 쓰게 함. AGENTS.md 명세 권장대로 명령어를 문서 맨 앞에 배치 | 지침 수정은 AGENTS.md에서만 해야 함 (CLAUDE.md에 직접 쓰면 Codex와 어긋남) |
@@ -25,3 +25,8 @@
 | D-018 | 11-24 | quiet-wings | 마음버블 일러스트를 **구름 모양 + 흰색으로 통일** | ① 버블 10종(유리·폭신함·진주·비눗방울·젤리 등 질감별, 파스텔 색) ② 구름 모양 + 흰색 통일 | 사용자 결정. 모양이 제각각이면 브랜드가 흩어져 보임. 구름 하나로 묶고 질감만 달리해 '부드럽게 털어놓는 공간' 느낌을 맞춤 | 핑크·민트 등 색 구분이 사라짐(진주 광택·비눗방울 가장자리 무지갯빛만 질감으로 남김). 직접 그린 이미지라 표정·손으로 빚은 듯한 디테일은 단순함 |
 | D-019 | 11-24 | quiet-wings | 블로그 챗봇 이름을 **「클로버에게 물어보기」 → 「포앤에게 물어봐」**로 바꾸고 캐릭터 그림(네잎클로버 머리 아기 천사)을 아이콘으로 사용 | ① 클로버 유지(이모지 🍀) ② 포앤 + 캐릭터 아이콘 | 사용자 결정. '포앤'은 Fortune(행운) + Angel(천사)을 붙인 조어로 "행운을 가져다주는 천사"라는 뜻. 흔한 단어 '클로버'보다 마음버블만의 캐릭터로 기억되고, 반말 버튼("물어봐")으로 친근하게 말 걸기 쉬움. 이름의 뜻을 소개 글에 넣어 챗봇이 "포앤이 누구야?"에도 블로그 근거로 답하게 함 | 사전에 없는 이름이라 처음엔 뜻을 설명해야 함. AI 쪽 이름은 Cloudflare 중계(`ask.js`) 재배포 후 적용. 1번 글 제목·PRD 속 '클로버' 표기는 따로 맞춰야 함 |
 | D-020 | 11-25 | quiet-wings | 마음버블서점을 **업그레이드 페이지(감정책방 「마음버블서점 업그레이드」)로 교체**: 앱 `/bookstore/` 정적 페이지로 올리고 `/books`·블로그 서점 링크를 그쪽으로 연결. AI 추천은 Supabase 함수 대신 같은 Cloudflare 프로젝트의 `/api/bookstore/recommend`(Claude, 서버 고정 책 목록·호출 제한)로 옮김 | ① 기존 React 서점 유지 ② 업그레이드 페이지를 React로 다시 작성 ③ 정적 페이지 그대로 올리고 서버 함수만 이식 | 사용자 결정. 감정 단어·한 문장 AI 추천·작가 쪽지·BGM·영어까지 이미 완성된 페이지라 그대로 쓰는 게 가장 빠르고 안전. 기존 Supabase 프로젝트는 주소가 없어져(NXDOMAIN) 블로그 챗봇과 같은 Claude 비밀값·KV를 재사용 | 서점은 앱 하단 메뉴가 없는 별도 화면(상단 "← 마음버블"로 복귀). 방문·검색 통계는 남기지 않고 별점·한마디만 KV에 30일 보관 |
+
+## 결정 과정 메모
+공동 결정이 어떤 순서로 이루어졌는지 기록한다.
+- **D-001**: 방향·요구사항 초안 quiet-wings → ①관리자 글쓰기 자동화·②독자 Q&A 챗봇 구현 1차본 Claude → ①수정·③글 3줄 요약 quiet-wings → 최종 결정 함께
+- **D-007**: Firebase 사용 결정 quiet-wings → Claude가 "Cloud Functions는 유료(Blaze)"라고 의견 제시 → quiet-wings가 다른 방법 질문 → Claude가 AI Logic의 Gemini Developer API(무료) 안내 → quiet-wings가 채택
