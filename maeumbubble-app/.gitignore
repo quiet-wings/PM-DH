@@ -13,3 +13,5 @@ package-lock.json
 
 # Pixabay 음원(Rain Mind) — 라이선스상 원본을 그대로 재배포하지 않도록 저장소에는 올리지 않음 (배포 폴더에만)
 public/audio/*.mp3
+# 뽁뽁이 효과음(CC0 영상에서 잘라 낸 wav) — 혹시 모를 권리 문제를 피하려고 저장소에는 올리지 않음 (배포 폴더에만)
+public/audio/*.wav

@@ -101,6 +101,112 @@ class SoundManager {
     }
   }
 
+  // 뽁뽁이 "툭툭": 실제 뽁뽁이 녹음에서 잘라 낸 두 소리(/audio/wrap-pop-1·2.wav)를 큰 소리 → 작은 소리로 빠르게 이어서 재생해요
+  // 파일을 아직 못 불러왔거나 없으면 기존 합성 소리로 대신해요.
+  private wrapBuffers: AudioBuffer[] = []
+  private wrapLoading = false
+
+  private loadWrapPops() {
+    if (this.wrapLoading || !this.ctx || typeof fetch === 'undefined') return
+    this.wrapLoading = true
+    const ctx = this.ctx
+    Promise.all(
+      WRAP_POP_SRCS.map((src) =>
+        fetch(src)
+          .then((r) => (r.ok ? r.arrayBuffer() : Promise.reject(new Error(src))))
+          .then((b) => ctx.decodeAudioData(b)),
+      ),
+    )
+      .then((bufs) => {
+        this.wrapBuffers = bufs
+      })
+      .catch(() => {
+        this.wrapLoading = false // 다음 번에 다시 시도
+      })
+  }
+
+  // 화면에 들어올 때 미리 불러 두면 첫 "툭"부터 녹음 소리가 나요
+  public preloadWrapPop() {
+    this.initContext()
+    this.loadWrapPops()
+  }
+
+  public playWrapPop() {
+    if (this.isMuted) return
+    // 휴대폰 진동 "톡" (안드로이드 Chrome·삼성 인터넷 지원, 아이폰 Safari는 브라우저가 막아 소리만 나요)
+    try {
+      if (typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function') navigator.vibrate(WRAP_VIBRATE_MS)
+    } catch {}
+    try {
+      this.initContext()
+      if (!this.ctx) return
+      this.loadWrapPops()
+      if (this.wrapBuffers.length < 2) {
+        this.playPopSound()
+        return
+      }
+      // 한 번 누를 때마다 큰 "툭" → 바로 이어서 작은 "툭"
+      const now = this.ctx.currentTime
+      const rate = 0.96 + Math.random() * 0.08 // 매번 살짝 다르게
+      const hit = (buf: AudioBuffer, at: number, vol: number) => {
+        if (!this.ctx) return
+        const src = this.ctx.createBufferSource()
+        src.buffer = buf
+        src.playbackRate.value = rate
+        const gain = this.ctx.createGain()
+        gain.gain.value = vol
+        src.connect(gain)
+        gain.connect(this.ctx.destination)
+        src.start(at)
+      }
+      hit(this.wrapBuffers[0], now, WRAP_POP_VOLUME)
+      hit(this.wrapBuffers[1], now + WRAP_POP_GAP_SEC, WRAP_POP_VOLUME * 0.35)
+    } catch {}
+  }
+
+  // 네잎클로버 찾기 "바스락": 마른 잎 소리(OpenGameArt 「20 rustles dry leaves」 17번, CC0, qubodup)
+  // 파일을 못 불러왔으면 기존 합성 소리로 대신해요.
+  private rustleBuffer: AudioBuffer | null = null
+  private rustleLoading = false
+
+  public preloadCloverRustle() {
+    this.initContext()
+    if (this.rustleLoading || !this.ctx || typeof fetch === 'undefined') return
+    this.rustleLoading = true
+    const ctx = this.ctx
+    fetch(CLOVER_RUSTLE_SRC)
+      .then((r) => (r.ok ? r.arrayBuffer() : Promise.reject(new Error(CLOVER_RUSTLE_SRC))))
+      .then((b) => ctx.decodeAudioData(b))
+      .then((buf) => {
+        this.rustleBuffer = buf
+      })
+      .catch(() => {
+        this.rustleLoading = false
+      })
+  }
+
+  // rate: 1보다 크면 조금 높고 빠르게(황금 세잎클로버), 작으면 낮게
+  public playCloverRustle(rate = 1) {
+    if (this.isMuted) return
+    try {
+      this.initContext()
+      if (!this.ctx) return
+      if (!this.rustleBuffer) {
+        this.preloadCloverRustle()
+        this.playPopSound(rate >= 1 ? 1.2 : 0.8)
+        return
+      }
+      const src = this.ctx.createBufferSource()
+      src.buffer = this.rustleBuffer
+      src.playbackRate.value = rate * (0.95 + Math.random() * 0.1)
+      const gain = this.ctx.createGain()
+      gain.gain.value = CLOVER_RUSTLE_VOLUME
+      src.connect(gain)
+      gain.connect(this.ctx.destination)
+      src.start()
+    } catch {}
+  }
+
   // 「퇴사할게요」 도장 "쾅": 묵직하게 떨어지는 저음 + 종이에 찍히는 짧은 타격음
   // delay(초) 뒤에 울려서 도장이 종이에 닿는 순간과 맞춰요.
   public playStampSound(delay = 0) {
@@ -294,6 +400,12 @@ class SoundManager {
 
 export const AMBIENT_PREF_KEY = 'maeum-ambient'
 const AMBIENT_SRC = '/audio/rain-mind.mp3'
+const WRAP_POP_SRCS = ['/audio/wrap-pop-1.wav', '/audio/wrap-pop-2.wav']
+const WRAP_POP_VOLUME = 0.7
+const CLOVER_RUSTLE_SRC = '/audio/clover-rustle.wav'
+const CLOVER_RUSTLE_VOLUME = 0.6
+const WRAP_POP_GAP_SEC = 0.06
+const WRAP_VIBRATE_MS = 18
 const AMBIENT_VOLUME = 0.2
 const AMBIENT_FADE_SEC = 3
 // 서버가 파일 길이를 알려 주지 않을 때(스트리밍) 쓰는 음원 길이: 8분

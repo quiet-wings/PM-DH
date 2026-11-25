@@ -11,7 +11,7 @@
 | 테스트 보고서 (v1.4, A4 2쪽) | [`docs/TEST_REPORT.md`](docs/TEST_REPORT.md) · 스크린샷 [`docs/screenshots/`](docs/screenshots) |
 | 에이전트용 지침 | [`AGENTS.md`](AGENTS.md) (`CLAUDE.md`는 import 한 줄) |
 | 의사결정 로그 | [`docs/logs/DECISION_LOG.md`](docs/logs/DECISION_LOG.md) (D-001~D-022, 결정자 표기 + 「결정 과정 메모」) |
-| 성공·실패 로그 | [`docs/logs/SUCCESS_FAILURE_LOG.md`](docs/logs/SUCCESS_FAILURE_LOG.md) (#1~#25) |
+| 성공·실패 로그 | [`docs/logs/SUCCESS_FAILURE_LOG.md`](docs/logs/SUCCESS_FAILURE_LOG.md) (#1~#28) |
 | 제출 체크리스트 | [`docs/SUBMISSION_CHECKLIST.md`](docs/SUBMISSION_CHECKLIST.md) |
 | 소스코드 | 블로그: `lib/`(챗봇·검색·안전 규칙), `site/`(화면), `scripts/`(빌드), `posts/`(글), `tests/` · 마음버블 앱·서점: [`maeumbubble-app/`](maeumbubble-app) |
 | 마음버블 페이지 | https://maeumbubble-test.pages.dev (Cloudflare Pages) |
@@ -83,7 +83,7 @@ Windows에서는 [Git for Windows](https://git-scm.com)가 필요해요 (GitHub 
 - Claude API 키 등록: `npx wrangler pages secret put ANTHROPIC_API_KEY --project-name maeumbubble-test`
 - 중계 코드: [`ask.js`](maeumbubble-app/cloudflare/functions/api/ask.js)(포앤) · [`bookstore/recommend.js`](maeumbubble-app/cloudflare/functions/api/bookstore/recommend.js)(서점 추천) · [`bookstore/feedback.js`](maeumbubble-app/cloudflare/functions/api/bookstore/feedback.js)(서점 별점)
 - 앱을 정적 빌드한 뒤 배포 폴더에서 `배포하기.ps1`을 실행합니다. 서점은 `maeumbubble-app/public/bookstore/`에 있고, 예전 `/books` 주소는 `/bookstore/`로 넘어가요.
-- 홈·서점 배경음 `maeumbubble-app/public/audio/rain-mind.mp3`는 라이선스상 저장소에 올리지 않아요. [Pixabay 「Rain Mind」](https://pixabay.com/music/meditationspiritual-rain-mind-195496/)를 받아 앞 8분을 이 이름으로 넣은 뒤 빌드하세요 ([D-021](docs/logs/DECISION_LOG.md)).
+- 홈·서점 배경음 `maeumbubble-app/public/audio/rain-mind.mp3`는 라이선스상 저장소에 올리지 않아요. [Pixabay 「Rain Mind」](https://pixabay.com/music/meditationspiritual-rain-mind-195496/)를 받아 앞 8분을 이 이름으로 넣은 뒤 빌드하세요 ([D-021](docs/logs/DECISION_LOG.md)). 뽁뽁이 효과음 `public/audio/wrap-pop-1.wav`·`wrap-pop-2.wav`(CC0 영상에서 잘라 낸 소리)와 네잎클로버 효과음 `clover-rustle.wav`([OpenGameArt 「20 rustles dry leaves」](https://opengameart.org/content/20-rustles-dry-leaves) 17번, CC0)도 같은 이유로 저장소에 없고, 없으면 예전 합성 소리로 대신 나요 (성공·실패 #26·#28).
 
 ## 새 글 쓰기
 `posts/YYYY-MM-DD-slug.md`를 만들고 front-matter(`title`, `date`, `tags`, `summary`, `feature`)를 채워 push하면 끝. 포앤이 새 글을 바로 근거로 씁니다.

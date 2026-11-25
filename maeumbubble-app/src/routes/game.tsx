@@ -180,6 +180,10 @@ function pickRandomIndex(max: number, exclude?: number): number {
 
 function LuckyCloverGame() {
   const [difficulty, setDifficulty] = useState<CloverDifficulty>('easy')
+  // 바스락 소리를 미리 불러 둬요
+  useEffect(() => {
+    soundManager.preloadCloverRustle()
+  }, [])
   const totalCells = DIFFICULTY_CONFIG[difficulty].count
 
   const [popped, setPopped] = useState<boolean[]>(() => Array(totalCells).fill(false))
@@ -275,11 +279,12 @@ function LuckyCloverGame() {
       toast.success('🍀 행운의 네잎클로버를 찾았어요!')
     } else if (index === goldenThreeLeafIdx) {
       setFoundGoldenThreeLeaf(true)
+      soundManager.playCloverRustle(1.15)
       soundManager.playPopSound(1.2)
       triggerBubblePopConfetti(cx, cy)
       toast.success("✨ 황금빛 세잎클로버('행복')를 발견했어요! 아래 위로카드를 확인해 보세요.")
     } else {
-      soundManager.playPopSound(0.8)
+      soundManager.playCloverRustle()
     }
   }
 
@@ -618,9 +623,14 @@ function BubbleWrapGame() {
     return () => clearTimeout(timer)
   }, [remaining])
 
+  // 녹음한 "툭" 소리를 미리 불러 둬요
+  useEffect(() => {
+    soundManager.preloadWrapPop()
+  }, [])
+
   const pop = (i: number) => {
     if (popped[i]) return
-    soundManager.playPopSound()
+    soundManager.playWrapPop()
     setPopped((prev) => {
       const next = [...prev]
       next[i] = true
