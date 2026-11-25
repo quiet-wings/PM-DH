@@ -7,10 +7,10 @@
 | 제출물 | 위치 |
 |---|---|
 | 배포된 블로그 | Firebase Hosting **비공개 미리보기 링크**(30일) — 링크는 제출란으로만 공유 ([D-011](docs/logs/DECISION_LOG.md)) |
-| PRD 기획서 (v0.1 → v3.1, A4 2쪽) | [`docs/PRD.md`](docs/PRD.md) · 버전별 HTML [`versions/`](versions) · 과정은 `docs: PRD vX` 커밋 |
+| PRD 기획서 (v0.1 → v3.2, A4 2쪽) | [`docs/PRD.md`](docs/PRD.md) · 버전별 HTML [`versions/`](versions) · 과정은 `docs: PRD vX` 커밋 |
 | 테스트 보고서 (v1.4, A4 2쪽) | [`docs/TEST_REPORT.md`](docs/TEST_REPORT.md) · 스크린샷 [`docs/screenshots/`](docs/screenshots) |
 | 에이전트용 지침 | [`AGENTS.md`](AGENTS.md) (`CLAUDE.md`는 import 한 줄) |
-| 의사결정 로그 | [`docs/logs/DECISION_LOG.md`](docs/logs/DECISION_LOG.md) (D-001~D-020) |
+| 의사결정 로그 | [`docs/logs/DECISION_LOG.md`](docs/logs/DECISION_LOG.md) (D-001~D-020, 결정자 표기 + 「결정 과정 메모」) |
 | 성공·실패 로그 | [`docs/logs/SUCCESS_FAILURE_LOG.md`](docs/logs/SUCCESS_FAILURE_LOG.md) (#1~#23) |
 | 제출 체크리스트 | [`docs/SUBMISSION_CHECKLIST.md`](docs/SUBMISSION_CHECKLIST.md) |
 | 소스코드 | 블로그: `lib/`(챗봇·검색·안전 규칙), `site/`(화면), `scripts/`(빌드), `posts/`(글), `tests/` · 마음버블 앱·서점: [`maeumbubble-app/`](maeumbubble-app) |
@@ -23,6 +23,17 @@
 - **독자**: 지친 순간에 긴 글을 다 읽기 어렵고, 답이 어느 글에 있는지 모른다.
 - **운영자(1인)**: 같은 질문에 반복해서 답하고, 독자가 뭘 궁금해하는지 데이터가 없다.
 - **해결**: 블로그 글 근거 Q&A 챗봇 포앤 → 답 + 출처 + 마음버블 기능 링크. 답하지 못한 질문은 익명으로 모아 다음 글 주제로 쓴다.
+
+## 만든 방식 (사람 + AI 에이전트)
+기획자 **quiet-wings**와 AI 코딩 에이전트 **Claude**가 함께 만들었습니다. 의사결정 로그의 결정자는 세 가지로 적습니다.
+
+| 결정자 | 뜻 | 예 |
+|---|---|---|
+| quiet-wings | 기획자가 직접 내린 결정 | D-003 마음버블 연결, D-008 병원 타깃 |
+| Claude(AI 에이전트) + quiet-wings 공동 | quiet-wings가 방향·요구사항 초안을 주고, 중간 수정과 최종 결정은 함께 | D-001 챗봇 집중, D-007 Firebase + 무료 AI Logic |
+| Claude(AI 에이전트) | 에이전트의 기술 판단 | D-002 외부 의존성 없음, D-005 키워드 검색 |
+
+공동 결정이 어떤 순서로 이루어졌는지는 로그 아래 「결정 과정 메모」에 있습니다. 비밀키는 사람이 직접 만들어 GitHub Secret·Cloudflare 비밀값에 넣고, 저장소에는 이름만 적습니다(성공·실패 #23).
 
 ## 동작 흐름
 ```
